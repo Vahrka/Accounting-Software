@@ -1,0 +1,61 @@
+/* Dashboard Widget
+#MetricCard {
+    background: palette(base);
+    border-radius: 8px;
+    padding: 20px;
+    border-left: 4px solid palette(highlight);
+}
+
+#MetricTitle {
+    font-size: 14px;
+    font-weight: bold;
+    color: palette(windowText);
+}
+
+#MetricValue {
+    font-size: 18px;
+    font-weight: bold;
+    color: palette(highlight);
+}
+
+#ChartFrame {
+    background: palette(base);
+    border-radius: 8px;
+    padding: 20px;
+}
+
+#ChartTitle {
+    font-size: 16px;
+    font-weight: bold;
+    color: palette(windowText);
+}
+
+QLineEdit {
+    border: 1px solid palette(mid);
+    border-radius: 4px;
+    padding: 8px;
+}
+
+QTableView {
+    background: palette(base);
+    gridline-color: palette(mid);
+    border: 1px solid palette(mid);
+    border-radius: 8px;
+}
+
+QHeaderView::section {
+    background: palette(button);
+    padding: 8px;
+    border: 0;
+} */
+
+
+
+
+#SideNav {
+    background: #252525;
+    border-radius: 10;
+
+}
+
+
