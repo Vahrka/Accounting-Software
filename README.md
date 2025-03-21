@@ -4,7 +4,7 @@
 [![Platform: Cross-Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey.svg)](https://pyside.org)
 [![Python 3.12+](https://img.shields.io/badge/Python-3.12%2B-blue.svg)](https://python.org)
 
-<img src="screenshots/screenshots001.png" style="text-align:center;width: 80%;border-radius: 24px;backdrop-filter: blur(16px);background: rgba(255, 255, 255, 0.1);box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);border: 1px solid rgba(255, 255, 255, 0.2);margin: 2rem auto;display: block;&:hover {transform: translateY(-8px);}" alt="Software Interface" width="800"/>
+![Software Interface](images/screenshots001.png)  
 
 **Free open-source accounting software** for small businesses with strict licensing terms. Built with PySide6 for native cross-platform performance.
 
