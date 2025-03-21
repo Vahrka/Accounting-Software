@@ -1,0 +1,10 @@
+
+extention:
+  name: "Accounts"
+  entrypoint: "main.Account"
+  verstion: "1.0.0"
+  author: "AC"
+
+
+software:
+  version: "1.0.0"
