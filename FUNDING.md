@@ -7,7 +7,6 @@ If you find this project useful, please consider supporting it by donating via t
 **Supported Tokens:** BTC.
 
 ![BSC QR Code](images/qr-code.png)  
-*(Replace this placeholder with a link to your actual BSC QR code image)*
 
 ## Important Notes
 
