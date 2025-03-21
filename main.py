@@ -1,7 +1,7 @@
 #! /usr/bin/env python3.12
 import sys
 
-from PySide6.QtCore import QFile, QSettings, Qt
+from PySide6.QtCore import QFile, QSettings
 from PySide6.QtGui import QFont, QFontDatabase, QIcon
 from PySide6.QtWidgets import QApplication
 
@@ -9,7 +9,7 @@ from PySide6.QtWidgets import QApplication
 import src.gui.source_rc
 # Local imports
 from src.core.database.models import initialize_database
-from src.core.utils.logger import setup_logger
+from src.core.utils.logger import get_logger
 from src.core.utils.settings import (APP_NAME, APP_VERSION,
                                      ORGANIZATION_DOMAIN, ORGANIZATION_NAME)
 from src.core.utils.shortcutes import get_database_path
@@ -17,7 +17,7 @@ from src.gui.main_window import MainWindow
 
 # Codes Here
 
-logger = setup_logger(APP_NAME)
+logger = get_logger(APP_NAME)
 
 
 def load_fonts():
