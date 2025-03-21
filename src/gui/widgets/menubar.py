@@ -1,7 +1,7 @@
-import os
 from pathlib import Path
 
-from PySide6.QtGui import QAction, QIcon
+from PySide6.QtCore import Qt, QUrl
+from PySide6.QtGui import QAction, QDesktopServices, QIcon
 from PySide6.QtWidgets import QFileDialog, QMenu, QMenuBar
 
 from src.core.plugins.loader import register_plugin
@@ -17,11 +17,15 @@ class Menubar(QMenuBar):
         self.actionRegister = QAction()
         self.actionRegister.setObjectName("actionRegister")
         self.actionRegister.setIcon(QIcon(":/icons/register.svg"))
+        self.actionRegister.setShortcut(Qt.KeyboardModifier.ControlModifier |
+                                        Qt.KeyboardModifier.AltModifier | Qt.Key.Key_R)
 
         self.actionList = QAction()
         self.actionList.setObjectName("actionList")
         self.actionList.setIcon(QIcon(":/icons/list.svg"))
-
+        self.actionList.setShortcut(Qt.KeyboardModifier.ControlModifier |
+                                        Qt.KeyboardModifier.ShiftModifier | Qt.Key.Key_X)
+        
         self.actionExport = QAction()
         self.actionExport.setObjectName("actionExport")
         self.actionExport.setIcon(QIcon(":/icons/export.svg"))
@@ -37,14 +41,18 @@ class Menubar(QMenuBar):
         self.actionContact = QAction()
         self.actionContact.setObjectName("actionContact")
         self.actionContact.setIcon(QIcon(":/icons/contact-phonebook-support.svg"))
+        self.actionContact.setShortcut(Qt.Key.Key_F1 | Qt.KeyboardModifier.ControlModifier)
+        
 
         self.actionHelp = QAction()
         self.actionHelp.setObjectName("actionHelp")
         self.actionHelp.setIcon(QIcon(":/icons/help.svg"))
+        self.actionHelp.setShortcut(Qt.Key.Key_F1)
 
         self.actionInfo = QAction()
         self.actionInfo.setObjectName("actionInfo")
         self.actionInfo.setIcon(QIcon(":/icons/info-square.svg"))
+        self.actionInfo.setShortcut(Qt.Key.Key_F1 | Qt.KeyboardModifier.AltModifier)
 
         # Create menus and submenus
         self.menuFile = QMenu()  # Main "File" menu
@@ -94,6 +102,7 @@ class Menubar(QMenuBar):
 
         # Connect the "Register" action to its handler
         self.actionRegister.triggered.connect(self.register_plugin)
+        self.actionContact.triggered.connect(self.open_contact)
 
     def retranslateUi(self):
         """Set the display text for all UI elements (actions and menus)."""
@@ -126,3 +135,11 @@ class Menubar(QMenuBar):
         if folder_path:
             main_window = self.parent()
             register_plugin(path=Path(folder_path), main_window=main_window)
+
+    def open_contact(self):
+        # Define the URL
+        url = QUrl("https://github.com/bambier/Accounting-Software/discussions")
+
+        # Open the URL in the default web browser
+        if not QDesktopServices.openUrl(url):
+            print("Failed to open URL")

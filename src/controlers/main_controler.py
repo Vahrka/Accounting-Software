@@ -6,7 +6,7 @@ from src.gui.widgets.base_screen import BaseScreen
 
 
 class MainControler:
-    def add_core_navs(self, widget: QWidget):
+    def add_btn_to_nav(self, widget: QWidget):
         """Add buttons to the side navigation."""
         # Connect buttons to switch screens
         self.side_nav.addWidget(widget)
@@ -14,3 +14,6 @@ class MainControler:
     def add_screen_to_stack(self, screen: BaseScreen):
         """Add screens to the stacked widget."""
         return self.stacked_widget.addWidget(screen)
+
+    def go_to_screen(self, screen: int):
+        self.stacked_widget.setCurrentIndex(screen)

@@ -58,9 +58,12 @@ def register_plugin(path: Path, main_window: QMainWindow):
         logger.debug(f"'{plugin}' registered successfully.")
 
     except ImportError as e:
-        logger.critical(f"Cannot import '{entry_point}' from '{name}'. Ensure the path is correct.", exc_info=e)
+        logger.critical(f"Cannot import '{entry_point}' from '{name}'. Ensure the path is correct.")
+    except FileNotFoundError as e:
+        logger.error(f"Failed to register plugin: {e}")
+        logger.info(f"Check if config file format is `.yml` and not `yaml` or `ymal`")
     except Exception as e:
-        logger.critical(f"Failed to register plugin: {e}", exc_info=e)
+        logger.critical(f"Failed to register plugin: {e}")
 
 
 def unregister_plugin(path: Path, main_window: QMainWindow):
@@ -110,6 +113,6 @@ def unregister_plugin(path: Path, main_window: QMainWindow):
         logger.debug(f"'{plugin}' unregistered successfully.")
 
     except ImportError as e:
-        logger.critical(f"Cannot import '{entry_point}' from '{name}'. Ensure the path is correct.", exc_info=e)
+        logger.critical(f"Cannot import '{entry_point}' from '{name}'. Ensure the path is correct.")
     except Exception as e:
-        logger.critical(f"Failed to unregister plugin: {e}", exc_info=e)
+        logger.critical(f"Failed to unregister plugin: {e}")
