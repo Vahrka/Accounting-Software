@@ -2,11 +2,11 @@ from typing import override
 
 from PySide6.QtWidgets import QWidget
 
-from src.core.utils.logger import setup_logger
+from src.core.utils.logger import get_logger
 
 # Codes Here
 
-logger = setup_logger()
+logger = get_logger()
 
 
 class BaseScreen(QWidget):

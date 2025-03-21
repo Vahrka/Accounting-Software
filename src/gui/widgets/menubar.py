@@ -117,10 +117,12 @@ class Menubar(QMenuBar):
         folder_path = QFileDialog.getExistingDirectory(
             self,  # Parent widget
             self.tr("Select Folder"),  # Dialog title
-            os.path.expanduser("~"),  # Start directory (user's home directory)
+            ".",  # Start directory (user's home directory)
+            # os.path.expanduser("~"),  # Start directory (user's home directory)
             QFileDialog.ShowDirsOnly  # Only show directories
         )
 
         # Check if a folder was selected
         if folder_path:
-            register_plugin(Path(folder_path))
+            main_window = self.parent()
+            register_plugin(path=Path(folder_path), main_window=main_window)

@@ -1,6 +1,6 @@
 import logging
 
-__all__ = ["setup_logger"]
+__all__ = ["get_logger"]
 
 
 # ANSI color codes
@@ -31,7 +31,7 @@ class ColoredFormatter(logging.Formatter):
         return super().format(record)
 
 
-def setup_logger(name: str = "AccountingApp", level=logging.DEBUG) -> logging.Logger:
+def get_logger(name: str = "AccountingApp", level=logging.DEBUG) -> logging.Logger:
     """Set up and return a customized logger."""
     # Create a logger
     logger = logging.getLogger(name)
@@ -56,7 +56,7 @@ def setup_logger(name: str = "AccountingApp", level=logging.DEBUG) -> logging.Lo
 
 # Example usage
 if __name__ == "__main__":
-    logger = setup_logger()
+    logger = get_logger()
 
     logger.debug("This is a debug message.")
     logger.info("This is an info message.")

@@ -1,8 +1,8 @@
 from pathlib import Path
 
-from src.core.utils.logger import setup_logger
+from src.core.utils.logger import get_logger
 
-logger = setup_logger()
+logger = get_logger()
 
 __all__ = [
     'BASE_DIR',

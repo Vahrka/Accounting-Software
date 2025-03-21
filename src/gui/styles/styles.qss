@@ -52,10 +52,10 @@ QHeaderView::section {
 
 
 
-#SideNav {
-    background: #252525;
-    border-radius: 10;
-
+#MainSideNav {
+    background: #ebe9e3;
+    border-radius: 15px;
+    border: 1px solid #dee2e6;
 }
 
 
