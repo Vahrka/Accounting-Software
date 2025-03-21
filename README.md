@@ -31,21 +31,21 @@ Contact Bambier for:
 
 ## 🚀 Features
 
-**Core Accounting**
+### Core Accounting
 
 - Double-entry bookkeeping
 - VAT/GST tax calculations
 - Financial reporting (PDF/Excel)
 - Multi-currency support
 
-**Business Management**
+### Business Management
 
 - Invoice & receipt scanning (OCR)
 - Inventory tracking
 - Payroll management
 - Bank feed integration
 
-**Technical**
+### Technical
 
 - SQLite/PostgreSQL backend
 - AES-256 data encryption
