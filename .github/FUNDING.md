@@ -8,7 +8,7 @@ If you’d still like to contribute to our work, you can donate via the **Binanc
 
 **Supported Tokens:** BTC.
 
-![BSC QR Code](images/qr-code.png)  
+![BSC QR Code](../images/qr-code.png)  
 
 ## Important Notes
 
