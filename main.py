@@ -2,7 +2,7 @@
 import sys
 
 from PySide6.QtCore import QFile, QSettings
-from PySide6.QtGui import QFont, QFontDatabase, QIcon
+from PySide6.QtGui import QFont, QIcon
 from PySide6.QtWidgets import QApplication
 
 # Reources
@@ -12,41 +12,12 @@ from src.core.database.models import initialize_database
 from src.core.utils.logger import get_logger
 from src.core.utils.settings import (APP_NAME, APP_VERSION,
                                      ORGANIZATION_DOMAIN, ORGANIZATION_NAME)
-from src.core.utils.shortcutes import get_database_path
+from src.core.utils.shortcutes import get_database_path, load_fonts
 from src.gui.main_window import MainWindow
 
 # Codes Here
 
 logger = get_logger(APP_NAME)
-
-
-def load_fonts():
-    """Load custom fonts from resources."""
-    font_aliases = [
-        "Vazirmatn-RD-UI-FD-Black",
-        "Vazirmatn-RD-UI-FD-Black",
-        "Vazirmatn-RD-UI-FD-Bold",
-        "Vazirmatn-RD-UI-FD-ExtraBold",
-        "Vazirmatn-RD-UI-FD-ExtraLight",
-        "Vazirmatn-RD-UI-FD-Light",
-        "Vazirmatn-RD-UI-FD-Medium",
-        "Vazirmatn-RD-UI-FD-Regular",
-        "Vazirmatn-RD-UI-FD-SemiBold",
-        "Vazirmatn-RD-UI-FD-Thin",
-    ]
-    QFontDatabase.removeAllApplicationFonts()
-    # BUG: Force first time bug
-    # Loading font for first time will got in to unknown problem
-    # We have to add this to later codes works
-    QFontDatabase.addApplicationFont(":/fonts/Vazirmatn-RD-UI-FD-Regular")
-
-    for alias in font_aliases:
-        font_path = f":/fonts/{alias}"
-        if not QFontDatabase.addApplicationFont(font_path):
-            if QFile(font_path).ex0ists():
-                logger.error(f"{alias} exists but failed to load font.")
-            else:
-                logger.error(f"{alias} dosn't exists.")
 
 
 def setup_application():
