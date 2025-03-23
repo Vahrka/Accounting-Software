@@ -9,6 +9,7 @@ from PySide6.QtWidgets import QApplication
 import src.gui.source_rc
 # Local imports
 from src.core.database.models import initialize_database
+from src.core.plugins.loader import load_plugins
 from src.core.utils.logger import get_logger
 from src.core.utils.settings import (APP_NAME, APP_VERSION,
                                      ORGANIZATION_DOMAIN, ORGANIZATION_NAME)
@@ -62,6 +63,9 @@ def main():
         main_window.setMinimumWidth(1024)
         main_window.setMinimumHeight(720)
         main_window.show()
+
+        # Load installed plugins
+        load_plugins(main_window)
 
         # Start event loop
         sys.exit(app.exec())
