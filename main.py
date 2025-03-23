@@ -67,7 +67,7 @@ def main():
         sys.exit(app.exec())
 
     except Exception as e:
-        logger.critical(f"Critical error: {str(e)}")
+        logger.critical(f"Critical error: {e}")
         sys.exit(1)
 
 
