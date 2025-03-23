@@ -10,7 +10,6 @@ __all__ = [
     'APP_VERSION',
     'ORGANIZATION_DOMAIN',
     'ORGANIZATION_NAME',
-    'get_database_path',
 ]
 
 BASE_DIR = Path(__file__).parent.parent.parent.parent
