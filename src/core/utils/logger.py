@@ -2,7 +2,6 @@ import logging
 
 __all__ = ["get_logger"]
 
-
 # ANSI color codes
 COLORS = {
     "DEBUG": "\033[92m",  # Green
@@ -21,7 +20,7 @@ class ColoredFormatter(logging.Formatter):
         super().__init__(fmt, datefmt, style)
 
     def format(self, record):
-        # Get the color for the log level
+        # Get the color for the log level (default is RESET/none)
         color = COLORS.get(record.levelname, COLORS["RESET"])
         reset = COLORS["RESET"]
 
@@ -33,23 +32,25 @@ class ColoredFormatter(logging.Formatter):
 
 def get_logger(name: str = "AccountingApp", level=logging.DEBUG) -> logging.Logger:
     """Set up and return a customized logger."""
-    # Create a logger
+    # Create or get the logger
     logger = logging.getLogger(name)
     logger.setLevel(level)
 
-    # Create a console handler
-    console_handler = logging.StreamHandler()
-    console_handler.setLevel(level)
+    # Check if the logger already has handlers to avoid duplication
+    if not logger.handlers:
+        # Create a console handler
+        console_handler = logging.StreamHandler()
+        console_handler.setLevel(level)
 
-    # Create a formatter and add it to the handler
-    formatter = ColoredFormatter(
-        fmt="%(levelname)s - %(filename)s:%(lineno)d - %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S"
-    )
-    console_handler.setFormatter(formatter)
+        # Create a formatter and add it to the handler
+        formatter = ColoredFormatter(
+            fmt="%(levelname)s - %(filename)s:%(lineno)d - %(message)s",
+            datefmt="%Y-%m-%d %H:%M:%S"
+        )
+        console_handler.setFormatter(formatter)
 
-    # Add the handler to the logger
-    logger.addHandler(console_handler)
+        # Add the handler to the logger
+        logger.addHandler(console_handler)
 
     return logger
 
