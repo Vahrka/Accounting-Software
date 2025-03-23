@@ -13,7 +13,7 @@ __all__ = [
     'get_database_path',
 ]
 
-BASE_DIR = Path(__file__).parent.parent.parent
+BASE_DIR = Path(__file__).parent.parent.parent.parent
 
 # UI Settings
 
