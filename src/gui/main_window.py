@@ -1,4 +1,4 @@
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QSettings
 from PySide6.QtWidgets import (QFrame, QHBoxLayout, QMainWindow,
                                QStackedWidget, QVBoxLayout, QWidget)
 
@@ -11,6 +11,8 @@ from src.gui.widgets.menubar import Menubar
 class MainWindow(QMainWindow, MainControler):
     def __init__(self):
         super().__init__()
+        
+        self.setting = QSettings()
 
         # Create main container
         main_widget = QWidget()
