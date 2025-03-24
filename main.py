@@ -68,7 +68,12 @@ def main():
         main_window.show()
 
         # Start event loop
-        sys.exit(app.exec())
+        exit_code = app.exec()
+
+        # Remove registerd plugins so next time we can register them again
+        QSettings().remove('registerd_plugins')
+
+        sys.exit(exit_code)
 
     except Exception as e:
         logger.critical(e)

@@ -1,6 +1,6 @@
 import importlib
 from pathlib import Path
-from typing import Any, Dict, Optional, Set
+from typing import Optional
 
 import yaml
 from PySide6.QtCore import QSettings
@@ -10,82 +10,77 @@ from src.core.plugins.plugin_base import PluginBase
 from src.core.utils.DataStructure import (PluginConfigStruct,
                                           PluginsConfigFileStruct)
 from src.core.utils.logger import get_logger
-from src.core.utils.settings import BASE_DIR
 
 logger = get_logger()
 
 
-def validate_plugins_config(plugins_config: Dict[str, Any]) -> PluginsConfigFileStruct:
+def list_plugins_from_storage() -> PluginsConfigFileStruct:
     """
-    Validate the structure of the plugins configuration.
-    If the configuration is invalid, return a default configuration with an empty plugins dictionary.
+    Validate the structure of the plugins configuration stored in QSettings.
+    Returns a default configuration if invalid.
     """
-    if not isinstance(plugins_config, dict) or not isinstance(plugins_config.get("plugins", {}), dict):
+    settings = QSettings()
+    plugins_config = settings.value("plugins_config", None)
+
+    if not isinstance(plugins_config, dict):
         return {"plugins": {}}
-    return plugins_config
+
+    plugins = plugins_config.get("plugins", {})
+    if not isinstance(plugins, dict):
+        return {"plugins": {}}
+
+    return {"plugins": plugins}
+
+
+def get_registerd_plugins() -> set:
+    return set(QSettings().value("registerd_plugins", set()))
 
 
 def write_plugin_config(path: Path, name: str) -> None:
     """
-    Write the plugin configuration to the plugins.yml file.
-    If the plugins.yml file does not exist, it will be created.
+    Write the plugin configuration to QSettings.
     """
-    plugins_folder_path = BASE_DIR / "plugins"
-    plugins_folder_path.mkdir(parents=True, exist_ok=True)
-    plugins_list_file_path = plugins_folder_path / "plugins.yml"
+    plugins_config = list_plugins_from_storage()
+    plugins_config["plugins"][name] = {
+        "path": str(path.absolute()),  # Store absolute path
+        "installed": True
+    }
 
-    # Read the existing configuration
-    with plugins_list_file_path.open("r", encoding="utf-8") as plugins_file:
-        raw_configs = plugins_file.read()
-        plugins_config: PluginsConfigFileStruct = yaml.safe_load(raw_configs) or {"plugins": {}}
-        plugins_config = validate_plugins_config(plugins_config)
-
-        # Update the configuration with the new plugin
-        plugins_config["plugins"][name] = {
-            "path": str(path),
-            "installed": True
-        }
-
-    # Write the updated configuration back to the file
-    with plugins_list_file_path.open("w", encoding="utf-8") as f:
-        yaml.dump(plugins_config, f)
+    registered_plugins = get_registerd_plugins()
+    registered_plugins.add(name)
+    QSettings().setValue('plugins_config', plugins_config)
+    QSettings().setValue("registerd_plugins", registered_plugins)
 
 
-def remove_plugin_config(path: Path, name: str, remove: bool = False) -> None:
-    plugins_folder_path = BASE_DIR / "plugins"
-    plugins_folder_path.mkdir(parents=True, exist_ok=True)
-    plugins_list_file_path = plugins_folder_path / "plugins.yml"
+def remove_plugin_config(name: str, remove: bool = False) -> None:
+    """
+    Update plugin configuration in QSettings when uninstalling/disabling.
+    """
+    plugins_config = list_plugins_from_storage()
 
-    # Read the existing configuration
-    with plugins_list_file_path.open("r", encoding="utf-8") as plugins_file:
-        raw_configs = plugins_file.read()
-        plugins_config: PluginsConfigFileStruct = yaml.safe_load(raw_configs) or {"plugins": {}}
-        plugins_config = validate_plugins_config(plugins_config)
+    if remove:
+        plugins_config["plugins"].pop(name, None)
+    else:
+        plugin = plugins_config["plugins"].get(name)
+        if plugin:
+            plugin["installed"] = False
 
-        # Update the configuration with the new plugin
-        if remove:
-            plugins_config["plugins"].pop(name)
-        else:
-            plugins_config["plugins"][name] = {
-                "path": str(path),
-                "installed": False
-            }
-
-    # Write the updated configuration back to the file
-    with plugins_list_file_path.open("w", encoding="utf-8") as f:
-        yaml.dump(plugins_config, f)
+    QSettings().setValue("plugins_config", plugins_config)
 
 
 def load_plugin_config(path: Path) -> Optional[PluginConfigStruct]:
     """
-    Load the plugin configuration from the config.yml file.
-    Returns None if the file is not found or the configuration is invalid.
+    Load plugin configuration from config.yml with validation.
     """
     try:
-        with open(path / "config.yml", "r") as file:
-            return yaml.safe_load(file)
+        config_path = path / "config.yml"
+        if config_path.exists() and config_path.is_file():
+            with config_path.open("r", encoding="utf-8") as file:
+                config = yaml.safe_load(file)
+                return config
+
     except (FileNotFoundError, yaml.YAMLError) as e:
-        logger.error(f"Failed to load plugin config: {e}")
+        logger.error(f"Failed to load plugin config from {path}: {e}")
         return None
 
 
@@ -104,12 +99,6 @@ def get_plugin_class(module_name: str, class_name: str) -> Optional[type]:
     except ImportError as e:
         logger.critical(f"Cannot import '{module_name}': {e}")
         return None
-
-
-def get_registerd_plugins() -> Set[str]:
-    setting = QSettings()
-    registerd_plugins:  Set[str] = setting.value("installed_plugins", set())
-    return registerd_plugins
 
 
 def register_plugin(path: Path, main_window: QMainWindow) -> bool:
@@ -131,17 +120,9 @@ def register_plugin(path: Path, main_window: QMainWindow) -> bool:
         logger.critical(
             "Extension config file doesn't have the correct structure at ['extention']['name'] or ['extention']['entrypoint']")
         return False
-
-    # Check if the plugin is already registered
-    register_plugin = get_registerd_plugins()
-
-    if name in register_plugin:
-        logger.info(f"Plugin '{name}' is already registered.")
+    if name in get_registerd_plugins():
+        logger.info(f"Plugin {name} is already installed.")
         return True
-    else:
-        setting = QSettings()
-        register_plugin.add(name)
-        setting.setValue("installed_plugins", register_plugin)
 
     # Construct the module and class names
     module_name = f"plugins.{name}.{entry_point.split('.')[0]}"
@@ -166,7 +147,7 @@ def unregister_plugin(path: Path, main_window: QMainWindow, remove: False) -> No
     Unregister a plugin by loading its configuration, dynamically importing the plugin class,
     and calling its unregister method.
     """
-    data = load_plugin_config(path)
+    data = load_plugin_config()
     if not data or not isinstance(data.get("extention"), dict):
         logger.critical("Extension config file doesn't have the correct structure")
         return
@@ -201,30 +182,19 @@ def load_plugins(main_window: QMainWindow) -> None:
     """
     Load all plugins listed in the plugins.yml file and register them if they are not already registered.
     """
-    plugins_path = BASE_DIR / "plugins"
-    plugins_path.mkdir(parents=True, exist_ok=True)
-    config_file_path = plugins_path / "plugins.yml"
-
-    if not config_file_path.exists() or not config_file_path.is_file():
-        logger.error("Plugins configuration file does not exist.")
-        return
-
     # Load the plugins configuration
-    with config_file_path.open("r", encoding="utf-8") as plugin_file:
-        plugins_config = yaml.safe_load(plugin_file) or {"plugins": {}}
-        plugins_config = validate_plugins_config(plugins_config)
+    plugins_config = list_plugins_from_storage()
 
-        # Iterate through all plugins and register them if they are not already registered
-        for name, plugin in plugins_config["plugins"].items():
-            if plugin.get("installed"):
-                path = Path(plugin["path"])
-                if path.exists():
-                    try:
-                        logger.info(f"Registering Plugin '{name}'")
-                        register_plugin(path, main_window)
-                    except Exception as e:
-                        logger.critical(f"Failed to load plugin '{name}': {e}")
-                else:
-                    logger.error(f"Plugin '{name}' does not exist at '{path}'")
+    # Iterate through all plugins and register them if they are not already registered
+    for name, plugin in plugins_config["plugins"].items():
+        if plugin.get("installed"):
+            path = Path(plugin["path"])
+            if path.exists():
+                try:
+                    register_plugin(path, main_window)
+                except Exception as e:
+                    logger.critical(f"Failed to load plugin '{name}': {e}")
             else:
-                logger.info(f"Plugin '{name}' is not marked for installation.")
+                logger.error(f"Plugin '{name}' does not exist at '{path}'")
+        else:
+            logger.info(f"Plugin '{name}' is not marked for installation.")
