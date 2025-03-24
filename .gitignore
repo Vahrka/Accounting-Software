@@ -2005,3 +2005,6 @@ FodyWeavers.xsd
 
 data/
 AccountingSoftware.dist
+
+
+plugins/plugins.yml
