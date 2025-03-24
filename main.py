@@ -62,16 +62,16 @@ def main():
         # main_window.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         main_window.setMinimumWidth(1024)
         main_window.setMinimumHeight(720)
-        main_window.show()
-
         # Load installed plugins
         load_plugins(main_window)
+
+        main_window.show()
 
         # Start event loop
         sys.exit(app.exec())
 
     except Exception as e:
-        logger.critical(f"Critical error: {e}")
+        logger.critical(e)
         sys.exit(1)
 
 
