@@ -1,4 +1,5 @@
-from PySide6.QtWidgets import QWidget
+from PySide6.QtCore import QSettings
+from PySide6.QtWidgets import QStackedLayout, QVBoxLayout, QWidget
 
 from src.gui.widgets.base_screen import BaseScreen
 
@@ -6,6 +7,10 @@ from src.gui.widgets.base_screen import BaseScreen
 
 
 class MainControler:
+    side_nav: QVBoxLayout
+    stacked_widget: QStackedLayout
+    settings: QSettings
+
     def add_btn_to_nav(self, widget: QWidget):
         """Add buttons to the side navigation."""
         # Connect buttons to switch screens
@@ -17,3 +22,10 @@ class MainControler:
 
     def go_to_screen(self, screen: int):
         self.stacked_widget.setCurrentIndex(screen)
+
+    class data:
+        def store(self, key, value):
+            self.settings.setValue(key, value)
+
+        def retrieve(self, key):
+            return self.settings.getValue(key)
