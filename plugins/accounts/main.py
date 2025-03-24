@@ -7,4 +7,4 @@ class Account(PluginBase):
 
     def register(self):
         self.button = QPushButton(self.tr("Push me"))
-        self.main_window.add_core_navs(self.button)
+        self.main_window.add_btn_to_nav(self.button)
