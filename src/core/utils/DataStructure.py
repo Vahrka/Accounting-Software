@@ -1,4 +1,4 @@
-from typing import TypedDict
+from typing import Dict, TypedDict
 
 
 class PluginConfigStructExt(TypedDict):
@@ -16,3 +16,12 @@ class PluginConfigStructSoft(TypedDict):
 class PluginConfigStruct(TypedDict):
     extention: PluginConfigStructExt
     software: PluginConfigStructSoft
+
+
+class PluginsItemConfigFileStruct(TypedDict):
+    path: str
+    installed: bool
+
+
+class PluginsConfigFileStruct(TypedDict):
+    plugins: Dict[str, PluginsItemConfigFileStruct]
