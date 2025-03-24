@@ -5,6 +5,9 @@ from PySide6.QtGui import QAction, QDesktopServices, QIcon
 from PySide6.QtWidgets import QFileDialog, QMenu, QMenuBar
 
 from src.core.plugins.loader import register_plugin
+from src.core.utils.logger import get_logger
+
+logger = get_logger()
 
 
 class Menubar(QMenuBar):
@@ -24,8 +27,8 @@ class Menubar(QMenuBar):
         self.actionList.setObjectName("actionList")
         self.actionList.setIcon(QIcon(":/icons/list.svg"))
         self.actionList.setShortcut(Qt.KeyboardModifier.ControlModifier |
-                                        Qt.KeyboardModifier.ShiftModifier | Qt.Key.Key_X)
-        
+                                    Qt.KeyboardModifier.ShiftModifier | Qt.Key.Key_X)
+
         self.actionExport = QAction()
         self.actionExport.setObjectName("actionExport")
         self.actionExport.setIcon(QIcon(":/icons/export.svg"))
@@ -42,7 +45,6 @@ class Menubar(QMenuBar):
         self.actionContact.setObjectName("actionContact")
         self.actionContact.setIcon(QIcon(":/icons/contact-phonebook-support.svg"))
         self.actionContact.setShortcut(Qt.Key.Key_F1 | Qt.KeyboardModifier.ControlModifier)
-        
 
         self.actionHelp = QAction()
         self.actionHelp.setObjectName("actionHelp")
@@ -142,4 +144,4 @@ class Menubar(QMenuBar):
 
         # Open the URL in the default web browser
         if not QDesktopServices.openUrl(url):
-            print("Failed to open URL")
+            logger.error(f"Failed to open URL. {url}")
