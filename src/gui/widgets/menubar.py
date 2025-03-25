@@ -1,5 +1,7 @@
+from pathlib import Path
+
 from PySide6.QtCore import QUrl, Slot
-from PySide6.QtGui import QAction, QDesktopServices
+from PySide6.QtGui import QDesktopServices
 from PySide6.QtWidgets import QFileDialog, QMainWindow
 
 from src.core.plugins.loader import register_plugin
@@ -13,9 +15,9 @@ logger = get_logger()
 class Menubar:
     """A custom menubar class that sets up the UI and handles menu actions."""
 
-    def __init__(self, ui: Ui_MainWindow = None):
-        self.ui = ui
-        self.parent = self.ui.menuBar
+    def __init__(self, main_window: QMainWindow = None):
+        self.ui: Ui_MainWindow = main_window.ui
+        self.parent = main_window
 
         self.actionContact = self.ui.actionContact
         self.actionInfo = self.ui.actionInfo
@@ -40,7 +42,8 @@ class Menubar:
     @Slot()
     def register_plugin(self):
         """Handle the 'Register' action by opening a file dialog to select a folder."""
-        folder_path = QFileDialog.getExistingDirectory()
+        folder_path = Path(QFileDialog.getExistingDirectory()).absolute()
+
         if folder_path:
             main_window = self.parent
             register_plugin(path=folder_path, main_window=main_window)
@@ -55,7 +58,7 @@ class Menubar:
     @Slot()
     def open_plugins_list(self):
         """Show the plugins list in a new window."""
-        self.plugins_list = PluginsListView()
+        self.plugins_list = PluginsListView(main_window=self.parent)
         self.plugins_list.show()
 
     @Slot()

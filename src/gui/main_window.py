@@ -15,16 +15,24 @@ class MainWindow(QMainWindow):
         self.ui.MainSideNav.setAlignment(Qt.AlignmentFlag.AlignTop)
 
         # Setup Menubar (handle functionality)
-        self.menubar_controler = Menubar(self.ui)
+        self.menubar_controler = Menubar(self)
         self.menubar_controler.setup_ui()
 
     def add_btn_to_nav(self, widget: QWidget):
         """Add buttons to the side navigation."""
         self.ui.MainSideNav.addWidget(widget)
 
+    def remove_btn_from_nav(self, widget: QWidget):
+        """Removes buttons from the side navigation."""
+        self.ui.MainSideNav.removeWidget(widget)
+
     def add_screen_to_stack(self, screen: BaseScreen) -> int:
         """Add screens to the stacked widget."""
         return self.ui.MainStackView.addWidget(screen)
+
+    def remove_screen_fro_stack(self, screen: BaseScreen) -> int:
+        """Remove screens from the stacked widget."""
+        self.ui.MainStackView.removeWidget(screen)
 
     def go_to_screen(self, screen: int):
         """Switch to a specific screen in the stack view."""

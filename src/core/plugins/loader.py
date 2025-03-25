@@ -29,7 +29,7 @@ def list_plugins_from_storage() -> PluginsConfigFileStruct:
     if not isinstance(plugins, dict):
         return {"plugins": {}}
 
-    return {"plugins": plugins}
+    return plugins_config
 
 
 def get_registerd_plugins() -> set:
@@ -57,7 +57,8 @@ def remove_plugin_config(name: str, remove: bool = False) -> None:
     Update plugin configuration in QSettings when uninstalling/disabling.
     """
     plugins_config = list_plugins_from_storage()
-
+    registered_plugins = get_registerd_plugins()
+    registered_plugins.remove(name)
     if remove:
         plugins_config["plugins"].pop(name, None)
     else:
@@ -66,6 +67,7 @@ def remove_plugin_config(name: str, remove: bool = False) -> None:
             plugin["installed"] = False
 
     QSettings().setValue("plugins_config", plugins_config)
+    QSettings().setValue("registerd_plugins", registered_plugins)
 
 
 def load_plugin_config(path: Path) -> Optional[PluginConfigStruct]:
@@ -142,15 +144,15 @@ def register_plugin(path: Path, main_window: QMainWindow) -> bool:
     return True
 
 
-def unregister_plugin(path: Path, main_window: QMainWindow, remove: False) -> None:
+def unregister_plugin(path: Path, main_window: QMainWindow, remove: bool = False) -> bool:
     """
     Unregister a plugin by loading its configuration, dynamically importing the plugin class,
     and calling its unregister method.
     """
-    data = load_plugin_config()
+    data = load_plugin_config(path)
     if not data or not isinstance(data.get("extention"), dict):
         logger.critical("Extension config file doesn't have the correct structure")
-        return
+        return False
 
     extention = data["extention"]
     name = extention.get("name", "").lower()
@@ -159,7 +161,7 @@ def unregister_plugin(path: Path, main_window: QMainWindow, remove: False) -> No
     if not name or not entry_point:
         logger.critical(
             "Extension config file doesn't have the correct structure at ['extention']['name'] or ['extention']['entrypoint']")
-        return
+        return False
 
     # Construct the module and class names
     module_name = f"plugins.{name}.{entry_point.split('.')[0]}"
@@ -169,13 +171,15 @@ def unregister_plugin(path: Path, main_window: QMainWindow, remove: False) -> No
     plugin_class = get_plugin_class(module_name, class_name)
     if not plugin_class or not issubclass(plugin_class, PluginBase):
         logger.error(f"Class '{plugin_class}' is not a subclass of '{PluginBase}'")
-        return
+        return False
 
     # Initialize and unregister the plugin
     plugin: PluginBase = plugin_class(main_window)
     plugin.unregister()
-    remove_plugin_config(path, name, remove)
+    remove_plugin_config(name, remove)
     logger.info(f"'{plugin}' unregistered successfully.")
+
+    return True
 
 
 def load_plugins(main_window: QMainWindow) -> None:

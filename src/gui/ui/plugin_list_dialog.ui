@@ -54,7 +54,7 @@
     <number>0</number>
    </property>
    <item row="0" column="0">
-    <widget class="QListView" name="listView"/>
+    <widget class="QListWidget" name="listWidget"/>
    </item>
   </layout>
  </widget>

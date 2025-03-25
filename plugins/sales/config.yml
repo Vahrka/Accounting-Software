@@ -1,0 +1,9 @@
+extention:
+  name: "Sales"
+  entrypoint: "main.Sales"
+  verstion: "1.0.0"
+  author: "AC"
+
+
+software:
+  version: "1.0.0"
