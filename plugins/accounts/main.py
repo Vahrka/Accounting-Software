@@ -7,10 +7,11 @@ from src.core.plugins.plugin_base import PluginBase
 class Account(PluginBase):
 
     def register(self):
-        self.button = QPushButton(self.tr("Account"))
-        self.button.setObjectName("Account")
-        self.account_screen = AccountScreen()
-        self.main_window.add_to_screen(self.button, self.account_screen)
+        button = QPushButton(self.tr("Account"))
+        button.setObjectName("Account")
+        account_screen = AccountScreen()
+
+        self.add(button, account_screen)
 
     def unregister(self):
-        self.main_window.remove_plugin_btn_screen("Account")
+        self.remove("Account")
