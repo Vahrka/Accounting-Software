@@ -1,7 +1,8 @@
 from pathlib import Path
-
-from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QDialog, QListWidgetItem, QMainWindow
+from PySide6.QtCore import Qt, QSize
+from PySide6.QtWidgets import (QDialog, QListWidgetItem, QMainWindow, 
+                              QWidget, QHBoxLayout, QPushButton, QCheckBox,
+                              QMessageBox, QListWidget)
 
 from src.core.plugins.loader import (get_registerd_plugins,
                                      list_plugins_from_storage,
@@ -9,44 +10,119 @@ from src.core.plugins.loader import (get_registerd_plugins,
 from src.core.utils.logger import get_logger
 from src.gui.ui.plugin_list_dialog_ui import Ui_Dialog
 
-# Codes Here
-
 logger = get_logger()
 
 
 class PluginsListView(QDialog):
     def __init__(self, main_window: QMainWindow):
-        super().__init__()
+        super().__init__(main_window)
         self.main_window = main_window
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
 
-        # Get plugin names (assuming list_plugins_from_storage() returns a list of strings)
-        self.plugin_names = list_plugins_from_storage()['plugins']
-        self.get_registerd_plugins = get_registerd_plugins
+        # Set object names for styling
+        self.setObjectName("pluginManager")
+        self.ui.listWidget.setObjectName("pluginList")
+        
+        # Apply initial layout config
+        self._setup_layout()
+        self.load_plugins()
 
-        for plugin_name in self.plugin_names:
-            item = QListWidgetItem(plugin_name)
+    def _setup_layout(self):
+        """Configure layout properties"""
+        self.ui.listWidget.setSpacing(4)
+        self.ui.listWidget.setVerticalScrollMode(QListWidget.ScrollPerPixel)
+        self.ui.listWidget.setHorizontalScrollMode(QListWidget.ScrollPerPixel)
 
-            # Make the item checkable
-            item.setFlags(item.flags() | Qt.ItemIsUserCheckable)
-            if plugin_name in self.get_registerd_plugins():
-                item.setCheckState(Qt.Checked)  # Default unchecked
-            else:
-                item.setCheckState(Qt.Unchecked)  # Default unchecked
-                
+    def load_plugins(self):
+        """Load plugins into the list widget"""
+        self.ui.listWidget.clear()
+        plugin_data = list_plugins_from_storage()
+        self.plugin_names = plugin_data.get('plugins', {})
+        registered_plugins = get_registerd_plugins()
 
-            self.ui.listWidget.addItem(item)
+        for plugin_name, plugin_info in self.plugin_names.items():
+            self._create_plugin_item(plugin_name, plugin_info, plugin_name in registered_plugins)
 
-        # Connect signal to handle checkbox changes
-        self.ui.listWidget.itemChanged.connect(self.on_item_changed)
+    def _create_plugin_item(self, plugin_name, plugin_info, is_enabled):
+        """Create a plugin item widget with classic checkbox"""
+        widget = QWidget()
+        widget.setObjectName("pluginItem")
+        layout = QHBoxLayout(widget)
+        layout.setContentsMargins(12, 8, 12, 8)
+        layout.setSpacing(16)
 
-    def on_item_changed(self, item):
-        """Called when a checkbox state changes"""
-        plugin_name = item.text()
+        # Classic checkbox - no custom styling
+        checkbox = QCheckBox(plugin_name)
+        checkbox.setObjectName("pluginCheckbox")
+        checkbox.setChecked(is_enabled)
+        checkbox.setProperty("state", "enabled" if is_enabled else "disabled")
+
+        # Delete button (styled in QSS)
+        delete_btn = QPushButton("Remove")
+        delete_btn.setObjectName("pluginDeleteBtn")
+        delete_btn.setProperty("state", "enabled" if is_enabled else "disabled")
+        delete_btn.setCursor(Qt.PointingHandCursor)
+        delete_btn.setFixedSize(90, 30)
+
+        layout.addWidget(checkbox, 1)
+        layout.addWidget(delete_btn)
+
+        item = QListWidgetItem()
+        item.setData(Qt.UserRole, plugin_info['path'])
+        item.setSizeHint(widget.sizeHint())
+        
+        self.ui.listWidget.addItem(item)
+        self.ui.listWidget.setItemWidget(item, widget)
+
+        checkbox.toggled.connect(lambda checked, pn=plugin_name: self._on_plugin_toggled(pn, checked))
+        delete_btn.clicked.connect(lambda _, pn=plugin_name: self._on_delete_clicked(pn))
+
+    def _on_plugin_toggled(self, plugin_name, enabled):
+        """Handle plugin toggle"""
         plugin = self.plugin_names[plugin_name]
         path = Path(plugin['path'])
-        if item.checkState() == Qt.Checked:
+        
+        if enabled:
             register_plugin(path, self.main_window)
         else:
-            unregister_plugin(path, self.main_window, False)
+            unregister_plugin(path, self.main_window, remove=False)
+        
+        self._update_item_state(plugin_name, enabled)
+
+    def _on_delete_clicked(self, plugin_name):
+        """Handle delete button click"""
+        reply = QMessageBox(
+            QMessageBox.Warning,
+            "Remove Plugin",
+            f"Are you sure you want to remove '{plugin_name}'?",
+            QMessageBox.Yes | QMessageBox.No,
+            self
+        )
+        reply.setObjectName("pluginMessageBox")
+        
+        if reply.exec() == QMessageBox.Yes:
+            self._delete_plugin(plugin_name)
+
+    def _delete_plugin(self, plugin_name):
+        """Delete plugin completely"""
+        plugin = self.plugin_names[plugin_name]
+        path = Path(plugin['path'])
+        unregister_plugin(path, self.main_window, remove=True)
+        self.load_plugins()
+
+    def _update_item_state(self, plugin_name, enabled):
+        """Update item visual state"""
+        for i in range(self.ui.listWidget.count()):
+            item = self.ui.listWidget.item(i)
+            widget = self.ui.listWidget.itemWidget(item)
+            
+            if widget and widget.findChild(QCheckBox).text() == plugin_name:
+                state = "enabled" if enabled else "disabled"
+                widget.findChild(QCheckBox).setProperty("state", state)
+                widget.findChild(QPushButton).setProperty("state", state)
+                
+                # Force style update
+                widget.style().unpolish(widget)
+                widget.style().polish(widget)
+                break

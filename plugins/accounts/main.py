@@ -10,6 +10,7 @@ class Account(PluginBase):
         button = QPushButton(self.tr("Account"))
         button.setObjectName("Account")
         account_screen = AccountScreen()
+        account_screen.setup_ui()
 
         self.add(button, account_screen)
 

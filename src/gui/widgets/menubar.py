@@ -29,7 +29,19 @@ class Menubar:
         self.actionExport = self.ui.actionExport
 
         self.actionPrefrences = self.ui.actionPrefrences
+        self._add_style_properties()
 
+    def _add_style_properties(self):
+        """Add only the necessary properties for modern styling."""
+        # Highlight important actions
+        self.actionContact.setProperty("highlighted", "true")
+        self.actionPrefrences.setProperty("type", "settings")
+        
+        # Add accessible names for styling
+        self.actionRegister.setProperty("name", "register")
+        self.actionList.setProperty("name", "plugin-list")
+        self.actionImport.setProperty("name", "import")
+        self.actionExport.setProperty("name", "export")
     def setup_ui(self):
         """Initialize and configure the actions for the menubar."""
         # Connect the actions to their handlers

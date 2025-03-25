@@ -43,6 +43,7 @@
     <file alias="file-question-alt.svg">src/gui/resources/svg/file-question-alt-svgrepo-com.svg</file>
     <file alias="data.svg">src/gui/resources/svg/data-svgrepo-com.svg</file>
     <file alias="plugin-2.svg">src/gui/resources/svg/plugin-2-svgrepo-com.svg</file>
+    <file alias="right-arrow-alt.svg">src/gui/resources/svg/</file>
 
   </qresource>
 

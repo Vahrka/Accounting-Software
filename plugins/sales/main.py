@@ -8,11 +8,12 @@ from .sales_screen import SalesScreen
 class Sales(PluginBase):
 
     def register(self):
-        self.ledger_screen = SalesScreen()
-        self.btn = QPushButton(self.tr("Sales"))
-        self.btn.setObjectName("Sales")
+        sales_screen = SalesScreen()
+        sales_screen.setup_ui()
+        btn = QPushButton(self.tr("Sales"))
+        btn.setObjectName("Sales")
 
-        self.add(self.btn, self.ledger_screen)
+        self.add(btn, sales_screen)
 
     def unregister(self):
         self.remove("Sales")

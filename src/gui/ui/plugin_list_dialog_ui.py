@@ -32,11 +32,12 @@ class Ui_Dialog(object):
         Dialog.setMaximumSize(QSize(640, 480))
         Dialog.setBaseSize(QSize(360, 320))
         self.gridLayout = QGridLayout(Dialog)
-        self.gridLayout.setSpacing(0)
+        self.gridLayout.setSpacing(2)
         self.gridLayout.setObjectName(u"gridLayout")
-        self.gridLayout.setContentsMargins(0, 0, 0, 0)
+        self.gridLayout.setContentsMargins(9, 9, 9, 9)
         self.listWidget = QListWidget(Dialog)
         self.listWidget.setObjectName(u"listWidget")
+        self.listWidget.setSpacing(2)
 
         self.gridLayout.addWidget(self.listWidget, 0, 0, 1, 1)
 

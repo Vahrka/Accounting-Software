@@ -9,6 +9,7 @@ class Ledger(PluginBase):
 
     def register(self):
         ledger_screen = LedgerScreen()
+        ledger_screen.setup_ui()
         btn = QPushButton(self.tr("Ledger"))
         btn.setObjectName("Ledger")
 

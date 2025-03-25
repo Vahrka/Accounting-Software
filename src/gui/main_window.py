@@ -1,9 +1,15 @@
-from PySide6.QtCore import Qt, Signal, Slot
+from PySide6.QtCore import Qt, Slot
 from PySide6.QtWidgets import QMainWindow, QPushButton
 
+from src.core.utils.logger import get_logger
 from src.gui.ui.main_window_ui import Ui_MainWindow
 from src.gui.widgets.base_screen import BaseScreen
 from src.gui.widgets.menubar import Menubar
+
+# Codes Here
+
+
+logger = get_logger()
 
 
 class MainWindow(QMainWindow):
@@ -32,12 +38,12 @@ class MainWindow(QMainWindow):
         """Safely removes buttons and screens, updating all indices."""
         btn = self.ui.MainSideNavFrame.findChild(QPushButton, obj_name)
         if not btn:
-            print(f"Button {obj_name} not found")
+            logger.error(f"Button {obj_name} not found")
             return
 
         removed_index = btn.property("index")
         if removed_index is None:
-            print(f"Button {obj_name} has no index property")
+            logger.error(f"Button {obj_name} has no index property")
             return
 
         # Remove from navigation
@@ -89,12 +95,11 @@ class MainWindow(QMainWindow):
 
     @Slot(int, name="Go to screen")
     def go_to_screen(self, screen: int):
-        print(screen)
         """Switch to a specific screen in the stack view."""
         if 0 <= screen < self.ui.MainStackView.count():
             self.ui.MainStackView.setCurrentIndex(screen)
         else:
-            print(f"Invalid screen index: {screen}")
+            logger.error(f"Invalid screen index: {screen}")
 
     def clear_stacked_layout(self):
         """Clear all widgets from the stacked layout."""
@@ -115,4 +120,4 @@ class MainWindow(QMainWindow):
                     continue
 
                 if btn_index >= self.ui.MainStackView.count():
-                    print(f"Warning: Button {btn.objectName()} points to invalid index {btn_index}")
+                    logger.error(f"Warning: Button {btn.objectName()} points to invalid index {btn_index}")
