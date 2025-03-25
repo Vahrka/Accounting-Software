@@ -6,7 +6,7 @@ from PySide6.QtGui import QFont, QIcon
 from PySide6.QtWidgets import QApplication
 
 # Reources
-import src.gui.source_rc
+import source_rc
 # Local imports
 from src.core.database.models import initialize_database
 from src.core.plugins.loader import load_plugins
