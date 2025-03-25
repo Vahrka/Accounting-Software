@@ -1,0 +1,50 @@
+<RCC>
+  <qresource prefix="/">
+    <file>src/gui/styles/qtquickcontrols2.conf</file>
+  </qresource>
+
+
+  <qresource prefix="styles">
+    <file alias="default-style">src/gui/styles/styles.qss</file>
+  </qresource>
+
+
+  <qresource prefix="/fonts">
+    <file alias="Vazirmatn-RD-UI-FD-Black">src/gui/resources/fonts/vazirmatn/Vazirmatn-RD-UI-FD-Black.ttf</file>
+    <file alias="Vazirmatn-RD-UI-FD-Bold">src/gui/resources/fonts/vazirmatn/Vazirmatn-RD-UI-FD-Bold.ttf</file>
+    <file alias="Vazirmatn-RD-UI-FD-ExtraBold">src/gui/resources/fonts/vazirmatn/Vazirmatn-RD-UI-FD-ExtraBold.ttf</file>
+    <file alias="Vazirmatn-RD-UI-FD-ExtraLight">src/gui/resources/fonts/vazirmatn/Vazirmatn-RD-UI-FD-ExtraLight.ttf</file>
+    <file alias="Vazirmatn-RD-UI-FD-Light">src/gui/resources/fonts/vazirmatn/Vazirmatn-RD-UI-FD-Light.ttf</file>
+    <file alias="Vazirmatn-RD-UI-FD-Medium">src/gui/resources/fonts/vazirmatn/Vazirmatn-RD-UI-FD-Medium.ttf</file>
+    <file alias="Vazirmatn-RD-UI-FD-Regular">src/gui/resources/fonts/vazirmatn/Vazirmatn-RD-UI-FD-Regular.ttf</file>
+    <file alias="Vazirmatn-RD-UI-FD-SemiBold">src/gui/resources/fonts/vazirmatn/Vazirmatn-RD-UI-FD-SemiBold.ttf</file>
+    <file alias="Vazirmatn-RD-UI-FD-Thin">src/gui/resources/fonts/vazirmatn/Vazirmatn-RD-UI-FD-Thin.ttf</file>
+  </qresource>
+
+  <qresource prefix="img-icon">
+    <file alias="icon">src/gui/resources/imgs/icon.png</file>
+    <file alias="app-ico">src/gui/resources/imgs/icon.ico</file>
+  </qresource>
+
+
+  <qresource prefix="icons">
+    <file alias="dashboard.svg">src/gui/resources/svg/dashboard-svgrepo-com.svg</file>
+    <file alias="table.svg">src/gui/resources/svg/table-svgrepo-com.svg</file>
+    <file alias="document.svg">src/gui/resources/svg/document-duplication-svgrepo-com.svg</file>
+    <file alias="chart.svg">src/gui/resources/svg/chart-mixed-svgrepo-com.svg</file>
+    <file alias="register.svg">src/gui/resources/svg/register-svgrepo-com.svg</file>
+    <file alias="list.svg">src/gui/resources/svg/list-1-svgrepo-com.svg</file>
+    <file alias="export.svg">src/gui/resources/svg/export-svgrepo-com.svg</file>
+    <file alias="import.svg">src/gui/resources/svg/import-svgrepo-com.svg</file>
+    <file alias="preferences.svg">src/gui/resources/svg/preferences-svgrepo-com.svg</file>
+    <file alias="contact-phonebook-support.svg">src/gui/resources/svg/contact-phonebook-support-svgrepo-com.svg</file>
+    <file alias="help.svg">src/gui/resources/svg/help-svgrepo-com.svg</file>
+    <file alias="info-square.svg">src/gui/resources/svg/info-square-svgrepo-com.svg</file>
+    <file alias="file-question-alt.svg">src/gui/resources/svg/file-question-alt-svgrepo-com.svg</file>
+    <file alias="data.svg">src/gui/resources/svg/data-svgrepo-com.svg</file>
+    <file alias="plugin-2.svg">src/gui/resources/svg/plugin-2-svgrepo-com.svg</file>
+
+  </qresource>
+
+
+</RCC>
