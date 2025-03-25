@@ -55,8 +55,8 @@ class Menubar:
     @Slot()
     def open_plugins_list(self):
         """Show the plugins list in a new window."""
-        plugins_list = PluginsListView()
-        plugins_list.show()
+        self.plugins_list = PluginsListView()
+        self.plugins_list.show()
 
     @Slot()
     def import_data(self):
