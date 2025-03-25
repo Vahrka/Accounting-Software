@@ -123,7 +123,6 @@ def register_plugin(path: Path, main_window: QMainWindow) -> bool:
             "Extension config file doesn't have the correct structure at ['extention']['name'] or ['extention']['entrypoint']")
         return False
     if name in get_registerd_plugins():
-        logger.info(f"Plugin {name} is already installed.")
         return True
 
     # Construct the module and class names
@@ -140,7 +139,6 @@ def register_plugin(path: Path, main_window: QMainWindow) -> bool:
     plugin: PluginBase = plugin_class(main_window)
     plugin.register()
     write_plugin_config(path, name)
-    logger.info(f"'{plugin}' registered successfully.")
     return True
 
 
@@ -177,7 +175,6 @@ def unregister_plugin(path: Path, main_window: QMainWindow, remove: bool = False
     plugin: PluginBase = plugin_class(main_window)
     plugin.unregister()
     remove_plugin_config(name, remove)
-    logger.info(f"'{plugin}' unregistered successfully.")
 
     return True
 
@@ -191,7 +188,7 @@ def load_plugins(main_window: QMainWindow) -> None:
 
     # Iterate through all plugins and register them if they are not already registered
     for name, plugin in plugins_config["plugins"].items():
-        if plugin.get("installed"):
+        if plugin.get("installed") is True:
             path = Path(plugin["path"])
             if path.exists():
                 try:
@@ -200,5 +197,3 @@ def load_plugins(main_window: QMainWindow) -> None:
                     logger.critical(f"Failed to load plugin '{name}': {e}")
             else:
                 logger.error(f"Plugin '{name}' does not exist at '{path}'")
-        else:
-            logger.info(f"Plugin '{name}' is not marked for installation.")

@@ -1,5 +1,6 @@
 from typing import override
 
+from PySide6.QtCore import Slot
 from PySide6.QtWidgets import QMainWindow, QWidget
 
 
@@ -23,3 +24,7 @@ class PluginBase(QWidget):
 
     def __repr__(self):
         return self.__str__()
+
+    @Slot(str)
+    def __btn_removed(self, btn_id):
+        print(btn_id)

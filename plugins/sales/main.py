@@ -9,11 +9,13 @@ class Sales(PluginBase):
 
     def register(self):
         self.ledger_screen = SalesScreen()
-        self.ledgr_screen_id = self.main_window.add_screen_to_stack(self.ledger_screen)
         self.btn = QPushButton(self.tr("Sales"))
-        self.btn.clicked.connect(self.go_to_ledger)
+        self.btn.setObjectName("Sales")
 
-        self.main_window.add_btn_to_nav(self.btn)
+        self.main_window.add_to_screen(self.btn, self.ledger_screen)
+
+    def unregister(self):
+        self.main_window.remove_plugin_btn_screen("Sales")
 
     def go_to_ledger(self):
         self.main_window.go_to_screen(self.ledgr_screen_id)

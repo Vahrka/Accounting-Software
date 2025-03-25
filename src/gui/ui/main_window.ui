@@ -93,8 +93,8 @@
     </item>
     <item>
      <widget class="QStackedWidget" name="MainStackView">
-      <widget class="QWidget" name="page"/>
-      <widget class="QWidget" name="page_2"/>
+      <widget class="QWidget" name="page1"/>
+      <widget class="QWidget" name="page0"/>
      </widget>
     </item>
    </layout>
