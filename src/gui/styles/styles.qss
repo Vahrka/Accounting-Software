@@ -3,7 +3,7 @@
 /* ====================== */
 
 QMainWindow {
-    background-color: #e1e6eb;
+    background-color: #f8fafc;
     font-size: 13px;
     color: #374151;
 }
@@ -59,10 +59,10 @@ QMenuBar::icon {
 /* ====================== */
 
 #MainSideNavFrame {
-    background-color: #ffffff;
-    border-right: 2px solid #e5e7eb;
+    background-color: #fafcfe;
+    border: 3px solid #e5e7eb;
     padding: 8px 0;
-    border-radius: 10px;
+    border-radius: 15px;
 }
 
 #MainSideNavFrame QPushButton { /* The btns inside navbar */
