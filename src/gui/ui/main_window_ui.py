@@ -176,9 +176,14 @@ class Ui_MainWindow(object):
         self.actionHelp.setShortcut(QCoreApplication.translate("MainWindow", u"F1", None))
 #endif // QT_CONFIG(shortcut)
         self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"File", None))
+        self.menuFile.setProperty(u"class", QCoreApplication.translate("MainWindow", u"menubar-menu", None))
         self.menuPlugins.setTitle(QCoreApplication.translate("MainWindow", u"Plugins", None))
+        self.menuPlugins.setProperty(u"class", QCoreApplication.translate("MainWindow", u"menubar-menu", None))
         self.menuData.setTitle(QCoreApplication.translate("MainWindow", u"Data", None))
+        self.menuData.setProperty(u"class", QCoreApplication.translate("MainWindow", u"menubar-menu", None))
         self.menuSettings.setTitle(QCoreApplication.translate("MainWindow", u"Settings", None))
+        self.menuSettings.setProperty(u"class", QCoreApplication.translate("MainWindow", u"menubar-menu", None))
         self.menuHelp.setTitle(QCoreApplication.translate("MainWindow", u"Help", None))
+        self.menuHelp.setProperty(u"class", QCoreApplication.translate("MainWindow", u"menubar-menu", None))
     # retranslateUi
 

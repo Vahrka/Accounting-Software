@@ -2,9 +2,8 @@
 /* CORE APPLICATION STYLES */
 /* ====================== */
 
-MainWindow {
-    background-color: #f8fafc;
-    font-family: "Segoe UI", Arial, sans-serif;
+QMainWindow {
+    background-color: #e1e6eb;
     font-size: 13px;
     color: #374151;
 }
@@ -13,17 +12,20 @@ MainWindow {
 /* ENHANCED NAVBAR STYLES */
 /* ====================== */
 
+/* This is the Menu "BAR" it self */
 QMenuBar {
     background-color: #ffffff;
-    padding: 8px 16px;
+    padding: 8px 0;
+    margin: 0;
+    outline: 0;
     border-bottom: 1px solid #e5e7eb;
     font-size: 13px;
     font-weight: 500;
-    border-radius: 0;
 }
 
+/* This is the Top Menubar each item but not its content */
 QMenuBar::item {
-    padding: 8px 24px 8px 32px;
+    padding: 8px 14px;
     margin: 0 6px;
     border-radius: 6px;
     color: #4b5563;
@@ -58,19 +60,23 @@ QMenuBar::icon {
 
 #MainSideNavFrame {
     background-color: #ffffff;
-    border-right: 1px solid #e5e7eb;
-    padding: 12px 0;
-    border-radius: 0 8px 8px 0;
+    border-right: 2px solid #e5e7eb;
+    padding: 8px 0;
+    border-radius: 10px;
 }
 
-#MainSideNavFrame QPushButton {
-    min-width: 0;
+#MainSideNavFrame QPushButton { /* The btns inside navbar */
+    min-width: 50px;
     max-width: 200px;
-    padding: 10px 16px 10px 28px;
-    margin: 4px 8px;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 500;
+    padding: 10px 35px 10px 10px;
+    border-left: 5px solid #6453fe;
+    margin: 0px 8px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    font-size: 14px;
+    font-weight: 400;
     color: #4b5563;
     text-align: left;
     background-color: transparent;
@@ -79,15 +85,9 @@ QMenuBar::icon {
 #MainSideNavFrame QPushButton:hover {
     background-color: #f3f4f6;
     color: #1d4ed8;
+    border-left: 5px solid #ff006a;
 }
 
-#MainSideNavFrame QPushButton:checked {
-    background-color: #eff6ff;
-    border-left: 3px solid #1d4ed8;
-    padding-left: 25px;
-    color: #1d4ed8;
-    font-weight: 600;
-}
 
 #MainSideNavFrame QPushButton::icon {
     margin-right: 12px;
@@ -151,19 +151,39 @@ QPushButton.danger:hover {
 /* PLUGIN MANAGER STYLES */
 /* ====================== */
 
-#pluginManager {
+QDialog#pluginManager {
     background-color: #ffffff;
-    border-radius: 8px;
+    border-radius: 15px;
     padding: 12px;
     border: 1px solid #e5e7eb;
 }
 
-#pluginList {
+QDialog #pluginList {
     background-color: #ffffff;
     border: 1px solid #e2e8f0;
     border-radius: 6px;
     padding: 6px;
 }
+
+QDialog #pluginList:item::hover {
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 6px;
+}
+
+QDialog #pluginList:item::selected {
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 6px;
+}
+
+QDialog #pluginList:item::focus {
+    border: 1px solid #e2e8f0;
+    background: #fff;
+    border-radius: 6px;
+    padding: 6px;
+}
+
 
 #pluginCheckbox {
     spacing: 10px;
@@ -175,13 +195,14 @@ QPushButton.danger:hover {
 #pluginCheckbox::indicator {
     width: 18px;
     height: 18px;
-    border-radius: 4px;
+    border-radius: 6px;
     border: 1px solid #cbd5e1;
 }
 
 #pluginCheckbox::indicator:checked {
     background-color: #3b82f6;
     border-color: #2563eb;
+    border: 2px solid #cbd5e1;
 }
 
 #pluginDeleteBtn {
@@ -198,33 +219,43 @@ QPushButton.danger:hover {
 #pluginDeleteBtn:hover {
     background-color: #fee2e2;
     border-color: #fecaca;
+    border: 1px solid #cbd5e1;
 }
 
 /* ====================== */
 /* MENU STYLES */
 /* ====================== */
 
-QMenu {
+QMenu.menubar-menu {
     background-color: #ffffff;
     border: 1px solid #e5e7eb;
     border-radius: 8px;
-    padding: 6px 0;
     font-size: 13px;
     color: #374151;
+    font-weight: 500;
 }
 
-QMenu::item {
-    padding: 8px 24px 8px 36px;
-    border-radius: 4px;
+QMenu.menubar-menu::item {
+    padding: 8px 14px;
+    /* padding: 8px 24px 8px 36px; */
+    border-radius: 0;
 }
 
-QMenu::item:selected {
+QMenu.menubar-menu::item:selected {
     background-color: #f3f4f6;
     color: #1d4ed8;
 }
 
-QMenu::icon {
-    margin-right: 12px;
+QMenu.menubar-menu::item:selected:first {
+    border-top-right-radius: 8px;
+}
+
+QMenu.menubar-menu::item:selected:last {
+    border-bottom-right-radius: 8px;
+}
+
+QMenu.menubar-menu::icon {
+    margin: 0 12px 0 6px;
     width: 18px;
     height: 18px;
 }

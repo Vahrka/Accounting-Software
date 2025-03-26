@@ -100,6 +100,9 @@
     <property name="title">
      <string>File</string>
     </property>
+    <property name="class" stdset="0">
+     <string>menubar-menu</string>
+    </property>
     <widget class="QMenu" name="menuPlugins">
      <property name="title">
       <string>Plugins</string>
@@ -107,6 +110,9 @@
      <property name="icon">
       <iconset resource="../../../source.qrc">
        <normaloff>:/icons/plugin-2.svg</normaloff>:/icons/plugin-2.svg</iconset>
+     </property>
+     <property name="class" stdset="0">
+      <string>menubar-menu</string>
      </property>
      <addaction name="actionRegister"/>
      <addaction name="actionList"/>
@@ -119,6 +125,9 @@
       <iconset resource="../../../source.qrc">
        <normaloff>:/icons/data.svg</normaloff>:/icons/data.svg</iconset>
      </property>
+     <property name="class" stdset="0">
+      <string>menubar-menu</string>
+     </property>
      <addaction name="actionImport"/>
      <addaction name="actionExport"/>
     </widget>
@@ -129,11 +138,17 @@
     <property name="title">
      <string>Settings</string>
     </property>
+    <property name="class" stdset="0">
+     <string>menubar-menu</string>
+    </property>
     <addaction name="actionPrefrences"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
      <string>Help</string>
+    </property>
+    <property name="class" stdset="0">
+     <string>menubar-menu</string>
     </property>
     <addaction name="actionContact"/>
     <addaction name="actionHelp"/>

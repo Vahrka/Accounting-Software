@@ -2,7 +2,7 @@
 import sys
 
 from PySide6.QtCore import QFile, QSettings
-from PySide6.QtGui import QFont, QIcon
+from PySide6.QtGui import QFont, QIcon, Qt
 from PySide6.QtWidgets import QApplication
 
 # Reources

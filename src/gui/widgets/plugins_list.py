@@ -1,8 +1,9 @@
 from pathlib import Path
-from PySide6.QtCore import Qt, QSize
-from PySide6.QtWidgets import (QDialog, QListWidgetItem, QMainWindow, 
-                              QWidget, QHBoxLayout, QPushButton, QCheckBox,
-                              QMessageBox, QListWidget)
+
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import (QCheckBox, QDialog, QHBoxLayout, QListWidget,
+                               QListWidgetItem, QMainWindow, QMessageBox,
+                               QPushButton, QWidget)
 
 from src.core.plugins.loader import (get_registerd_plugins,
                                      list_plugins_from_storage,
@@ -23,7 +24,7 @@ class PluginsListView(QDialog):
         # Set object names for styling
         self.setObjectName("pluginManager")
         self.ui.listWidget.setObjectName("pluginList")
-        
+
         # Apply initial layout config
         self._setup_layout()
         self.load_plugins()
@@ -71,7 +72,7 @@ class PluginsListView(QDialog):
         item = QListWidgetItem()
         item.setData(Qt.UserRole, plugin_info['path'])
         item.setSizeHint(widget.sizeHint())
-        
+
         self.ui.listWidget.addItem(item)
         self.ui.listWidget.setItemWidget(item, widget)
 
@@ -82,12 +83,12 @@ class PluginsListView(QDialog):
         """Handle plugin toggle"""
         plugin = self.plugin_names[plugin_name]
         path = Path(plugin['path'])
-        
+
         if enabled:
             register_plugin(path, self.main_window)
         else:
             unregister_plugin(path, self.main_window, remove=False)
-        
+
         self._update_item_state(plugin_name, enabled)
 
     def _on_delete_clicked(self, plugin_name):
@@ -100,7 +101,7 @@ class PluginsListView(QDialog):
             self
         )
         reply.setObjectName("pluginMessageBox")
-        
+
         if reply.exec() == QMessageBox.Yes:
             self._delete_plugin(plugin_name)
 
@@ -116,12 +117,12 @@ class PluginsListView(QDialog):
         for i in range(self.ui.listWidget.count()):
             item = self.ui.listWidget.item(i)
             widget = self.ui.listWidget.itemWidget(item)
-            
+
             if widget and widget.findChild(QCheckBox).text() == plugin_name:
                 state = "enabled" if enabled else "disabled"
                 widget.findChild(QCheckBox).setProperty("state", state)
                 widget.findChild(QPushButton).setProperty("state", state)
-                
+
                 # Force style update
                 widget.style().unpolish(widget)
                 widget.style().polish(widget)
