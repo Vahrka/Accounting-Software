@@ -58,7 +58,7 @@ class Menubar:
 
         if folder_path:
             main_window = self.parent
-            register_plugin(path=folder_path, add_func=main_window)
+            register_plugin(path=folder_path, add_func=main_window.add_to_screen)
 
     @Slot()
     def open_contact(self):
