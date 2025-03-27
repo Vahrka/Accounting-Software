@@ -1,13 +1,13 @@
 from typing import override
 
-from PySide6.QtCore import Slot
-from PySide6.QtWidgets import QMainWindow, QPushButton, QWidget
+from PySide6.QtWidgets import QPushButton, QWidget
 
 
 class PluginBase(QWidget):
-    def __init__(self, main_window: QMainWindow):
+    def __init__(self, add_func: callable = None, remove_func: callable = None):
         super().__init__()
-        self.main_window = main_window
+        self.__add_to_screen = add_func
+        self.__remove_plugin_btn_screen = remove_func
 
     @override
     def register(self):
@@ -20,18 +20,13 @@ class PluginBase(QWidget):
         pass
 
     def add(self, btn: QPushButton, screen: QWidget):
-        self.main_window.add_to_screen(btn, screen)
+        self.__add_to_screen(btn, screen)
 
     def remove(self, name: str):
-        self.main_window.remove_plugin_btn_screen(name)
-        
+        self.__remove_plugin_btn_screen(name)
 
     def __str__(self):
         return f"<{self.__class__.__name__}Plugin >"
 
     def __repr__(self):
         return self.__str__()
-
-    @Slot(str)
-    def __btn_removed(self, btn_id):
-        print(btn_id)

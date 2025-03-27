@@ -15,15 +15,78 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QGridLayout, QHBoxLayout, QLabel,
-    QScrollArea, QSizePolicy, QTabWidget, QVBoxLayout,
-    QWidget)
+from PySide6.QtWidgets import (QApplication, QFrame, QGridLayout, QHBoxLayout,
+    QLabel, QLayout, QScrollArea, QSizePolicy,
+    QTabWidget, QVBoxLayout, QWidget)
 
 class Ui_Form(object):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
-        Form.resize(819, 660)
+        Form.resize(819, 762)
+        Form.setStyleSheet(u"/* ===== Modern Borderless QTabWidget ===== */\n"
+"QTabWidget {\n"
+"    background: transparent;\n"
+"}\n"
+"\n"
+"/* Remove all borders from the content pane */\n"
+"QTabWidget::pane {\n"
+"    border: 0;\n"
+"    margin: 0;\n"
+"    padding: 0;\n"
+"    top: -1px; /* Seamless connection with tab bar */\n"
+"}\n"
+"\n"
+"/* Tab bar styling */\n"
+"QTabBar {\n"
+"    background: transparent;\n"
+"    spacing: 4px;\n"
+"}\n"
+"\n"
+"/* Individual tab styling */\n"
+"QTabBar::tab {\n"
+"    background: #f5f5f5;\n"
+"    color: #555;\n"
+"    border: 0;\n"
+"    border-radius: 6px 6px 0 0;\n"
+"    padding: 8px 20px;\n"
+"    margin-right: 2px;\n"
+"    font-family: 'Segoe UI', system-ui, sans-serif;\n"
+"    font-size: 11pt;\n"
+"    min-width: 80px;\n"
+"}\n"
+"\n"
+"/* Selected tab */\n"
+"QTabBar::tab:selected {\n"
+"    background: white;\n"
+"    color: #5900ff;\n"
+"    border-bottom: 3px solid #5900ff;\n"
+"    font-weight: 500;\n"
+"}\n"
+"\n"
+"/* Hover effect */\n"
+"QTabBar::tab:hover:!selected {\n"
+"    background: #e0e0e0;\n"
+"}\n"
+"\n"
+""
+                        "/* Disabled tab */\n"
+"QTabBar::tab:disabled {\n"
+"    color: #aaa;\n"
+"    background: #f0f0f0;\n"
+"}\n"
+"\n"
+"/* Left/right scroll buttons (when tabs overflow) */\n"
+"QTabBar QToolButton {\n"
+"    background: #f0f0f0;\n"
+"    border-radius: 4px;\n"
+"}\n"
+"\n"
+"\n"
+"QScrollArea {\n"
+"    background: transparent;\n"
+"}\n"
+"")
         self.verticalLayout = QVBoxLayout(Form)
         self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName(u"verticalLayout")
@@ -36,19 +99,22 @@ class Ui_Form(object):
         self.gridLayout.setObjectName(u"gridLayout")
         self.scrollArea = QScrollArea(self.Invoices_tab)
         self.scrollArea.setObjectName(u"scrollArea")
+        self.scrollArea.setMinimumSize(QSize(500, 700))
         self.scrollArea.setStyleSheet(u"border: none;")
-        self.scrollArea.setWidgetResizable(True)
+        self.scrollArea.setFrameShadow(QFrame.Shadow.Raised)
+        self.scrollArea.setAlignment(Qt.AlignmentFlag.AlignHCenter|Qt.AlignmentFlag.AlignTop)
         self.scrollbar = QWidget()
         self.scrollbar.setObjectName(u"scrollbar")
-        self.scrollbar.setGeometry(QRect(0, 0, 797, 610))
+        self.scrollbar.setGeometry(QRect(2, 0, 797, 700))
         self.verticalLayout_2 = QVBoxLayout(self.scrollbar)
         self.verticalLayout_2.setSpacing(0)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_2.setContentsMargins(8, 8, 8, 8)
         self.company_area = QVBoxLayout()
-        self.company_area.setSpacing(6)
+        self.company_area.setSpacing(0)
         self.company_area.setObjectName(u"company_area")
-        self.company_area.setContentsMargins(9, 9, 9, 9)
+        self.company_area.setSizeConstraint(QLayout.SizeConstraint.SetMaximumSize)
+        self.company_area.setContentsMargins(0, 0, 0, 0)
         self.new_invoice = QLabel(self.scrollbar)
         self.new_invoice.setObjectName(u"new_invoice")
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
@@ -69,6 +135,9 @@ class Ui_Form(object):
         sizePolicy.setHeightForWidth(self.company.sizePolicy().hasHeightForWidth())
         self.company.setSizePolicy(sizePolicy)
         self.company.setMaximumSize(QSize(16777215, 25))
+        font1 = QFont()
+        font1.setPointSize(14)
+        self.company.setFont(font1)
 
         self.company_area.addWidget(self.company)
 
@@ -84,6 +153,7 @@ class Ui_Form(object):
         self.verticalLayout_2.addLayout(self.company_area)
 
         self.billing_area = QHBoxLayout()
+        self.billing_area.setSpacing(0)
         self.billing_area.setObjectName(u"billing_area")
         self.label = QLabel(self.scrollbar)
         self.label.setObjectName(u"label")
@@ -95,6 +165,7 @@ class Ui_Form(object):
         self.verticalLayout_2.addLayout(self.billing_area)
 
         self.advanced_area = QHBoxLayout()
+        self.advanced_area.setSpacing(0)
         self.advanced_area.setObjectName(u"advanced_area")
         self.label_2 = QLabel(self.scrollbar)
         self.label_2.setObjectName(u"label_2")
@@ -114,7 +185,7 @@ class Ui_Form(object):
         self.Customers_tab.setObjectName(u"Customers_tab")
         self.tabs.addTab(self.Customers_tab, "")
 
-        self.verticalLayout.addWidget(self.tabs)
+        self.verticalLayout.addWidget(self.tabs, 0, Qt.AlignmentFlag.AlignTop)
 
 
         self.retranslateUi(Form)

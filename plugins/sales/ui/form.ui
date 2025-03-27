@@ -7,11 +7,75 @@
     <x>0</x>
     <y>0</y>
     <width>819</width>
-    <height>660</height>
+    <height>762</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">/* ===== Modern Borderless QTabWidget ===== */
+QTabWidget {
+    background: transparent;
+}
+
+/* Remove all borders from the content pane */
+QTabWidget::pane {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    top: -1px; /* Seamless connection with tab bar */
+}
+
+/* Tab bar styling */
+QTabBar {
+    background: transparent;
+    spacing: 4px;
+}
+
+/* Individual tab styling */
+QTabBar::tab {
+    background: #f5f5f5;
+    color: #555;
+    border: 0;
+    border-radius: 6px 6px 0 0;
+    padding: 8px 20px;
+    margin-right: 2px;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 11pt;
+    min-width: 80px;
+}
+
+/* Selected tab */
+QTabBar::tab:selected {
+    background: white;
+    color: #5900ff;
+    border-bottom: 3px solid #5900ff;
+    font-weight: 500;
+}
+
+/* Hover effect */
+QTabBar::tab:hover:!selected {
+    background: #e0e0e0;
+}
+
+/* Disabled tab */
+QTabBar::tab:disabled {
+    color: #aaa;
+    background: #f0f0f0;
+}
+
+/* Left/right scroll buttons (when tabs overflow) */
+QTabBar QToolButton {
+    background: #f0f0f0;
+    border-radius: 4px;
+}
+
+
+QScrollArea {
+    background: transparent;
+}
+</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
@@ -29,7 +93,7 @@
    <property name="bottomMargin">
     <number>0</number>
    </property>
-   <item>
+   <item alignment="Qt::AlignmentFlag::AlignTop">
     <widget class="QTabWidget" name="tabs">
      <property name="currentIndex">
       <number>0</number>
@@ -41,19 +105,28 @@
       <layout class="QGridLayout" name="gridLayout">
        <item row="0" column="0">
         <widget class="QScrollArea" name="scrollArea">
+         <property name="minimumSize">
+          <size>
+           <width>500</width>
+           <height>700</height>
+          </size>
+         </property>
          <property name="styleSheet">
           <string notr="true">border: none;</string>
          </property>
-         <property name="widgetResizable">
-          <bool>true</bool>
+         <property name="frameShadow">
+          <enum>QFrame::Shadow::Raised</enum>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignTop</set>
          </property>
          <widget class="QWidget" name="scrollbar">
           <property name="geometry">
            <rect>
-            <x>0</x>
+            <x>2</x>
             <y>0</y>
             <width>797</width>
-            <height>610</height>
+            <height>700</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -61,33 +134,36 @@
             <number>0</number>
            </property>
            <property name="leftMargin">
-            <number>0</number>
+            <number>8</number>
            </property>
            <property name="topMargin">
-            <number>0</number>
+            <number>8</number>
            </property>
            <property name="rightMargin">
-            <number>0</number>
+            <number>8</number>
            </property>
            <property name="bottomMargin">
-            <number>0</number>
+            <number>8</number>
            </property>
            <item>
             <layout class="QVBoxLayout" name="company_area">
              <property name="spacing">
-              <number>6</number>
+              <number>0</number>
+             </property>
+             <property name="sizeConstraint">
+              <enum>QLayout::SizeConstraint::SetMaximumSize</enum>
              </property>
              <property name="leftMargin">
-              <number>9</number>
+              <number>0</number>
              </property>
              <property name="topMargin">
-              <number>9</number>
+              <number>0</number>
              </property>
              <property name="rightMargin">
-              <number>9</number>
+              <number>0</number>
              </property>
              <property name="bottomMargin">
-              <number>9</number>
+              <number>0</number>
              </property>
              <item>
               <widget class="QLabel" name="new_invoice">
@@ -128,6 +204,11 @@
                  <height>25</height>
                 </size>
                </property>
+               <property name="font">
+                <font>
+                 <pointsize>14</pointsize>
+                </font>
+               </property>
                <property name="text">
                 <string>Company</string>
                </property>
@@ -156,6 +237,9 @@
            </item>
            <item>
             <layout class="QHBoxLayout" name="billing_area">
+             <property name="spacing">
+              <number>0</number>
+             </property>
              <item>
               <widget class="QLabel" name="label">
                <property name="font">
@@ -173,6 +257,9 @@
            </item>
            <item>
             <layout class="QHBoxLayout" name="advanced_area">
+             <property name="spacing">
+              <number>0</number>
+             </property>
              <item>
               <widget class="QLabel" name="label_2">
                <property name="font">

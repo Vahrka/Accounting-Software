@@ -60,7 +60,7 @@ class PluginsListView(QDialog):
         checkbox.setProperty("state", "enabled" if is_enabled else "disabled")
 
         # Delete button (styled in QSS)
-        delete_btn = QPushButton("Remove")
+        delete_btn = QPushButton(self.tr("Remove"))
         delete_btn.setObjectName("pluginDeleteBtn")
         delete_btn.setProperty("state", "enabled" if is_enabled else "disabled")
         delete_btn.setCursor(Qt.PointingHandCursor)
@@ -85,9 +85,9 @@ class PluginsListView(QDialog):
         path = Path(plugin['path'])
 
         if enabled:
-            register_plugin(path, self.main_window)
+            register_plugin(path, self.main_window.add_to_screen)
         else:
-            unregister_plugin(path, self.main_window, remove=False)
+            unregister_plugin(path, self.main_window.remove_plugin_btn_screen, remove=False)
 
         self._update_item_state(plugin_name, enabled)
 
@@ -95,8 +95,8 @@ class PluginsListView(QDialog):
         """Handle delete button click"""
         reply = QMessageBox(
             QMessageBox.Warning,
-            "Remove Plugin",
-            f"Are you sure you want to remove '{plugin_name}'?",
+            self.tr("Remove Plugin"),
+            self.tr(f"Are you sure you want to remove '{plugin_name}'?"),
             QMessageBox.Yes | QMessageBox.No,
             self
         )
@@ -109,7 +109,7 @@ class PluginsListView(QDialog):
         """Delete plugin completely"""
         plugin = self.plugin_names[plugin_name]
         path = Path(plugin['path'])
-        unregister_plugin(path, self.main_window, remove=True)
+        unregister_plugin(path, self.main_window.remove_plugin_btn_screen, remove=True)
         self.load_plugins()
 
     def _update_item_state(self, plugin_name, enabled):

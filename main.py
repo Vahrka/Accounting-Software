@@ -1,7 +1,8 @@
 #! /usr/bin/env python3.12
 import sys
 
-from PySide6.QtCore import QFile, QSettings
+from PySide6.QtCore import (QFile, QItemSelection, QLibraryInfo, QLocale,
+                            QSettings, QTranslator)
 from PySide6.QtGui import QFont, QIcon, Qt
 from PySide6.QtWidgets import QApplication
 
@@ -36,6 +37,15 @@ def setup_application():
     app.setFont(QFont(":/fonts/Vazirmatn-RD-UI-FD-Regular", 10))
     app.setWindowIcon(QIcon(":/img-icon/icon-ico"))
 
+    path = QLibraryInfo.path(QLibraryInfo.LibraryPath.TranslationsPath)
+    translator = QTranslator(app)
+    if translator.load(QLocale.system(), 'qtbase', '_', path):
+        app.installTranslator(translator)
+    translator = QTranslator(app)
+    path = ':/translations'
+    if translator.load(QLocale.system(), 'example', '_', path):
+        app.installTranslator(translator)
+
     # Load stylesheet
     # In main.py
     style_file = QFile(":/styles/default-style")
@@ -60,10 +70,11 @@ def main():
         # Create and show main window
         main_window = MainWindow()
         # main_window.setWindowFlags(Qt.WindowType.FramelessWindowHint)
+        main_window.setWindowState(Qt.WindowState.WindowMaximized)
         main_window.setMinimumWidth(1024)
         main_window.setMinimumHeight(720)
         # Load installed plugins
-        load_plugins(main_window)
+        load_plugins(main_window.add_to_screen)
 
         main_window.show()
 

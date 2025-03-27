@@ -4,7 +4,6 @@ from typing import Optional
 
 import yaml
 from PySide6.QtCore import QSettings
-from PySide6.QtWidgets import QMainWindow
 
 from src.core.plugins.plugin_base import PluginBase
 from src.core.utils.DataStructure import (PluginConfigStruct,
@@ -56,6 +55,7 @@ def remove_plugin_config(name: str, remove: bool = False) -> None:
     """
     Update plugin configuration in QSettings when uninstalling/disabling.
     """
+
     plugins_config = list_plugins_from_storage()
     registered_plugins = get_registerd_plugins()
     registered_plugins.remove(name)
@@ -103,7 +103,7 @@ def get_plugin_class(module_name: str, class_name: str) -> Optional[type]:
         return None
 
 
-def register_plugin(path: Path, main_window: QMainWindow) -> bool:
+def register_plugin(path: Path, add_func: callable) -> bool:
     """
     Register a plugin by loading its configuration, dynamically importing the plugin class,
     and initializing it. If the plugin is already registered, it will not be registered again.
@@ -136,13 +136,13 @@ def register_plugin(path: Path, main_window: QMainWindow) -> bool:
         return False
 
     # Initialize and register the plugin
-    plugin: PluginBase = plugin_class(main_window)
+    plugin: PluginBase = plugin_class(add_func=add_func)
     plugin.register()
     write_plugin_config(path, name)
     return True
 
 
-def unregister_plugin(path: Path, main_window: QMainWindow, remove: bool = False) -> bool:
+def unregister_plugin(path: Path, remove_func: callable,  remove: bool = False) -> bool:
     """
     Unregister a plugin by loading its configuration, dynamically importing the plugin class,
     and calling its unregister method.
@@ -172,14 +172,14 @@ def unregister_plugin(path: Path, main_window: QMainWindow, remove: bool = False
         return False
 
     # Initialize and unregister the plugin
-    plugin: PluginBase = plugin_class(main_window)
+    plugin: PluginBase = plugin_class(remove_func=remove_func)
     plugin.unregister()
     remove_plugin_config(name, remove)
 
     return True
 
 
-def load_plugins(main_window: QMainWindow) -> None:
+def load_plugins(add_func: callable) -> None:
     """
     Load all plugins listed in the plugins.yml file and register them if they are not already registered.
     """
@@ -192,8 +192,8 @@ def load_plugins(main_window: QMainWindow) -> None:
             path = Path(plugin["path"])
             if path.exists():
                 try:
-                    register_plugin(path, main_window)
+                    register_plugin(path, add_func)
                 except Exception as e:
-                    logger.critical(f"Failed to load plugin '{name}': {e}")
+                    logger.critical(f"Failed to load plugin '{name}'\nError: {e}")
             else:
                 logger.error(f"Plugin '{name}' does not exist at '{path}'")
