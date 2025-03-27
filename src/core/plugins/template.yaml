@@ -5,6 +5,7 @@ extention:
   entrypoint: ""
   verstion: ""
   author: ""
+  dependency: ""
 
 software:
   version: ""
