@@ -25,7 +25,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1024, 752)
+        MainWindow.resize(1024, 720)
         MainWindow.setMinimumSize(QSize(1024, 720))
         self.actionContact = QAction(MainWindow)
         self.actionContact.setObjectName(u"actionContact")
@@ -84,6 +84,7 @@ class Ui_MainWindow(object):
         sizePolicy1.setHeightForWidth(self.MainSideNavFrame.sizePolicy().hasHeightForWidth())
         self.MainSideNavFrame.setSizePolicy(sizePolicy1)
         self.MainSideNavFrame.setMinimumSize(QSize(100, 0))
+        self.MainSideNavFrame.setMaximumSize(QSize(224, 16777215))
         self.MainSideNavFrame.setFrameShape(QFrame.Shape.StyledPanel)
         self.MainSideNavFrame.setFrameShadow(QFrame.Shadow.Raised)
         self.verticalLayout = QVBoxLayout(self.MainSideNavFrame)
@@ -100,12 +101,6 @@ class Ui_MainWindow(object):
 
         self.MainStackView = QStackedWidget(self.centralwidget)
         self.MainStackView.setObjectName(u"MainStackView")
-        self.page1 = QWidget()
-        self.page1.setObjectName(u"page1")
-        self.MainStackView.addWidget(self.page1)
-        self.page0 = QWidget()
-        self.page0.setObjectName(u"page0")
-        self.MainStackView.addWidget(self.page0)
 
         self.horizontalLayout.addWidget(self.MainStackView)
 

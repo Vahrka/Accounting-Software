@@ -1,4 +1,9 @@
 /* ===== Modern Borderless QTabWidget ===== */
+
+* {
+    border: none;
+}
+
 QTabWidget {
     background: transparent;
 }

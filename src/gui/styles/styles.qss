@@ -264,21 +264,92 @@ QMenu.menubar-menu::icon {
 /* SCROLLBAR STYLES */
 /* ====================== */
 
+/* ===== MODERN SCROLLBARS WITH NO CORNER ARTIFACTS ===== */
+/* Applies to all QScrollBars in the application */
+
+/* --- COMPLETELY REMOVE RESIZE CORNER --- */
+QScrollBar::corner,
+QAbstractScrollArea::corner {
+    background: transparent;
+    border: none;
+    width: 0;
+    height: 0;
+}
+
+/* --- VERTICAL SCROLLBAR --- */
 QScrollBar:vertical {
-    width: 10px;
+    width: 12px;
     background: #f1f5f9;
-    border-radius: 5px;
+    border-radius: 6px;
+    margin: 0;
+    padding: 0;
 }
 
 QScrollBar::handle:vertical {
     background: #cbd5e1;
     min-height: 30px;
-    border-radius: 5px;
+    border-radius: 6px;
+    margin: 12px 0;
 }
 
 QScrollBar::handle:vertical:hover {
     background: #9ca3af;
 }
+
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {
+    height: 12px;
+    background: #e2e8f0;
+    border-radius: 6px;
+}
+
+QScrollBar::add-line:vertical:hover,
+QScrollBar::sub-line:vertical:hover {
+    background: #cbd5e1;
+}
+
+QScrollBar::add-line:vertical:pressed,
+QScrollBar::sub-line:vertical:pressed {
+    background: #9ca3af;
+}
+
+/* --- HORIZONTAL SCROLLBAR --- */
+QScrollBar:horizontal {
+    height: 12px;
+    background: #f1f5f9;
+    border-radius: 6px;
+    margin: 0;
+    padding: 0;
+}
+
+QScrollBar::handle:horizontal {
+    background: #cbd5e1;
+    min-width: 30px;
+    border-radius: 6px;
+    margin: 0 12px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background: #9ca3af;
+}
+
+QScrollBar::add-line:horizontal,
+QScrollBar::sub-line:horizontal {
+    width: 12px;
+    background: #e2e8f0;
+    border-radius: 6px;
+}
+
+QScrollBar::add-line:horizontal:hover,
+QScrollBar::sub-line:horizontal:hover {
+    background: #cbd5e1;
+}
+
+QScrollBar::add-line:horizontal:pressed,
+QScrollBar::sub-line:horizontal:pressed {
+    background: #9ca3af;
+}
+
 
 /* ====================== */
 /* TEXT INPUT STYLES */

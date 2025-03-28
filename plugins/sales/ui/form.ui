@@ -1,20 +1,383 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>Form</class>
- <widget class="QWidget" name="Form">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>819</width>
-    <height>762</height>
-   </rect>
-  </property>
-  <property name="windowTitle">
-   <string>Form</string>
-  </property>
+ <widget class="QTabWidget" name="Form">
   <property name="styleSheet">
-   <string notr="true">/* ===== Modern Borderless QTabWidget ===== */
+   <string notr="true">/* ====================== */
+/* CORE APPLICATION STYLES */
+/* ====================== */
+
+QMainWindow {
+    background-color: #f8fafc;
+    font-size: 13px;
+    color: #374151;
+}
+
+/* ====================== */
+/* ENHANCED NAVBAR STYLES */
+/* ====================== */
+
+/* This is the Menu &quot;BAR&quot; it self */
+QMenuBar {
+    background-color: #ffffff;
+    padding: 8px 0;
+    margin: 0;
+    outline: 0;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* This is the Top Menubar each item but not its content */
+QMenuBar::item {
+    padding: 8px 14px;
+    margin: 0 6px;
+    border-radius: 6px;
+    color: #4b5563;
+    background-color: transparent;
+}
+
+QMenuBar::item:hover {
+    background-color: #f3f4f6;
+    color: #1d4ed8;
+}
+
+QMenuBar::item:selected {
+    background-color: #eff6ff;
+    color: #1d4ed8;
+    font-weight: 600;
+}
+
+QMenuBar::item:pressed {
+    background-color: #e5e7eb;
+}
+
+QMenuBar::icon {
+    margin-right: 12px;
+    left: 12px;
+    width: 18px;
+    height: 18px;
+}
+
+/* ====================== */
+/* SIDE NAVIGATION STYLES */
+/* ====================== */
+
+#MainSideNavFrame {
+    background-color: #fafcfe;
+    border: 3px solid #e5e7eb;
+    padding: 8px 0;
+    border-radius: 15px;
+}
+
+#MainSideNavFrame QPushButton { /* The btns inside navbar */
+    min-width: 50px;
+    max-width: 200px;
+    padding: 10px 35px 10px 10px;
+    border-left: 5px solid #6453fe;
+    margin: 0px 8px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    font-size: 14px;
+    font-weight: 400;
+    color: #4b5563;
+    text-align: left;
+    background-color: transparent;
+}
+
+#MainSideNavFrame QPushButton:hover {
+    background-color: #f3f4f6;
+    color: #1d4ed8;
+    border-left: 5px solid #ff006a;
+}
+
+
+#MainSideNavFrame QPushButton::icon {
+    margin-right: 12px;
+    width: 18px;
+    height: 18px;
+}
+
+/* ====================== */
+/* BUTTON STYLES */
+/* ====================== */
+
+QPushButton {
+    min-width: 90px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    border: 1px solid #d1d5db;
+    background-color: #ffffff;
+    color: #374151;
+}
+
+QPushButton:hover {
+    background-color: #f9fafb;
+    border-color: #9ca3af;
+    color: #1d4ed8;
+}
+
+QPushButton:pressed {
+    background-color: #f3f4f6;
+}
+
+QPushButton:disabled {
+    color: #9ca3af;
+    background-color: #f8f9fa;
+}
+
+QPushButton.primary {
+    background-color: #2563eb;
+    border-color: #2563eb;
+    color: #ffffff;
+}
+
+QPushButton.primary:hover {
+    background-color: #1d4ed8;
+    border-color: #1d4ed8;
+}
+
+QPushButton.danger {
+    background-color: #dc2626;
+    border-color: #dc2626;
+    color: #ffffff;
+}
+
+QPushButton.danger:hover {
+    background-color: #b91c1c;
+    border-color: #b91c1c;
+}
+
+/* ====================== */
+/* PLUGIN MANAGER STYLES */
+/* ====================== */
+
+QDialog#pluginManager {
+    background-color: #ffffff;
+    border-radius: 15px;
+    padding: 12px;
+    border: 1px solid #e5e7eb;
+}
+
+QDialog #pluginList {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 6px;
+}
+
+QDialog #pluginList:item::hover {
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 6px;
+}
+
+QDialog #pluginList:item::selected {
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 6px;
+}
+
+QDialog #pluginList:item::focus {
+    border: 1px solid #e2e8f0;
+    background: #fff;
+    border-radius: 6px;
+    padding: 6px;
+}
+
+
+#pluginCheckbox {
+    spacing: 10px;
+    font-size: 13px;
+    padding: 4px 0;
+    color: #374151;
+}
+
+#pluginCheckbox::indicator {
+    width: 18px;
+    height: 18px;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+}
+
+#pluginCheckbox::indicator:checked {
+    background-color: #3b82f6;
+    border-color: #2563eb;
+    border: 2px solid #cbd5e1;
+}
+
+#pluginDeleteBtn {
+    min-width: 80px;
+    padding: 7px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 6px;
+    background-color: #fef2f2;
+    border: 1px solid #fee2e2;
+    color: #b91c1c;
+}
+
+#pluginDeleteBtn:hover {
+    background-color: #fee2e2;
+    border-color: #fecaca;
+    border: 1px solid #cbd5e1;
+}
+
+/* ====================== */
+/* MENU STYLES */
+/* ====================== */
+
+QMenu.menubar-menu {
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #374151;
+    font-weight: 500;
+}
+
+QMenu.menubar-menu::item {
+    padding: 8px 14px;
+    /* padding: 8px 24px 8px 36px; */
+    border-radius: 0;
+}
+
+QMenu.menubar-menu::item:selected {
+    background-color: #f3f4f6;
+    color: #1d4ed8;
+}
+
+QMenu.menubar-menu::item:selected:first {
+    border-top-right-radius: 8px;
+}
+
+QMenu.menubar-menu::item:selected:last {
+    border-bottom-right-radius: 8px;
+}
+
+QMenu.menubar-menu::icon {
+    margin: 0 12px 0 6px;
+    width: 18px;
+    height: 18px;
+}
+
+/* ====================== */
+/* SCROLLBAR STYLES */
+/* ====================== */
+
+/* ===== MODERN SCROLLBARS WITH NO CORNER ARTIFACTS ===== */
+/* Applies to all QScrollBars in the application */
+
+/* --- COMPLETELY REMOVE RESIZE CORNER --- */
+QScrollBar::corner,
+QAbstractScrollArea::corner {
+    background: transparent;
+    border: none;
+    width: 0;
+    height: 0;
+}
+
+/* --- VERTICAL SCROLLBAR --- */
+QScrollBar:vertical {
+    width: 12px;
+    background: #f1f5f9;
+    border-radius: 6px;
+    margin: 0;
+    padding: 0;
+}
+
+QScrollBar::handle:vertical {
+    background: #cbd5e1;
+    min-height: 30px;
+    border-radius: 6px;
+    margin: 12px 0;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #9ca3af;
+}
+
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {
+    height: 12px;
+    background: #e2e8f0;
+    border-radius: 6px;
+}
+
+QScrollBar::add-line:vertical:hover,
+QScrollBar::sub-line:vertical:hover {
+    background: #cbd5e1;
+}
+
+QScrollBar::add-line:vertical:pressed,
+QScrollBar::sub-line:vertical:pressed {
+    background: #9ca3af;
+}
+
+/* --- HORIZONTAL SCROLLBAR --- */
+QScrollBar:horizontal {
+    height: 12px;
+    background: #f1f5f9;
+    border-radius: 6px;
+    margin: 0;
+    padding: 0;
+}
+
+QScrollBar::handle:horizontal {
+    background: #cbd5e1;
+    min-width: 30px;
+    border-radius: 6px;
+    margin: 0 12px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background: #9ca3af;
+}
+
+QScrollBar::add-line:horizontal,
+QScrollBar::sub-line:horizontal {
+    width: 12px;
+    background: #e2e8f0;
+    border-radius: 6px;
+}
+
+QScrollBar::add-line:horizontal:hover,
+QScrollBar::sub-line:horizontal:hover {
+    background: #cbd5e1;
+}
+
+QScrollBar::add-line:horizontal:pressed,
+QScrollBar::sub-line:horizontal:pressed {
+    background: #9ca3af;
+}
+
+
+/* ====================== */
+/* TEXT INPUT STYLES */
+/* ====================== */
+
+QLineEdit, QTextEdit {
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 13px;
+    background-color: #ffffff;
+}
+
+QLineEdit:focus, QTextEdit:focus {
+    border-color: #3b82f6;
+}
+
+/* ===== Modern Borderless QTabWidget ===== */
+
+* {
+    border: none;
+}
+
 QTabWidget {
     background: transparent;
 }
@@ -77,218 +440,150 @@ QScrollArea {
 }
 </string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
-   <property name="spacing">
-    <number>0</number>
-   </property>
-   <property name="leftMargin">
-    <number>0</number>
-   </property>
-   <property name="topMargin">
-    <number>0</number>
-   </property>
-   <property name="rightMargin">
-    <number>0</number>
-   </property>
-   <property name="bottomMargin">
-    <number>0</number>
-   </property>
-   <item alignment="Qt::AlignmentFlag::AlignTop">
-    <widget class="QTabWidget" name="tabs">
-     <property name="currentIndex">
-      <number>0</number>
-     </property>
-     <widget class="QWidget" name="Invoices_tab">
-      <attribute name="title">
-       <string>Tab 1</string>
-      </attribute>
-      <layout class="QGridLayout" name="gridLayout">
-       <item row="0" column="0">
-        <widget class="QScrollArea" name="scrollArea">
-         <property name="minimumSize">
-          <size>
-           <width>500</width>
-           <height>700</height>
-          </size>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">border: none;</string>
-         </property>
-         <property name="frameShadow">
-          <enum>QFrame::Shadow::Raised</enum>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignTop</set>
-         </property>
-         <widget class="QWidget" name="scrollbar">
-          <property name="geometry">
-           <rect>
-            <x>2</x>
-            <y>0</y>
-            <width>797</width>
-            <height>700</height>
-           </rect>
-          </property>
-          <layout class="QVBoxLayout" name="verticalLayout_2">
-           <property name="spacing">
-            <number>0</number>
-           </property>
-           <property name="leftMargin">
-            <number>8</number>
-           </property>
-           <property name="topMargin">
-            <number>8</number>
-           </property>
-           <property name="rightMargin">
-            <number>8</number>
-           </property>
-           <property name="bottomMargin">
-            <number>8</number>
-           </property>
-           <item>
-            <layout class="QVBoxLayout" name="company_area">
-             <property name="spacing">
-              <number>0</number>
-             </property>
-             <property name="sizeConstraint">
-              <enum>QLayout::SizeConstraint::SetMaximumSize</enum>
-             </property>
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QLabel" name="new_invoice">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>25</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <pointsize>18</pointsize>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>New Invoice</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="company">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>25</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <pointsize>14</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>Company</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="note">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>25</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>Change the address, logo, and other information for your company. </string>
-               </property>
-              </widget>
-             </item>
-            </layout>
+  <widget class="QWidget" name="Invoices">
+   <attribute name="title">
+    <string>Page</string>
+   </attribute>
+   <layout class="QVBoxLayout">
+    <item>
+     <widget class="QScrollArea" name="scrollArea">
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="scrollarea_qwidget">
+       <layout class="QVBoxLayout" name="scrollarea_qwidget_layout">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <item alignment="Qt::AlignmentFlag::AlignTop">
+         <widget class="QWidget" name="frame" native="true">
+          <layout class="QVBoxLayout" name="frame_verticalLayout">
+           <item alignment="Qt::AlignmentFlag::AlignTop">
+            <widget class="QWidget" name="frame_invoice" native="true">
+             <layout class="QVBoxLayout" name="frame_invoice_layout">
+              <item>
+               <widget class="QLabel" name="label_new_invoice">
+                <property name="font">
+                 <font>
+                  <pointsize>18</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>New Invoice</string>
+                </property>
+                <property name="wordWrap">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_company">
+                <property name="font">
+                 <font>
+                  <pointsize>16</pointsize>
+                  <fontweight>DemiBold</fontweight>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Company</string>
+                </property>
+                <property name="wordWrap">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_subtitle">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                 </font>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">color: rgb(154, 153, 150)</string>
+                </property>
+                <property name="text">
+                 <string>Change the address, logo, and other information for your company.</string>
+                </property>
+                <property name="wordWrap">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
            </item>
-           <item>
-            <layout class="QHBoxLayout" name="billing_area">
-             <property name="spacing">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QLabel" name="label">
-               <property name="font">
-                <font>
-                 <pointsize>18</pointsize>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>Billing</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
+           <item alignment="Qt::AlignmentFlag::AlignTop">
+            <widget class="QWidget" name="frame_billing" native="true">
+             <layout class="QVBoxLayout" name="frame_billing_layout">
+              <item>
+               <widget class="QLabel" name="label_billing">
+                <property name="font">
+                 <font>
+                  <pointsize>18</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Billing</string>
+                </property>
+                <property name="wordWrap">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
            </item>
-           <item>
-            <layout class="QHBoxLayout" name="advanced_area">
-             <property name="spacing">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QLabel" name="label_2">
-               <property name="font">
-                <font>
-                 <pointsize>18</pointsize>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>Advanced</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
+           <item alignment="Qt::AlignmentFlag::AlignTop">
+            <widget class="QWidget" name="frame_advanced" native="true">
+             <layout class="QVBoxLayout" name="frame_advanced_layout">
+              <item>
+               <widget class="QLabel" name="label_advanced">
+                <property name="font">
+                 <font>
+                  <pointsize>18</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Advanced</string>
+                </property>
+                <property name="wordWrap">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
            </item>
           </layout>
          </widget>
-        </widget>
-       </item>
-      </layout>
+        </item>
+       </layout>
+      </widget>
      </widget>
-     <widget class="QWidget" name="Customers_tab">
-      <attribute name="title">
-       <string>Tab 2</string>
-      </attribute>
-     </widget>
-    </widget>
-   </item>
-  </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="Customers">
+   <attribute name="title">
+    <string>Page</string>
+   </attribute>
+  </widget>
  </widget>
  <resources/>
  <connections/>

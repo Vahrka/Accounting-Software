@@ -23,8 +23,6 @@ class MainWindow(QMainWindow):
         self.menubar_controler = Menubar(self)
         self.menubar_controler.setup_ui()
 
-        self.clear_stacked_layout()
-
     def add_to_screen(self, btn: QPushButton, screen: BaseScreen):
         """Add buttons to the side navigation and corresponding screen."""
         index = self.ui.MainStackView.addWidget(screen)
@@ -100,14 +98,6 @@ class MainWindow(QMainWindow):
             self.ui.MainStackView.setCurrentIndex(screen)
         else:
             logger.error(f"Invalid screen index: {screen}")
-
-    def clear_stacked_layout(self):
-        """Clear all widgets from the stacked layout."""
-        while self.ui.MainStackView.count():
-            widget = self.ui.MainStackView.widget(0)
-            if widget:
-                self.ui.MainStackView.removeWidget(widget)
-                widget.deleteLater()
 
     def verify_stack_consistency(self):
         """Debug method to verify button indices match stack widgets."""

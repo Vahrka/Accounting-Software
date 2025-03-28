@@ -1,8 +1,7 @@
 #! /usr/bin/env python3.12
 import sys
 
-from PySide6.QtCore import (QFile, QItemSelection, QLibraryInfo, QLocale,
-                            QSettings, QTranslator)
+from PySide6.QtCore import QFile, QLibraryInfo, QLocale, QSettings, QTranslator
 from PySide6.QtGui import QFont, QIcon, Qt
 from PySide6.QtWidgets import QApplication
 
@@ -70,7 +69,7 @@ def main():
         # Create and show main window
         main_window = MainWindow()
         # main_window.setWindowFlags(Qt.WindowType.FramelessWindowHint)
-        main_window.setWindowState(Qt.WindowState.WindowMaximized)
+        # main_window.setWindowState(Qt.WindowState.WindowMaximized)
         main_window.setMinimumWidth(1024)
         main_window.setMinimumHeight(720)
         # Load installed plugins
