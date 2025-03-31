@@ -95,57 +95,6 @@ QMenuBar::icon {
     height: 18px;
 }
 
-/* ====================== */
-/* BUTTON STYLES */
-/* ====================== */
-
-QPushButton {
-    min-width: 90px;
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 500;
-    border: 1px solid #d1d5db;
-    background-color: #ffffff;
-    color: #374151;
-}
-
-QPushButton:hover {
-    background-color: #f9fafb;
-    border-color: #9ca3af;
-    color: #1d4ed8;
-}
-
-QPushButton:pressed {
-    background-color: #f3f4f6;
-}
-
-QPushButton:disabled {
-    color: #9ca3af;
-    background-color: #f8f9fa;
-}
-
-QPushButton.primary {
-    background-color: #2563eb;
-    border-color: #2563eb;
-    color: #ffffff;
-}
-
-QPushButton.primary:hover {
-    background-color: #1d4ed8;
-    border-color: #1d4ed8;
-}
-
-QPushButton.danger {
-    background-color: #dc2626;
-    border-color: #dc2626;
-    color: #ffffff;
-}
-
-QPushButton.danger:hover {
-    background-color: #b91c1c;
-    border-color: #b91c1c;
-}
 
 /* ====================== */
 /* PLUGIN MANAGER STYLES */
@@ -351,18 +300,60 @@ QScrollBar::sub-line:horizontal:pressed {
 }
 
 
+
+
 /* ====================== */
-/* TEXT INPUT STYLES */
+/* BUTTON STYLES */
 /* ====================== */
 
-QLineEdit, QTextEdit {
-    border: 1px solid #d1d5db;
+QPushButton {
+    min-width: 90px;
+    padding: 8px 16px;
     border-radius: 6px;
-    padding: 8px 12px;
     font-size: 13px;
+    font-weight: 500;
+    border: 1px solid #d1d5db;
     background-color: #ffffff;
+    color: #374151;
 }
 
-QLineEdit:focus, QTextEdit:focus {
-    border-color: #3b82f6;
+QPushButton:hover {
+    background-color: #f9fafb;
+    border-color: #9ca3af;
+    color: #1d4ed8;
 }
+
+QPushButton:pressed {
+    background-color: #f3f4f6;
+}
+
+QPushButton:disabled {
+    color: #9ca3af;
+    background-color: #f8f9fa;
+}
+
+QPushButton.primary {
+    background-color: #2563eb;
+    border-color: #2563eb;
+    color: #ffffff;
+}
+
+QPushButton.primary:hover {
+    background-color: #1d4ed8;
+    border-color: #1d4ed8;
+}
+
+
+QPushButton.danger {
+    background-color: #dc2626;
+    border-color: #dc2626;
+    color: #ffffff;
+}
+
+QPushButton.danger:hover {
+    background-color: #b91c1c;
+    border-color: #b91c1c;
+}
+
+
+

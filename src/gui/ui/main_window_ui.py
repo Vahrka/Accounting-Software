@@ -87,6 +87,8 @@ class Ui_MainWindow(object):
         self.MainSideNavFrame.setMaximumSize(QSize(224, 16777215))
         self.MainSideNavFrame.setFrameShape(QFrame.Shape.StyledPanel)
         self.MainSideNavFrame.setFrameShadow(QFrame.Shadow.Raised)
+        self.MainSideNavFrame.setLineWidth(3)
+        self.MainSideNavFrame.setMidLineWidth(3)
         self.verticalLayout = QVBoxLayout(self.MainSideNavFrame)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
