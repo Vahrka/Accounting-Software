@@ -64,3 +64,122 @@ QTabBar QToolButton {
 QScrollArea {
     background: transparent;
 }
+
+
+
+QTextEdit, QPlainTextEdit, QLineEdit {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding-left: 8px;
+    padding-right: 8px;
+    color: #212529;
+    font-family: 'Segoe UI', 'Roboto', sans-serif;
+    font-size: 14px;
+    selection-background-color: #90caf9;
+    selection-color: #000000;
+}
+
+QTextEdit:hover, QPlainTextEdit:hover, QLineEdit:hover {
+    border: 1px solid #adb5bd;
+}
+
+QTextEdit:focus, QPlainTextEdit:focus, QLineEdit:focus {
+    border: 1px solid #1976d2;
+    background-color: #ffffff;
+    outline: none;
+}
+
+QTextEdit:disabled, QPlainTextEdit:disabled, QLineEdit:disabled {
+    background-color: #e9ecef;
+    color: #6c757d;
+}
+
+/* Scrollbar styling */
+QScrollBar:vertical {
+    border: none;
+    background-color: #f1f3f5;
+    width: 10px;
+    margin: 0px;
+}
+
+QScrollBar::handle:vertical {
+    background-color: #ced4da;
+    border-radius: 4px;
+    min-height: 20px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background-color: #adb5bd;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    background: none;
+}
+
+QScrollBar:horizontal {
+    border: none;
+    background-color: #f1f3f5;
+    height: 10px;
+    margin: 0px;
+}
+
+QScrollBar::handle:horizontal {
+    background-color: #ced4da;
+    border-radius: 4px;
+    min-width: 20px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background-color: #adb5bd;
+}
+
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+    width: 0px;
+}
+
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+    background: none;
+}
+
+
+QFrame#save_layout {
+    border-radius: 8px;
+    background: #eeeeeeee;
+}
+
+
+
+QPushButton#select_logo_btn {
+    border: 1px solid #efefef;
+    background-color: #75efefee;
+    border-radius: 10px;
+    font-weight: 700;
+    font-style: italic;
+}
+
+QPushButton#select_logo_btn:hover {
+    background-color: #beefefee;
+}
+
+QPushButton#select_logo_btn:pressed {
+    background-color: #ffefefee;
+}
+
+
+QPushButton.primary.outlined {
+    background-color: transparent;
+    border: 1px solid #2563eb;
+    color: #2563eb;
+    border-radius: 10px;
+}
+
+QPushButton.primary.outlined:hover {
+    border: 1px solid #1d4ed8;
+    background-color: #10345ac4;
+    color: #1d4ed8;
+}

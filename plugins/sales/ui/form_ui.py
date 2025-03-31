@@ -15,467 +15,32 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QLabel, QScrollArea, QSizePolicy,
+from PySide6.QtWidgets import (QApplication, QFrame, QHBoxLayout, QLabel,
+    QLineEdit, QPushButton, QScrollArea, QSizePolicy,
     QTabWidget, QVBoxLayout, QWidget)
 
 class Ui_Form(object):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
-        Form.setStyleSheet(u"/* ====================== */\n"
-"/* CORE APPLICATION STYLES */\n"
-"/* ====================== */\n"
-"\n"
-"QMainWindow {\n"
-"    background-color: #f8fafc;\n"
-"    font-size: 13px;\n"
-"    color: #374151;\n"
-"}\n"
-"\n"
-"/* ====================== */\n"
-"/* ENHANCED NAVBAR STYLES */\n"
-"/* ====================== */\n"
-"\n"
-"/* This is the Menu \"BAR\" it self */\n"
-"QMenuBar {\n"
-"    background-color: #ffffff;\n"
-"    padding: 8px 0;\n"
-"    margin: 0;\n"
-"    outline: 0;\n"
-"    border-bottom: 1px solid #e5e7eb;\n"
-"    font-size: 13px;\n"
-"    font-weight: 500;\n"
-"}\n"
-"\n"
-"/* This is the Top Menubar each item but not its content */\n"
-"QMenuBar::item {\n"
-"    padding: 8px 14px;\n"
-"    margin: 0 6px;\n"
-"    border-radius: 6px;\n"
-"    color: #4b5563;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"QMenuBar::item:hover {\n"
-"    background-color: #f3f4f6;\n"
-"    color: #1d4ed8;\n"
-"}\n"
-"\n"
-"QMenuBar::item:selected {\n"
-"    background-color: #eff6ff;\n"
-"    color: #1d4ed8;\n"
-"    font-weight: 600"
-                        ";\n"
-"}\n"
-"\n"
-"QMenuBar::item:pressed {\n"
-"    background-color: #e5e7eb;\n"
-"}\n"
-"\n"
-"QMenuBar::icon {\n"
-"    margin-right: 12px;\n"
-"    left: 12px;\n"
-"    width: 18px;\n"
-"    height: 18px;\n"
-"}\n"
-"\n"
-"/* ====================== */\n"
-"/* SIDE NAVIGATION STYLES */\n"
-"/* ====================== */\n"
-"\n"
-"#MainSideNavFrame {\n"
-"    background-color: #fafcfe;\n"
-"    border: 3px solid #e5e7eb;\n"
-"    padding: 8px 0;\n"
-"    border-radius: 15px;\n"
-"}\n"
-"\n"
-"#MainSideNavFrame QPushButton { /* The btns inside navbar */\n"
-"    min-width: 50px;\n"
-"    max-width: 200px;\n"
-"    padding: 10px 35px 10px 10px;\n"
-"    border-left: 5px solid #6453fe;\n"
-"    margin: 0px 8px;\n"
-"    border-top-left-radius: 0;\n"
-"    border-bottom-left-radius: 0;\n"
-"    border-top-right-radius: 6px;\n"
-"    border-bottom-right-radius: 6px;\n"
-"    font-size: 14px;\n"
-"    font-weight: 400;\n"
-"    color: #4b5563;\n"
-"    text-align: left;\n"
-"    background-color: transparent;\n"
-"}\n"
-"\n"
-"#MainSideNavFrame QPushBut"
-                        "ton:hover {\n"
-"    background-color: #f3f4f6;\n"
-"    color: #1d4ed8;\n"
-"    border-left: 5px solid #ff006a;\n"
-"}\n"
-"\n"
-"\n"
-"#MainSideNavFrame QPushButton::icon {\n"
-"    margin-right: 12px;\n"
-"    width: 18px;\n"
-"    height: 18px;\n"
-"}\n"
-"\n"
-"/* ====================== */\n"
-"/* BUTTON STYLES */\n"
-"/* ====================== */\n"
-"\n"
-"QPushButton {\n"
-"    min-width: 90px;\n"
-"    padding: 8px 16px;\n"
-"    border-radius: 6px;\n"
-"    font-size: 13px;\n"
-"    font-weight: 500;\n"
-"    border: 1px solid #d1d5db;\n"
-"    background-color: #ffffff;\n"
-"    color: #374151;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-color: #f9fafb;\n"
-"    border-color: #9ca3af;\n"
-"    color: #1d4ed8;\n"
-"}\n"
-"\n"
-"QPushButton:pressed {\n"
-"    background-color: #f3f4f6;\n"
-"}\n"
-"\n"
-"QPushButton:disabled {\n"
-"    color: #9ca3af;\n"
-"    background-color: #f8f9fa;\n"
-"}\n"
-"\n"
-"QPushButton.primary {\n"
-"    background-color: #2563eb;\n"
-"    border-color: #2563eb;\n"
-"    color: #ffffff;\n"
-"}\n"
-"\n"
-""
-                        "QPushButton.primary:hover {\n"
-"    background-color: #1d4ed8;\n"
-"    border-color: #1d4ed8;\n"
-"}\n"
-"\n"
-"QPushButton.danger {\n"
-"    background-color: #dc2626;\n"
-"    border-color: #dc2626;\n"
-"    color: #ffffff;\n"
-"}\n"
-"\n"
-"QPushButton.danger:hover {\n"
-"    background-color: #b91c1c;\n"
-"    border-color: #b91c1c;\n"
-"}\n"
-"\n"
-"/* ====================== */\n"
-"/* PLUGIN MANAGER STYLES */\n"
-"/* ====================== */\n"
-"\n"
-"QDialog#pluginManager {\n"
-"    background-color: #ffffff;\n"
-"    border-radius: 15px;\n"
-"    padding: 12px;\n"
-"    border: 1px solid #e5e7eb;\n"
-"}\n"
-"\n"
-"QDialog #pluginList {\n"
-"    background-color: #ffffff;\n"
-"    border: 1px solid #e2e8f0;\n"
-"    border-radius: 6px;\n"
-"    padding: 6px;\n"
-"}\n"
-"\n"
-"QDialog #pluginList:item::hover {\n"
-"    border: 1px solid #e2e8f0;\n"
-"    border-radius: 6px;\n"
-"    padding: 6px;\n"
-"}\n"
-"\n"
-"QDialog #pluginList:item::selected {\n"
-"    border: 1px solid #e2e8f0;\n"
-"    border-radius: 6px;\n"
-"    padding: 6px;\n"
-"}"
-                        "\n"
-"\n"
-"QDialog #pluginList:item::focus {\n"
-"    border: 1px solid #e2e8f0;\n"
-"    background: #fff;\n"
-"    border-radius: 6px;\n"
-"    padding: 6px;\n"
-"}\n"
-"\n"
-"\n"
-"#pluginCheckbox {\n"
-"    spacing: 10px;\n"
-"    font-size: 13px;\n"
-"    padding: 4px 0;\n"
-"    color: #374151;\n"
-"}\n"
-"\n"
-"#pluginCheckbox::indicator {\n"
-"    width: 18px;\n"
-"    height: 18px;\n"
-"    border-radius: 6px;\n"
-"    border: 1px solid #cbd5e1;\n"
-"}\n"
-"\n"
-"#pluginCheckbox::indicator:checked {\n"
-"    background-color: #3b82f6;\n"
-"    border-color: #2563eb;\n"
-"    border: 2px solid #cbd5e1;\n"
-"}\n"
-"\n"
-"#pluginDeleteBtn {\n"
-"    min-width: 80px;\n"
-"    padding: 7px 14px;\n"
-"    font-size: 13px;\n"
-"    font-weight: 500;\n"
-"    border-radius: 6px;\n"
-"    background-color: #fef2f2;\n"
-"    border: 1px solid #fee2e2;\n"
-"    color: #b91c1c;\n"
-"}\n"
-"\n"
-"#pluginDeleteBtn:hover {\n"
-"    background-color: #fee2e2;\n"
-"    border-color: #fecaca;\n"
-"    border: 1px solid #cbd5e1;\n"
-"}\n"
-"\n"
-"/* ==============="
-                        "======= */\n"
-"/* MENU STYLES */\n"
-"/* ====================== */\n"
-"\n"
-"QMenu.menubar-menu {\n"
-"    background-color: #ffffff;\n"
-"    border: 1px solid #e5e7eb;\n"
-"    border-radius: 8px;\n"
-"    font-size: 13px;\n"
-"    color: #374151;\n"
-"    font-weight: 500;\n"
-"}\n"
-"\n"
-"QMenu.menubar-menu::item {\n"
-"    padding: 8px 14px;\n"
-"    /* padding: 8px 24px 8px 36px; */\n"
-"    border-radius: 0;\n"
-"}\n"
-"\n"
-"QMenu.menubar-menu::item:selected {\n"
-"    background-color: #f3f4f6;\n"
-"    color: #1d4ed8;\n"
-"}\n"
-"\n"
-"QMenu.menubar-menu::item:selected:first {\n"
-"    border-top-right-radius: 8px;\n"
-"}\n"
-"\n"
-"QMenu.menubar-menu::item:selected:last {\n"
-"    border-bottom-right-radius: 8px;\n"
-"}\n"
-"\n"
-"QMenu.menubar-menu::icon {\n"
-"    margin: 0 12px 0 6px;\n"
-"    width: 18px;\n"
-"    height: 18px;\n"
-"}\n"
-"\n"
-"/* ====================== */\n"
-"/* SCROLLBAR STYLES */\n"
-"/* ====================== */\n"
-"\n"
-"/* ===== MODERN SCROLLBARS WITH NO CORNER ARTIFACTS ===== */\n"
-"/* Applies to all QScrol"
-                        "lBars in the application */\n"
-"\n"
-"/* --- COMPLETELY REMOVE RESIZE CORNER --- */\n"
-"QScrollBar::corner,\n"
-"QAbstractScrollArea::corner {\n"
-"    background: transparent;\n"
-"    border: none;\n"
-"    width: 0;\n"
-"    height: 0;\n"
-"}\n"
-"\n"
-"/* --- VERTICAL SCROLLBAR --- */\n"
-"QScrollBar:vertical {\n"
-"    width: 12px;\n"
-"    background: #f1f5f9;\n"
-"    border-radius: 6px;\n"
-"    margin: 0;\n"
-"    padding: 0;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:vertical {\n"
-"    background: #cbd5e1;\n"
-"    min-height: 30px;\n"
-"    border-radius: 6px;\n"
-"    margin: 12px 0;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:vertical:hover {\n"
-"    background: #9ca3af;\n"
-"}\n"
-"\n"
-"QScrollBar::add-line:vertical,\n"
-"QScrollBar::sub-line:vertical {\n"
-"    height: 12px;\n"
-"    background: #e2e8f0;\n"
-"    border-radius: 6px;\n"
-"}\n"
-"\n"
-"QScrollBar::add-line:vertical:hover,\n"
-"QScrollBar::sub-line:vertical:hover {\n"
-"    background: #cbd5e1;\n"
-"}\n"
-"\n"
-"QScrollBar::add-line:vertical:pressed,\n"
-"QScrollBar::sub-line:vertic"
-                        "al:pressed {\n"
-"    background: #9ca3af;\n"
-"}\n"
-"\n"
-"/* --- HORIZONTAL SCROLLBAR --- */\n"
-"QScrollBar:horizontal {\n"
-"    height: 12px;\n"
-"    background: #f1f5f9;\n"
-"    border-radius: 6px;\n"
-"    margin: 0;\n"
-"    padding: 0;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:horizontal {\n"
-"    background: #cbd5e1;\n"
-"    min-width: 30px;\n"
-"    border-radius: 6px;\n"
-"    margin: 0 12px;\n"
-"}\n"
-"\n"
-"QScrollBar::handle:horizontal:hover {\n"
-"    background: #9ca3af;\n"
-"}\n"
-"\n"
-"QScrollBar::add-line:horizontal,\n"
-"QScrollBar::sub-line:horizontal {\n"
-"    width: 12px;\n"
-"    background: #e2e8f0;\n"
-"    border-radius: 6px;\n"
-"}\n"
-"\n"
-"QScrollBar::add-line:horizontal:hover,\n"
-"QScrollBar::sub-line:horizontal:hover {\n"
-"    background: #cbd5e1;\n"
-"}\n"
-"\n"
-"QScrollBar::add-line:horizontal:pressed,\n"
-"QScrollBar::sub-line:horizontal:pressed {\n"
-"    background: #9ca3af;\n"
-"}\n"
-"\n"
-"\n"
-"/* ====================== */\n"
-"/* TEXT INPUT STYLES */\n"
-"/* ====================== */\n"
-"\n"
-"QLineEdit, "
-                        "QTextEdit {\n"
-"    border: 1px solid #d1d5db;\n"
-"    border-radius: 6px;\n"
-"    padding: 8px 12px;\n"
-"    font-size: 13px;\n"
-"    background-color: #ffffff;\n"
-"}\n"
-"\n"
-"QLineEdit:focus, QTextEdit:focus {\n"
-"    border-color: #3b82f6;\n"
-"}\n"
-"\n"
-"/* ===== Modern Borderless QTabWidget ===== */\n"
-"\n"
-"* {\n"
-"    border: none;\n"
-"}\n"
-"\n"
-"QTabWidget {\n"
-"    background: transparent;\n"
-"}\n"
-"\n"
-"/* Remove all borders from the content pane */\n"
-"QTabWidget::pane {\n"
-"    border: 0;\n"
-"    margin: 0;\n"
-"    padding: 0;\n"
-"    top: -1px; /* Seamless connection with tab bar */\n"
-"}\n"
-"\n"
-"/* Tab bar styling */\n"
-"QTabBar {\n"
-"    background: transparent;\n"
-"    spacing: 4px;\n"
-"}\n"
-"\n"
-"/* Individual tab styling */\n"
-"QTabBar::tab {\n"
-"    background: #f5f5f5;\n"
-"    color: #555;\n"
-"    border: 0;\n"
-"    border-radius: 6px 6px 0 0;\n"
-"    padding: 8px 20px;\n"
-"    margin-right: 2px;\n"
-"    font-family: 'Segoe UI', system-ui, sans-serif;\n"
-"    font-size: 11pt;\n"
-"    min-wi"
-                        "dth: 80px;\n"
-"}\n"
-"\n"
-"/* Selected tab */\n"
-"QTabBar::tab:selected {\n"
-"    background: white;\n"
-"    color: #5900ff;\n"
-"    border-bottom: 3px solid #5900ff;\n"
-"    font-weight: 500;\n"
-"}\n"
-"\n"
-"/* Hover effect */\n"
-"QTabBar::tab:hover:!selected {\n"
-"    background: #e0e0e0;\n"
-"}\n"
-"\n"
-"/* Disabled tab */\n"
-"QTabBar::tab:disabled {\n"
-"    color: #aaa;\n"
-"    background: #f0f0f0;\n"
-"}\n"
-"\n"
-"/* Left/right scroll buttons (when tabs overflow) */\n"
-"QTabBar QToolButton {\n"
-"    background: #f0f0f0;\n"
-"    border-radius: 4px;\n"
-"}\n"
-"\n"
-"\n"
-"QScrollArea {\n"
-"    background: transparent;\n"
-"}\n"
-"")
+        Form.resize(1119, 716)
         self.Invoices = QWidget()
         self.Invoices.setObjectName(u"Invoices")
         self.vboxLayout = QVBoxLayout(self.Invoices)
         self.vboxLayout.setObjectName(u"vboxLayout")
+        self.save = QPushButton(self.Invoices)
+        self.save.setObjectName(u"save")
+        self.save.setMinimumSize(QSize(200, 0))
+        self.save.setMaximumSize(QSize(350, 16777215))
+
+        self.vboxLayout.addWidget(self.save, 0, Qt.AlignmentFlag.AlignRight)
+
         self.scrollArea = QScrollArea(self.Invoices)
         self.scrollArea.setObjectName(u"scrollArea")
         self.scrollArea.setWidgetResizable(True)
         self.scrollarea_qwidget = QWidget()
         self.scrollarea_qwidget.setObjectName(u"scrollarea_qwidget")
+        self.scrollarea_qwidget.setGeometry(QRect(0, 0, 1095, 632))
         self.scrollarea_qwidget_layout = QVBoxLayout(self.scrollarea_qwidget)
         self.scrollarea_qwidget_layout.setObjectName(u"scrollarea_qwidget_layout")
         self.scrollarea_qwidget_layout.setContentsMargins(0, 0, 0, -1)
@@ -521,6 +86,123 @@ class Ui_Form(object):
         self.label_subtitle.setWordWrap(True)
 
         self.frame_invoice_layout.addWidget(self.label_subtitle)
+
+        self.line = QFrame(self.frame_invoice)
+        self.line.setObjectName(u"line")
+        self.line.setFrameShape(QFrame.Shape.HLine)
+        self.line.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.frame_invoice_layout.addWidget(self.line)
+
+        self.widget = QWidget(self.frame_invoice)
+        self.widget.setObjectName(u"widget")
+        self._2 = QHBoxLayout(self.widget)
+        self._2.setSpacing(8)
+        self._2.setObjectName(u"_2")
+        self._2.setContentsMargins(0, 0, 0, 0)
+        self.widget_2 = QWidget(self.widget)
+        self.widget_2.setObjectName(u"widget_2")
+        self.verticalLayout = QVBoxLayout(self.widget_2)
+        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.title_input = QLineEdit(self.widget_2)
+        self.title_input.setObjectName(u"title_input")
+        self.title_input.setMinimumSize(QSize(250, 30))
+        self.title_input.setMaximumSize(QSize(16777215, 35))
+
+        self.verticalLayout.addWidget(self.title_input)
+
+        self.subheading_input = QLineEdit(self.widget_2)
+        self.subheading_input.setObjectName(u"subheading_input")
+        self.subheading_input.setMinimumSize(QSize(250, 30))
+        self.subheading_input.setMaximumSize(QSize(16777215, 35))
+
+        self.verticalLayout.addWidget(self.subheading_input)
+
+
+        self._2.addWidget(self.widget_2)
+
+        self.frame_btn_logo = QWidget(self.widget)
+        self.frame_btn_logo.setObjectName(u"frame_btn_logo")
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.frame_btn_logo.sizePolicy().hasHeightForWidth())
+        self.frame_btn_logo.setSizePolicy(sizePolicy1)
+        self.frame_btn_logo.setMinimumSize(QSize(250, 250))
+        self.frame_btn_logo.setMaximumSize(QSize(250, 250))
+        self.frame_btn_logo.setBaseSize(QSize(250, 250))
+        self.verticalLayout_2 = QVBoxLayout(self.frame_btn_logo)
+        self.verticalLayout_2.setSpacing(0)
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.select_logo_btn = QPushButton(self.frame_btn_logo)
+        self.select_logo_btn.setObjectName(u"select_logo_btn")
+        sizePolicy1.setHeightForWidth(self.select_logo_btn.sizePolicy().hasHeightForWidth())
+        self.select_logo_btn.setSizePolicy(sizePolicy1)
+        self.select_logo_btn.setMinimumSize(QSize(250, 250))
+        self.select_logo_btn.setMaximumSize(QSize(250, 250))
+        self.select_logo_btn.setBaseSize(QSize(250, 250))
+        self.select_logo_btn.setFont(font)
+        icon = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.InsertImage))
+        self.select_logo_btn.setIcon(icon)
+        self.select_logo_btn.setIconSize(QSize(128, 128))
+
+        self.verticalLayout_2.addWidget(self.select_logo_btn)
+
+
+        self._2.addWidget(self.frame_btn_logo)
+
+        self.widget_4 = QWidget(self.widget)
+        self.widget_4.setObjectName(u"widget_4")
+        self.verticalLayout_3 = QVBoxLayout(self.widget_4)
+        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
+        self.name_input = QLineEdit(self.widget_4)
+        self.name_input.setObjectName(u"name_input")
+        self.name_input.setMinimumSize(QSize(250, 30))
+        self.name_input.setMaximumSize(QSize(16777215, 35))
+
+        self.verticalLayout_3.addWidget(self.name_input)
+
+        self.email_input = QLineEdit(self.widget_4)
+        self.email_input.setObjectName(u"email_input")
+        self.email_input.setMinimumSize(QSize(250, 30))
+        self.email_input.setMaximumSize(QSize(16777215, 35))
+
+        self.verticalLayout_3.addWidget(self.email_input)
+
+        self.tax_number_input = QLineEdit(self.widget_4)
+        self.tax_number_input.setObjectName(u"tax_number_input")
+        self.tax_number_input.setMinimumSize(QSize(250, 30))
+        self.tax_number_input.setMaximumSize(QSize(16777215, 35))
+
+        self.verticalLayout_3.addWidget(self.tax_number_input)
+
+        self.phone_input = QLineEdit(self.widget_4)
+        self.phone_input.setObjectName(u"phone_input")
+        self.phone_input.setMinimumSize(QSize(250, 30))
+        self.phone_input.setMaximumSize(QSize(16777215, 35))
+
+        self.verticalLayout_3.addWidget(self.phone_input)
+
+        self.address_input = QLineEdit(self.widget_4)
+        self.address_input.setObjectName(u"address_input")
+        self.address_input.setMinimumSize(QSize(250, 30))
+        self.address_input.setMaximumSize(QSize(16777215, 35))
+
+        self.verticalLayout_3.addWidget(self.address_input)
+
+        self.country_input = QLineEdit(self.widget_4)
+        self.country_input.setObjectName(u"country_input")
+        self.country_input.setMinimumSize(QSize(250, 30))
+        self.country_input.setMaximumSize(QSize(16777215, 35))
+
+        self.verticalLayout_3.addWidget(self.country_input)
+
+
+        self._2.addWidget(self.widget_4)
+
+
+        self.frame_invoice_layout.addWidget(self.widget)
 
 
         self.frame_verticalLayout.addWidget(self.frame_invoice, 0, Qt.AlignmentFlag.AlignTop)
@@ -571,9 +253,20 @@ class Ui_Form(object):
     # setupUi
 
     def retranslateUi(self, Form):
+        self.save.setText(QCoreApplication.translate("Form", u"Save", None))
+        self.save.setProperty(u"class", QCoreApplication.translate("Form", u"primary outlined", None))
         self.label_new_invoice.setText(QCoreApplication.translate("Form", u"New Invoice", None))
         self.label_company.setText(QCoreApplication.translate("Form", u"Company", None))
         self.label_subtitle.setText(QCoreApplication.translate("Form", u"Change the address, logo, and other information for your company.", None))
+        self.title_input.setPlaceholderText(QCoreApplication.translate("Form", u"Title", None))
+        self.subheading_input.setPlaceholderText(QCoreApplication.translate("Form", u"Subheading", None))
+        self.select_logo_btn.setText("")
+        self.name_input.setPlaceholderText(QCoreApplication.translate("Form", u"Name", None))
+        self.email_input.setPlaceholderText(QCoreApplication.translate("Form", u"Email", None))
+        self.tax_number_input.setPlaceholderText(QCoreApplication.translate("Form", u"Tax Number", None))
+        self.phone_input.setPlaceholderText(QCoreApplication.translate("Form", u"Phone", None))
+        self.address_input.setPlaceholderText(QCoreApplication.translate("Form", u"Address", None))
+        self.country_input.setPlaceholderText(QCoreApplication.translate("Form", u"Country", None))
         self.label_billing.setText(QCoreApplication.translate("Form", u"Billing", None))
         self.label_advanced.setText(QCoreApplication.translate("Form", u"Advanced", None))
         Form.setTabText(Form.indexOf(self.Invoices), QCoreApplication.translate("Form", u"Page", None))
