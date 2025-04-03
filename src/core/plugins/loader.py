@@ -5,7 +5,6 @@ from typing import Optional
 import yaml
 from PySide6.QtCore import QSettings
 
-from src.core.plugins.plugin_base import PluginBase
 from src.core.utils.DataStructure import (PluginConfigStruct,
                                           PluginsConfigFileStruct)
 from src.core.utils.logger import get_logger
@@ -131,12 +130,12 @@ def register_plugin(path: Path, add_func: callable) -> bool:
 
     # Dynamically import the plugin class
     plugin_class = get_plugin_class(module_name, class_name)
-    if not plugin_class or not issubclass(plugin_class, PluginBase):
-        logger.error(f"Class '{plugin_class}' is not a subclass of '{PluginBase}'")
+    if not plugin_class or not hasattr(plugin_class, "register"):
+        logger.error(f"Class '{plugin_class}' does't has correct stucture or does not exist.\nNo method named `register`")
         return False
 
     # Initialize and register the plugin
-    plugin: PluginBase = plugin_class(add_func=add_func)
+    plugin = plugin_class(add_func=add_func)
     plugin.register()
     write_plugin_config(path, name)
     return True
@@ -149,7 +148,7 @@ def unregister_plugin(path: Path, remove_func: callable,  remove: bool = False) 
     """
     data = load_plugin_config(path)
     if not data or not isinstance(data.get("extention"), dict):
-        logger.critical("Extension config file doesn't have the correct structure")
+        logger.critical("Extension config file doesn't have the correct structure.")
         return False
 
     extention = data["extention"]
@@ -167,12 +166,12 @@ def unregister_plugin(path: Path, remove_func: callable,  remove: bool = False) 
 
     # Dynamically import the plugin class
     plugin_class = get_plugin_class(module_name, class_name)
-    if not plugin_class or not issubclass(plugin_class, PluginBase):
-        logger.error(f"Class '{plugin_class}' is not a subclass of '{PluginBase}'")
+    if not plugin_class or not hasattr(plugin_class, "unregister"):
+        logger.error(f"Class '{plugin_class}' does not exist or does't has correct stracture.\nNo method named `unregister`")
         return False
 
     # Initialize and unregister the plugin
-    plugin: PluginBase = plugin_class(remove_func=remove_func)
+    plugin = plugin_class(remove_func=remove_func)
     plugin.unregister()
     remove_plugin_config(name, remove)
 
