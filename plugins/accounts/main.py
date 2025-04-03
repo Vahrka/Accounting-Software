@@ -1,10 +1,9 @@
 from PySide6.QtWidgets import QPushButton
 
 from plugins.accounts.account_screen import AccountScreen
-from src.core.plugins.plugin_base import PluginBase
 
 
-class Account(PluginBase):
+class Account:
 
     def register(self):
         button = QPushButton(self.tr("Account"))

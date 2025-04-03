@@ -1,11 +1,9 @@
 from PySide6.QtWidgets import QPushButton
 
-from src.core.plugins.plugin_base import PluginBase
-
 from .sales_screen import SalesScreen
 
 
-class Sales(PluginBase):
+class Sales:
 
     def register(self):
         sales_screen = SalesScreen()

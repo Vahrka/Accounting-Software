@@ -1,11 +1,9 @@
 from PySide6.QtWidgets import QPushButton
 
-from src.core.plugins.plugin_base import PluginBase
-
 from .ledger_screen import LedgerScreen
 
 
-class Ledger(PluginBase):
+class Ledger:
 
     def register(self):
         ledger_screen = LedgerScreen()
