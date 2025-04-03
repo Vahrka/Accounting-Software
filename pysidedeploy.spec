@@ -14,7 +14,7 @@ input_file = /home/nima/Desktop/python-projects/AccountingSoftware/main.py
 exec_directory = .
 
 # path to .pyproject project file
-project_file = 
+project_file = /home/nima/Desktop/python-projects/AccountingSoftware/ac.pyproject
 
 # application icon
 icon = /home/nima/Desktop/python-projects/AccountingSoftware/src/gui/resources/imgs/icon.png
@@ -40,7 +40,7 @@ qml_files =
 excluded_qml_plugins = 
 
 # qt modules used. comma separated
-modules = Widgets,Core,Gui
+modules = Gui,DBus,Widgets,Core
 
 # qt plugins used by the application. only relevant for desktop deployment. for qt plugins used
 # in android application see [android][plugins]

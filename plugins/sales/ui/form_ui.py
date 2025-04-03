@@ -23,24 +23,24 @@ class Ui_Form(object):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
-        Form.resize(1119, 716)
+        Form.resize(1470, 744)
         self.Invoices = QWidget()
         self.Invoices.setObjectName(u"Invoices")
         self.vboxLayout = QVBoxLayout(self.Invoices)
         self.vboxLayout.setObjectName(u"vboxLayout")
-        self.save = QPushButton(self.Invoices)
-        self.save.setObjectName(u"save")
-        self.save.setMinimumSize(QSize(200, 0))
-        self.save.setMaximumSize(QSize(350, 16777215))
+        self.save_btn = QPushButton(self.Invoices)
+        self.save_btn.setObjectName(u"save_btn")
+        self.save_btn.setMinimumSize(QSize(200, 0))
+        self.save_btn.setMaximumSize(QSize(350, 16777215))
 
-        self.vboxLayout.addWidget(self.save, 0, Qt.AlignmentFlag.AlignRight)
+        self.vboxLayout.addWidget(self.save_btn, 0, Qt.AlignmentFlag.AlignRight)
 
         self.scrollArea = QScrollArea(self.Invoices)
         self.scrollArea.setObjectName(u"scrollArea")
         self.scrollArea.setWidgetResizable(True)
         self.scrollarea_qwidget = QWidget()
         self.scrollarea_qwidget.setObjectName(u"scrollarea_qwidget")
-        self.scrollarea_qwidget.setGeometry(QRect(0, 0, 1095, 632))
+        self.scrollarea_qwidget.setGeometry(QRect(0, 0, 1446, 660))
         self.scrollarea_qwidget_layout = QVBoxLayout(self.scrollarea_qwidget)
         self.scrollarea_qwidget_layout.setObjectName(u"scrollarea_qwidget_layout")
         self.scrollarea_qwidget_layout.setContentsMargins(0, 0, 0, -1)
@@ -97,21 +97,24 @@ class Ui_Form(object):
         self.widget = QWidget(self.frame_invoice)
         self.widget.setObjectName(u"widget")
         self._2 = QHBoxLayout(self.widget)
-        self._2.setSpacing(8)
+        self._2.setSpacing(6)
         self._2.setObjectName(u"_2")
         self._2.setContentsMargins(0, 0, 0, 0)
-        self.widget_2 = QWidget(self.widget)
-        self.widget_2.setObjectName(u"widget_2")
-        self.verticalLayout = QVBoxLayout(self.widget_2)
+        self.frame_title_sub = QWidget(self.widget)
+        self.frame_title_sub.setObjectName(u"frame_title_sub")
+        self.frame_title_sub.setMinimumSize(QSize(250, 250))
+        self.frame_title_sub.setMaximumSize(QSize(400, 16777215))
+        self.verticalLayout = QVBoxLayout(self.frame_title_sub)
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.title_input = QLineEdit(self.widget_2)
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.title_input = QLineEdit(self.frame_title_sub)
         self.title_input.setObjectName(u"title_input")
         self.title_input.setMinimumSize(QSize(250, 30))
         self.title_input.setMaximumSize(QSize(16777215, 35))
 
         self.verticalLayout.addWidget(self.title_input)
 
-        self.subheading_input = QLineEdit(self.widget_2)
+        self.subheading_input = QLineEdit(self.frame_title_sub)
         self.subheading_input.setObjectName(u"subheading_input")
         self.subheading_input.setMinimumSize(QSize(250, 30))
         self.subheading_input.setMaximumSize(QSize(16777215, 35))
@@ -119,7 +122,7 @@ class Ui_Form(object):
         self.verticalLayout.addWidget(self.subheading_input)
 
 
-        self._2.addWidget(self.widget_2)
+        self._2.addWidget(self.frame_title_sub)
 
         self.frame_btn_logo = QWidget(self.widget)
         self.frame_btn_logo.setObjectName(u"frame_btn_logo")
@@ -129,12 +132,12 @@ class Ui_Form(object):
         sizePolicy1.setHeightForWidth(self.frame_btn_logo.sizePolicy().hasHeightForWidth())
         self.frame_btn_logo.setSizePolicy(sizePolicy1)
         self.frame_btn_logo.setMinimumSize(QSize(250, 250))
-        self.frame_btn_logo.setMaximumSize(QSize(250, 250))
+        self.frame_btn_logo.setMaximumSize(QSize(400, 250))
         self.frame_btn_logo.setBaseSize(QSize(250, 250))
-        self.verticalLayout_2 = QVBoxLayout(self.frame_btn_logo)
-        self.verticalLayout_2.setSpacing(0)
-        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout = QHBoxLayout(self.frame_btn_logo)
+        self.horizontalLayout.setSpacing(0)
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
         self.select_logo_btn = QPushButton(self.frame_btn_logo)
         self.select_logo_btn.setObjectName(u"select_logo_btn")
         sizePolicy1.setHeightForWidth(self.select_logo_btn.sizePolicy().hasHeightForWidth())
@@ -147,51 +150,79 @@ class Ui_Form(object):
         self.select_logo_btn.setIcon(icon)
         self.select_logo_btn.setIconSize(QSize(128, 128))
 
-        self.verticalLayout_2.addWidget(self.select_logo_btn)
+        self.horizontalLayout.addWidget(self.select_logo_btn)
 
 
         self._2.addWidget(self.frame_btn_logo)
 
-        self.widget_4 = QWidget(self.widget)
-        self.widget_4.setObjectName(u"widget_4")
-        self.verticalLayout_3 = QVBoxLayout(self.widget_4)
+        self.frame_logo = QFrame(self.widget)
+        self.frame_logo.setObjectName(u"frame_logo")
+        sizePolicy1.setHeightForWidth(self.frame_logo.sizePolicy().hasHeightForWidth())
+        self.frame_logo.setSizePolicy(sizePolicy1)
+        self.frame_logo.setMinimumSize(QSize(250, 250))
+        self.frame_logo.setMaximumSize(QSize(250, 250))
+        self.frame_logo.setBaseSize(QSize(250, 250))
+        self.frame_logo.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_logo.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayout_2 = QVBoxLayout(self.frame_logo)
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.image_lable = QLabel(self.frame_logo)
+        self.image_lable.setObjectName(u"image_lable")
+        sizePolicy1.setHeightForWidth(self.image_lable.sizePolicy().hasHeightForWidth())
+        self.image_lable.setSizePolicy(sizePolicy1)
+        self.image_lable.setMinimumSize(QSize(250, 250))
+        self.image_lable.setMaximumSize(QSize(250, 250))
+        self.image_lable.setBaseSize(QSize(250, 250))
+
+        self.verticalLayout_2.addWidget(self.image_lable)
+
+
+        self._2.addWidget(self.frame_logo)
+
+        self.frame_address = QWidget(self.widget)
+        self.frame_address.setObjectName(u"frame_address")
+        self.frame_address.setMinimumSize(QSize(250, 250))
+        self.frame_address.setMaximumSize(QSize(400, 16777215))
+        self.verticalLayout_3 = QVBoxLayout(self.frame_address)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
-        self.name_input = QLineEdit(self.widget_4)
+        self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
+        self.name_input = QLineEdit(self.frame_address)
         self.name_input.setObjectName(u"name_input")
         self.name_input.setMinimumSize(QSize(250, 30))
         self.name_input.setMaximumSize(QSize(16777215, 35))
 
         self.verticalLayout_3.addWidget(self.name_input)
 
-        self.email_input = QLineEdit(self.widget_4)
+        self.email_input = QLineEdit(self.frame_address)
         self.email_input.setObjectName(u"email_input")
         self.email_input.setMinimumSize(QSize(250, 30))
         self.email_input.setMaximumSize(QSize(16777215, 35))
 
         self.verticalLayout_3.addWidget(self.email_input)
 
-        self.tax_number_input = QLineEdit(self.widget_4)
+        self.tax_number_input = QLineEdit(self.frame_address)
         self.tax_number_input.setObjectName(u"tax_number_input")
         self.tax_number_input.setMinimumSize(QSize(250, 30))
         self.tax_number_input.setMaximumSize(QSize(16777215, 35))
 
         self.verticalLayout_3.addWidget(self.tax_number_input)
 
-        self.phone_input = QLineEdit(self.widget_4)
+        self.phone_input = QLineEdit(self.frame_address)
         self.phone_input.setObjectName(u"phone_input")
         self.phone_input.setMinimumSize(QSize(250, 30))
         self.phone_input.setMaximumSize(QSize(16777215, 35))
 
         self.verticalLayout_3.addWidget(self.phone_input)
 
-        self.address_input = QLineEdit(self.widget_4)
+        self.address_input = QLineEdit(self.frame_address)
         self.address_input.setObjectName(u"address_input")
         self.address_input.setMinimumSize(QSize(250, 30))
         self.address_input.setMaximumSize(QSize(16777215, 35))
 
         self.verticalLayout_3.addWidget(self.address_input)
 
-        self.country_input = QLineEdit(self.widget_4)
+        self.country_input = QLineEdit(self.frame_address)
         self.country_input.setObjectName(u"country_input")
         self.country_input.setMinimumSize(QSize(250, 30))
         self.country_input.setMaximumSize(QSize(16777215, 35))
@@ -199,7 +230,7 @@ class Ui_Form(object):
         self.verticalLayout_3.addWidget(self.country_input)
 
 
-        self._2.addWidget(self.widget_4)
+        self._2.addWidget(self.frame_address)
 
 
         self.frame_invoice_layout.addWidget(self.widget)
@@ -253,14 +284,15 @@ class Ui_Form(object):
     # setupUi
 
     def retranslateUi(self, Form):
-        self.save.setText(QCoreApplication.translate("Form", u"Save", None))
-        self.save.setProperty(u"class", QCoreApplication.translate("Form", u"primary outlined", None))
+        self.save_btn.setText(QCoreApplication.translate("Form", u"Save", None))
+        self.save_btn.setProperty(u"class", QCoreApplication.translate("Form", u"primary outlined", None))
         self.label_new_invoice.setText(QCoreApplication.translate("Form", u"New Invoice", None))
         self.label_company.setText(QCoreApplication.translate("Form", u"Company", None))
         self.label_subtitle.setText(QCoreApplication.translate("Form", u"Change the address, logo, and other information for your company.", None))
         self.title_input.setPlaceholderText(QCoreApplication.translate("Form", u"Title", None))
         self.subheading_input.setPlaceholderText(QCoreApplication.translate("Form", u"Subheading", None))
         self.select_logo_btn.setText("")
+        self.image_lable.setText("")
         self.name_input.setPlaceholderText(QCoreApplication.translate("Form", u"Name", None))
         self.email_input.setPlaceholderText(QCoreApplication.translate("Form", u"Email", None))
         self.tax_number_input.setPlaceholderText(QCoreApplication.translate("Form", u"Tax Number", None))

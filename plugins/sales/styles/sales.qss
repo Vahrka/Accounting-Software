@@ -183,3 +183,8 @@ QPushButton.primary.outlined:hover {
     background-color: #10345ac4;
     color: #1d4ed8;
 }
+
+#frame_logo {
+    border-radius: 10px;
+    border: 1px solid #efefef;
+}
