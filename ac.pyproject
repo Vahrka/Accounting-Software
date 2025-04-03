@@ -1,5 +1,26 @@
 {
     "files": [
-        "main.py"
+        "main.py",
+        "source.qrc",
+        "source_rc.py",
+        "src/core/plugins/loader.py",
+        "src/core/plugins/plugin_base.py",
+        "src/core/plugins/template.yaml",
+        "src/core/database/models.py",
+        "src/core/utils/DataStructure.py",
+        "src/core/utils/__init__.py",
+        "src/core/utils/logger.py",
+        "src/core/utils/settings.py",
+        "src/core/utils/shortcutes.py",
+        "src/gui/main_window.py",
+        "src/gui/styles/styles.qss",
+        "src/gui/ui/main_window.ui",
+        "src/gui/ui/main_window_ui.py",
+        "src/gui/ui/plugin_list_dialog.ui",
+        "src/gui/ui/plugin_list_dialog_ui.py",
+        "src/gui/widgets/base_screen.py",
+        "src/gui/widgets/__init__.py",
+        "src/gui/widgets/menubar.py",
+        "src/gui/widgets/plugins_list.py"
     ]
 }
