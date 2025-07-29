@@ -92,7 +92,7 @@ class MainWindow(QMainWindow):
                     lambda checked, idx=new_index: self.go_to_screen(idx)
                 )
 
-    @Slot(int, name="Go to screen")
+    @Slot(int, name="Go to screen") # type: ignore
     def go_to_screen(self, screen: int):
         """Switch to a specific screen in the stack view."""
         if 0 <= screen < self.ui.MainStackView.count():

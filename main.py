@@ -24,7 +24,7 @@ logger = get_logger(APP_NAME)
 def setup_application():
     """Configure the QApplication instance."""
     # Set up application settings
-    QSettings.setDefaultFormat(QSettings.IniFormat)
+    QSettings.setDefaultFormat(QSettings.IniFormat)  # type: ignore
 
     # Create application instance
     app = QApplication(sys.argv)
@@ -45,11 +45,10 @@ def setup_application():
     if translator.load(QLocale.system(), 'example', '_', path):
         app.installTranslator(translator)
 
-    # Load stylesheet
-    # In main.py
+    # Load stylesheet in main.py
     style_file = QFile(":/styles/default-style")
-    if style_file.open(QFile.ReadOnly | QFile.Text):
-        app.setStyleSheet(str(style_file.readAll(), encoding="utf-8"))
+    if style_file.open(QFile.ReadOnly | QFile.Text):  # pyright: ignore[reportAttributeAccessIssue]
+        app.setStyleSheet(str(style_file.readAll(), encoding="utf-8"))  # type: ignore
     else:
         logger.error("Faild to load style sheet.")
 

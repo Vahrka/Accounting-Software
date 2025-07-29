@@ -32,8 +32,8 @@ class PluginsListView(QDialog):
     def _setup_layout(self):
         """Configure layout properties"""
         self.ui.listWidget.setSpacing(4)
-        self.ui.listWidget.setVerticalScrollMode(QListWidget.ScrollPerPixel)
-        self.ui.listWidget.setHorizontalScrollMode(QListWidget.ScrollPerPixel)
+        self.ui.listWidget.setVerticalScrollMode(QListWidget.ScrollPerPixel)  # type: ignore
+        self.ui.listWidget.setHorizontalScrollMode(QListWidget.ScrollPerPixel)  # type: ignore
 
     def load_plugins(self):
         """Load plugins into the list widget"""
@@ -63,14 +63,14 @@ class PluginsListView(QDialog):
         delete_btn = QPushButton(self.tr("Remove"))
         delete_btn.setObjectName("pluginDeleteBtn")
         delete_btn.setProperty("state", "enabled" if is_enabled else "disabled")
-        delete_btn.setCursor(Qt.PointingHandCursor)
+        delete_btn.setCursor(Qt.PointingHandCursor)  # type: ignore
         delete_btn.setFixedSize(90, 30)
 
         layout.addWidget(checkbox, 1)
         layout.addWidget(delete_btn)
 
         item = QListWidgetItem()
-        item.setData(Qt.UserRole, plugin_info['path'])
+        item.setData(Qt.UserRole, plugin_info['path'])  # type: ignore
         item.setSizeHint(widget.sizeHint())
 
         self.ui.listWidget.addItem(item)
@@ -85,31 +85,31 @@ class PluginsListView(QDialog):
         path = Path(plugin['path'])
 
         if enabled:
-            register_plugin(path, self.main_window.add_to_screen)
+            register_plugin(path, self.main_window.add_to_screen)  # type: ignore
         else:
-            unregister_plugin(path, self.main_window.remove_plugin_btn_screen, remove=False)
+            unregister_plugin(path, self.main_window.remove_plugin_btn_screen, remove=False)  # type: ignore
 
         self._update_item_state(plugin_name, enabled)
 
     def _on_delete_clicked(self, plugin_name):
         """Handle delete button click"""
         reply = QMessageBox(
-            QMessageBox.Warning,
+            QMessageBox.Warning,  # type: ignore
             self.tr("Remove Plugin"),
             self.tr(f"Are you sure you want to remove '{plugin_name}'?"),
-            QMessageBox.Yes | QMessageBox.No,
+            QMessageBox.Yes | QMessageBox.No,  # type: ignore
             self
         )
         reply.setObjectName("pluginMessageBox")
 
-        if reply.exec() == QMessageBox.Yes:
+        if reply.exec() == QMessageBox.Yes:  # type: ignore
             self._delete_plugin(plugin_name)
 
     def _delete_plugin(self, plugin_name):
         """Delete plugin completely"""
         plugin = self.plugin_names[plugin_name]
         path = Path(plugin['path'])
-        unregister_plugin(path, self.main_window.remove_plugin_btn_screen, remove=True)
+        unregister_plugin(path, self.main_window.remove_plugin_btn_screen, remove=True)  # type: ignore
         self.load_plugins()
 
     def _update_item_state(self, plugin_name, enabled):
@@ -118,10 +118,10 @@ class PluginsListView(QDialog):
             item = self.ui.listWidget.item(i)
             widget = self.ui.listWidget.itemWidget(item)
 
-            if widget and widget.findChild(QCheckBox).text() == plugin_name:
+            if widget and widget.findChild(QCheckBox).text() == plugin_name:  # type: ignore
                 state = "enabled" if enabled else "disabled"
-                widget.findChild(QCheckBox).setProperty("state", state)
-                widget.findChild(QPushButton).setProperty("state", state)
+                widget.findChild(QCheckBox).setProperty("state", state)  # type: ignore
+                widget.findChild(QPushButton).setProperty("state", state)  # type: ignore
 
                 # Force style update
                 widget.style().unpolish(widget)

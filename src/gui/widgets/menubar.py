@@ -15,8 +15,8 @@ logger = get_logger()
 class Menubar:
     """A custom menubar class that sets up the UI and handles menu actions."""
 
-    def __init__(self, main_window: QMainWindow = None):
-        self.ui: Ui_MainWindow = main_window.ui
+    def __init__(self, main_window: QMainWindow):
+        self.ui: Ui_MainWindow = main_window.ui  # type: ignore
         self.parent = main_window
 
         self.actionContact = self.ui.actionContact
@@ -36,12 +36,13 @@ class Menubar:
         # Highlight important actions
         self.actionContact.setProperty("highlighted", "true")
         self.actionPrefrences.setProperty("type", "settings")
-        
+
         # Add accessible names for styling
         self.actionRegister.setProperty("name", "register")
         self.actionList.setProperty("name", "plugin-list")
         self.actionImport.setProperty("name", "import")
         self.actionExport.setProperty("name", "export")
+
     def setup_ui(self):
         """Initialize and configure the actions for the menubar."""
         # Connect the actions to their handlers
@@ -58,7 +59,7 @@ class Menubar:
 
         if folder_path:
             main_window = self.parent
-            register_plugin(path=folder_path, add_func=main_window.add_to_screen)
+            register_plugin(path=folder_path, add_func=main_window.add_to_screen)  # type: ignore
 
     @Slot()
     def open_contact(self):

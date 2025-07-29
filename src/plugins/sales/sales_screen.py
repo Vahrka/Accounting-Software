@@ -1,16 +1,18 @@
 from pathlib import Path
 
-from PySide6.QtCore import Qt, Slot
-from PySide6.QtGui import QAction, QPixmap
-from PySide6.QtWidgets import QFileDialog, QTabWidget
-from src.core.utils.logger import get_logger
+from PySide6.QtCore import QSize, Qt, Slot
+from PySide6.QtGui import QIcon, QPixmap, QStandardItem, QStandardItemModel
+from PySide6.QtWidgets import (QFileDialog, QHBoxLayout, QHeaderView,
+                               QTabWidget, QToolButton, QWidget)
+
 from src.core.database.models import Billing, db
+from src.core.utils.logger import get_logger
 
 from .ui.form_ui import Ui_Form
 
-
 logger = get_logger()
 
+# TODO: do not add item to db before saving using save btn
 class SalesScreen(QTabWidget):
 
     def setup_ui(self):
@@ -24,6 +26,19 @@ class SalesScreen(QTabWidget):
         self.ui.save_btn.clicked.connect(self.save)
         self.ui.select_logo_btn.clicked.connect(self.select_logo)
         self.ui.add_to_record_btn.clicked.connect(self.add_record)
+
+        self.ui.tableView.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)  # type: ignore
+        # self.ui.tableView.setEditTriggers(QAbstractItemView.NoEditTriggers)  # type: ignore
+        self.ui.tableView.setColumnWidth(0, 5000)
+        self.model = QStandardItemModel()
+        self.model.setHorizontalHeaderLabels([
+            self.tr("Name"),
+            self.tr("Price"),
+            self.tr("Count"),
+            self.tr("Total"),
+            self.tr("Action"),
+        ])
+        self.ui.tableView.setModel(self.model)
 
         self.retranslateUi()
 
@@ -73,13 +88,83 @@ class SalesScreen(QTabWidget):
                 db.close()
                 logger.info(f"Item saved in DB\nname={name}\nprice={price}\ncount={count}")
 
-                # TODO:
-                # Add to table
-                # self.ui.tableView.addAction(QAction(text="Hello"))
-                
-                
+                self.model = self.ui.tableView.model()
+                row_items = ([
+                    QStandardItem(name),
+                    QStandardItem(str(price)),
+                    QStandardItem(str(count)),
+                    QStandardItem(str(price * count)),
+                    QStandardItem(),
+
+                ])  # type: ignore
+
+                for i in range(len(row_items)):
+                    row_items[i].setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+
+                self.model.appendRow(row_items)
+                self.add_delete_button(self.model.rowCount() - 1)
+
+                self.ui.billing_name_input.clear()
+                self.ui.price_input.clear()
+                self.ui.count_input.clear()
+
             except ValueError as value_error:
                 logger.error(f"Price and Count must be integer number.\n{value_error}",)
 
             except Exception as error:
                 logger.fatal(f"Unexpected error happend.\n{error}",)
+
+    def add_delete_button(self, row):
+        # Create a container widget for perfect centering
+        container = QWidget()
+        layout = QHBoxLayout(container)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        # Create icon button
+        btn = QToolButton()
+        icon = QIcon(":/icons/delete-2.svg")
+        btn.setIcon(icon)
+        btn.setToolTip(self.tr("Delete"))
+        btn.setStyleSheet("""
+            QToolButton {
+                border: none;
+                padding: 2px;
+            }
+            QToolButton::icon {
+                color: #ff4444;  /* Red color for the icon */
+            }
+            QToolButton:hover {
+                background-color: #ffdddd;
+                border-radius: 3px;
+            }
+        """)
+        btn.clicked.connect(lambda checked, r=row: self.delete_row(r))
+
+        layout.addWidget(btn)
+
+        # Set container in table cell
+        self.ui.tableView.setIndexWidget(
+            self.model.index(row, 4),  # Assuming column 4 is action column
+            container
+        )
+
+    def delete_row(self, row):
+        try:
+            # Get the ID or unique identifier from your model
+            name = self.model.item(row, 0).text()
+
+            # Delete from database
+            db.connect()
+            Billing.delete().where(Billing.name == name).execute()
+            db.close()
+
+            # Remove from table
+            self.model.removeRow(row)
+
+            # Reindex remaining buttons
+            for r in range(row, self.model.rowCount()):
+                self.add_delete_button(r)
+
+        except Exception as e:
+            logger.error(f"Error deleting row:\n{e}")
