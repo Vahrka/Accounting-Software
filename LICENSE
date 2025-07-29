@@ -4,13 +4,16 @@ Copyright © 2025 Bambi. All rights reserved.
 1. DEFINITIONS
 "Software" = Original work & derivatives
 "Commercial Use" = Any monetization attempt
-"Distribution" = Sharing in any form
+"Distribution" = Sharing in any form even with edit
 
 2. GRANT OF RIGHTS
 You may:
 a) Use Software for any non-commercial purpose
 b) Modify source code for internal use
 c) Distribute patches with original license
+
+We may:
+a) Change licence any time and that will be affect on all previous versions of software and distribution too.
 
 3. RESTRICTIONS
 You may NOT:
@@ -39,7 +42,7 @@ Required terms:
 6. TERMINATION
 Violations result in:
 a) Automatic license revocation
-b) $500/day penalty for continued use
+b) €1000/day or $1200/day penalty for continued use from fist day of violation
 c) Legal action for damages
 
 7. DISCLAIMER
@@ -47,7 +50,7 @@ SOFTWARE PROVIDED "AS IS" WITHOUT WARRANTY.
 AUTHOR NOT LIABLE FOR DATA LOSS OR DAMAGES.
 
 8. GOVERNING LAW
-Subject to [Your Country] jurisdiction.
+Subject to <Your Country> jurisdiction.
 Litigation costs paid by violator.
 
 -- END OF LICENSE --
