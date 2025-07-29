@@ -3,11 +3,13 @@ from pathlib import Path
 from PySide6.QtCore import Qt, Slot
 from PySide6.QtGui import QAction, QPixmap
 from PySide6.QtWidgets import QFileDialog, QTabWidget
-
+from src.core.utils.logger import get_logger
 from src.core.database.models import Billing, db
 
 from .ui.form_ui import Ui_Form
 
+
+logger = get_logger()
 
 class SalesScreen(QTabWidget):
 
@@ -69,11 +71,15 @@ class SalesScreen(QTabWidget):
                 billing = Billing(name=name, price=price, count=count)
                 billing.save()
                 db.close()
+                logger.info(f"Item saved in DB\nname={name}\nprice={price}\ncount={count}")
 
-                self.ui.tableView.addAction(QAction(text="Hello"))
-                print("Done")
-            except ValueError as e:
-                print(e)
+                # TODO:
+                # Add to table
+                # self.ui.tableView.addAction(QAction(text="Hello"))
+                
+                
+            except ValueError as value_error:
+                logger.error(f"Price and Count must be integer number.\n{value_error}",)
 
-            except Exception as e:
-                print(e)
+            except Exception as error:
+                logger.fatal(f"Unexpected error happend.\n{error}",)
