@@ -332,28 +332,4 @@ QPushButton:disabled {
     background-color: #f8f9fa;
 }
 
-QPushButton.primary {
-    background-color: #2563eb;
-    border-color: #2563eb;
-    color: #ffffff;
-}
-
-QPushButton.primary:hover {
-    background-color: #1d4ed8;
-    border-color: #1d4ed8;
-}
-
-
-QPushButton.danger {
-    background-color: #dc2626;
-    border-color: #dc2626;
-    color: #ffffff;
-}
-
-QPushButton.danger:hover {
-    background-color: #b91c1c;
-    border-color: #b91c1c;
-}
-
-
 

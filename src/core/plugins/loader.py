@@ -1,6 +1,6 @@
 import importlib
 from pathlib import Path
-from typing import Optional
+from typing import Callable, Optional
 
 import yaml
 from PySide6.QtCore import QSettings
@@ -8,6 +8,7 @@ from PySide6.QtCore import QSettings
 from src.core.utils.DataStructure import (PluginConfigStruct,
                                           PluginsConfigFileStruct)
 from src.core.utils.logger import get_logger
+from src.plugins import *
 
 logger = get_logger()
 
@@ -102,7 +103,7 @@ def get_plugin_class(module_name: str, class_name: str) -> Optional[type]:
         return None
 
 
-def register_plugin(path: Path, add_func: callable) -> bool:
+def register_plugin(path: Path, add_func: Callable) -> bool:
     """
     Register a plugin by loading its configuration, dynamically importing the plugin class,
     and initializing it. If the plugin is already registered, it will not be registered again.
@@ -131,7 +132,8 @@ def register_plugin(path: Path, add_func: callable) -> bool:
     # Dynamically import the plugin class
     plugin_class = get_plugin_class(module_name, class_name)
     if not plugin_class or not hasattr(plugin_class, "register"):
-        logger.error(f"Class '{plugin_class}' does't has correct stucture or does not exist.\nNo method named `register`")
+        logger.error(
+            f"Class '{plugin_class}' does't has correct stucture or does not exist.\nNo method named `register`")
         return False
 
     # Initialize and register the plugin
@@ -141,7 +143,7 @@ def register_plugin(path: Path, add_func: callable) -> bool:
     return True
 
 
-def unregister_plugin(path: Path, remove_func: callable,  remove: bool = False) -> bool:
+def unregister_plugin(path: Path, remove_func: Callable,  remove: bool = False) -> bool:
     """
     Unregister a plugin by loading its configuration, dynamically importing the plugin class,
     and calling its unregister method.
@@ -167,7 +169,8 @@ def unregister_plugin(path: Path, remove_func: callable,  remove: bool = False) 
     # Dynamically import the plugin class
     plugin_class = get_plugin_class(module_name, class_name)
     if not plugin_class or not hasattr(plugin_class, "unregister"):
-        logger.error(f"Class '{plugin_class}' does not exist or does't has correct stracture.\nNo method named `unregister`")
+        logger.error(
+            f"Class '{plugin_class}' does not exist or does't has correct stracture.\nNo method named `unregister`")
         return False
 
     # Initialize and unregister the plugin
@@ -178,7 +181,7 @@ def unregister_plugin(path: Path, remove_func: callable,  remove: bool = False) 
     return True
 
 
-def load_plugins(add_func: callable) -> None:
+def load_external_plugins(add_func: Callable) -> None:
     """
     Load all plugins listed in the plugins.yml file and register them if they are not already registered.
     """
@@ -196,3 +199,11 @@ def load_plugins(add_func: callable) -> None:
                     logger.critical(f"Failed to load plugin '{name}'\nError: {e}")
             else:
                 logger.error(f"Plugin '{name}' does not exist at '{path}'")
+
+
+def load_internal_plugins(add_func: Callable) -> None:
+    """
+    Load all interal plugins.
+    """
+    # Load the plugins configuration
+    Sales(add_func=add_func).register()

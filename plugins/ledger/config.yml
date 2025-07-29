@@ -1,9 +1,0 @@
-extention:
-  name: "Ledger"
-  entrypoint: "main.Ledger"
-  verstion: "1.0.0"
-  author: "AC"
-
-
-software:
-  version: "1.0.0"

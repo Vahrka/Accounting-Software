@@ -2,14 +2,14 @@
 import sys
 
 from PySide6.QtCore import QFile, QLibraryInfo, QLocale, QSettings, QTranslator
-from PySide6.QtGui import QFont, QIcon, Qt
+from PySide6.QtGui import QFont, QIcon
 from PySide6.QtWidgets import QApplication
 
 # Reources
 import source_rc
 # Local imports
 from src.core.database.models import initialize_database
-from src.core.plugins.loader import load_plugins
+from src.core.plugins.loader import load_internal_plugins
 from src.core.utils.logger import get_logger
 from src.core.utils.settings import (APP_NAME, APP_VERSION,
                                      ORGANIZATION_DOMAIN, ORGANIZATION_NAME)
@@ -73,7 +73,7 @@ def main():
         main_window.setMinimumWidth(1024)
         main_window.setMinimumHeight(720)
         # Load installed plugins
-        load_plugins(main_window.add_to_screen)
+        load_internal_plugins(main_window.add_to_screen)
 
         main_window.show()
 

@@ -1,10 +1,10 @@
-from typing import override
+from typing import Callable, override
 
 from PySide6.QtWidgets import QPushButton, QWidget
 
 
 class PluginBase(QWidget):
-    def __init__(self, add_func: callable = None, remove_func: callable = None):
+    def __init__(self, add_func: Callable = None, remove_func: Callable = None):
         super().__init__()
         self.__add_to_screen = add_func
         self.__remove_plugin_btn_screen = remove_func

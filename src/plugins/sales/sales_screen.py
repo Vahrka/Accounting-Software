@@ -1,9 +1,10 @@
 from pathlib import Path
 
-from PySide6.QtCore import Qt, Signal, Slot
+from PySide6.QtCore import Qt, Slot
+from PySide6.QtGui import QAction, QPixmap
 from PySide6.QtWidgets import QFileDialog, QTabWidget
-from PySide6.QtGui import QPixmap
 
+from src.core.database.models import Billing, db
 
 from .ui.form_ui import Ui_Form
 
@@ -20,6 +21,7 @@ class SalesScreen(QTabWidget):
 
         self.ui.save_btn.clicked.connect(self.save)
         self.ui.select_logo_btn.clicked.connect(self.select_logo)
+        self.ui.add_to_record_btn.clicked.connect(self.add_record)
 
         self.retranslateUi()
 
@@ -28,11 +30,11 @@ class SalesScreen(QTabWidget):
         self.setTabText(1, self.tr("Customers"))
 
     @Slot()
-    def save(self, *args, **kwargs):
+    def save(self):
         print("Saved")
 
     @Slot()
-    def select_logo(self, *args, **kwargs):
+    def select_logo(self):
         file_path, selected_filter = QFileDialog.getOpenFileName(
             caption=self.tr("Select an Image"),
             filter=(
@@ -53,3 +55,25 @@ class SalesScreen(QTabWidget):
             pixmap = QPixmap(Path(file_path).absolute())
             pixmap = pixmap.scaled(250, 250, Qt.AspectRatioMode.KeepAspectRatio)
             self.ui.image_lable.setPixmap(pixmap)
+
+    @Slot()
+    def add_record(self):
+        name = self.ui.billing_name_input.text()
+        price = self.ui.price_input.text() or 0
+        count = self.ui.count_input.text() or 0
+        if all([name, price, count]):
+            try:
+                price = int(price)
+                count = int(count)
+                db.connect()
+                billing = Billing(name=name, price=price, count=count)
+                billing.save()
+                db.close()
+
+                self.ui.tableView.addAction(QAction(text="Hello"))
+                print("Done")
+            except ValueError as e:
+                print(e)
+
+            except Exception as e:
+                print(e)

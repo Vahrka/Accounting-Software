@@ -18,6 +18,7 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        
         self.ui.MainSideNav.setAlignment(Qt.AlignmentFlag.AlignTop)
 
         self.menubar_controler = Menubar(self)

@@ -15,15 +15,16 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QFrame, QHBoxLayout, QLabel,
-    QLineEdit, QPushButton, QScrollArea, QSizePolicy,
-    QTabWidget, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QFrame, QHBoxLayout, QHeaderView,
+    QLabel, QLineEdit, QPushButton, QScrollArea,
+    QSizePolicy, QTabWidget, QTableView, QVBoxLayout,
+    QWidget)
 
 class Ui_Form(object):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
-        Form.resize(1470, 744)
+        Form.resize(1470, 832)
         self.Invoices = QWidget()
         self.Invoices.setObjectName(u"Invoices")
         self.vboxLayout = QVBoxLayout(self.Invoices)
@@ -33,14 +34,14 @@ class Ui_Form(object):
         self.save_btn.setMinimumSize(QSize(200, 0))
         self.save_btn.setMaximumSize(QSize(350, 16777215))
 
-        self.vboxLayout.addWidget(self.save_btn, 0, Qt.AlignmentFlag.AlignRight)
+        self.vboxLayout.addWidget(self.save_btn)
 
         self.scrollArea = QScrollArea(self.Invoices)
         self.scrollArea.setObjectName(u"scrollArea")
         self.scrollArea.setWidgetResizable(True)
         self.scrollarea_qwidget = QWidget()
         self.scrollarea_qwidget.setObjectName(u"scrollarea_qwidget")
-        self.scrollarea_qwidget.setGeometry(QRect(0, 0, 1446, 660))
+        self.scrollarea_qwidget.setGeometry(QRect(0, 0, 1432, 755))
         self.scrollarea_qwidget_layout = QVBoxLayout(self.scrollarea_qwidget)
         self.scrollarea_qwidget_layout.setObjectName(u"scrollarea_qwidget_layout")
         self.scrollarea_qwidget_layout.setContentsMargins(0, 0, 0, -1)
@@ -110,14 +111,14 @@ class Ui_Form(object):
         self.title_input = QLineEdit(self.frame_title_sub)
         self.title_input.setObjectName(u"title_input")
         self.title_input.setMinimumSize(QSize(250, 30))
-        self.title_input.setMaximumSize(QSize(16777215, 35))
+        self.title_input.setMaximumSize(QSize(16777215, 40))
 
         self.verticalLayout.addWidget(self.title_input)
 
         self.subheading_input = QLineEdit(self.frame_title_sub)
         self.subheading_input.setObjectName(u"subheading_input")
         self.subheading_input.setMinimumSize(QSize(250, 30))
-        self.subheading_input.setMaximumSize(QSize(16777215, 35))
+        self.subheading_input.setMaximumSize(QSize(16777215, 40))
 
         self.verticalLayout.addWidget(self.subheading_input)
 
@@ -249,8 +250,48 @@ class Ui_Form(object):
 
         self.frame_billing_layout.addWidget(self.label_billing)
 
+        self.widget_3 = QWidget(self.frame_billing)
+        self.widget_3.setObjectName(u"widget_3")
+        self.horizontalLayout_3 = QHBoxLayout(self.widget_3)
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.billing_name_input = QLineEdit(self.widget_3)
+        self.billing_name_input.setObjectName(u"billing_name_input")
+        self.billing_name_input.setMinimumSize(QSize(250, 30))
+        self.billing_name_input.setMaximumSize(QSize(400, 40))
 
-        self.frame_verticalLayout.addWidget(self.frame_billing, 0, Qt.AlignmentFlag.AlignTop)
+        self.horizontalLayout_3.addWidget(self.billing_name_input)
+
+        self.price_input = QLineEdit(self.widget_3)
+        self.price_input.setObjectName(u"price_input")
+        self.price_input.setMinimumSize(QSize(250, 30))
+        self.price_input.setMaximumSize(QSize(400, 40))
+
+        self.horizontalLayout_3.addWidget(self.price_input)
+
+        self.count_input = QLineEdit(self.widget_3)
+        self.count_input.setObjectName(u"count_input")
+        self.count_input.setMinimumSize(QSize(250, 30))
+        self.count_input.setMaximumSize(QSize(400, 40))
+
+        self.horizontalLayout_3.addWidget(self.count_input)
+
+        self.add_to_record_btn = QPushButton(self.widget_3)
+        self.add_to_record_btn.setObjectName(u"add_to_record_btn")
+        self.add_to_record_btn.setMinimumSize(QSize(200, 0))
+
+        self.horizontalLayout_3.addWidget(self.add_to_record_btn)
+
+
+        self.frame_billing_layout.addWidget(self.widget_3)
+
+        self.tableView = QTableView(self.frame_billing)
+        self.tableView.setObjectName(u"tableView")
+        self.tableView.setMaximumSize(QSize(16777215, 350))
+
+        self.frame_billing_layout.addWidget(self.tableView)
+
+
+        self.frame_verticalLayout.addWidget(self.frame_billing)
 
         self.frame_advanced = QWidget(self.frame)
         self.frame_advanced.setObjectName(u"frame_advanced")
@@ -300,6 +341,11 @@ class Ui_Form(object):
         self.address_input.setPlaceholderText(QCoreApplication.translate("Form", u"Address", None))
         self.country_input.setPlaceholderText(QCoreApplication.translate("Form", u"Country", None))
         self.label_billing.setText(QCoreApplication.translate("Form", u"Billing", None))
+        self.billing_name_input.setPlaceholderText(QCoreApplication.translate("Form", u"Name", None))
+        self.price_input.setPlaceholderText(QCoreApplication.translate("Form", u"Price", None))
+        self.count_input.setPlaceholderText(QCoreApplication.translate("Form", u"Count", None))
+        self.add_to_record_btn.setText(QCoreApplication.translate("Form", u"Add to record", None))
+        self.add_to_record_btn.setProperty(u"class", QCoreApplication.translate("Form", u"primary outlined", None))
         self.label_advanced.setText(QCoreApplication.translate("Form", u"Advanced", None))
         Form.setTabText(Form.indexOf(self.Invoices), QCoreApplication.translate("Form", u"Page", None))
         Form.setTabText(Form.indexOf(self.Customers), QCoreApplication.translate("Form", u"Page", None))

@@ -28,8 +28,16 @@ class Transaction(BaseModel):
     to_account = ForeignKeyField(Account, backref='incoming_transactions')
 
 
+class Billing(BaseModel):
+    """Billings"""
+    name = CharField(max_length=50)
+    price = DecimalField()
+    count = DecimalField()
+
+
 def initialize_database(db_path: Path):
     """Initialize the database and create tables"""
     db.init(db_path)
     db.connect()
-    db.create_tables([Account, Transaction], safe=True)
+    db.create_tables([Account, Transaction, Billing], safe=True)
+    return db.close()
