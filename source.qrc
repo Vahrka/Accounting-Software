@@ -45,7 +45,10 @@
     <file alias="plugin-2.svg">src/gui/resources/svg/plugin-2-svgrepo-com.svg</file>
     <file alias="right-arrow-alt.svg">src/gui/resources/svg/right-arrow-alt-svgrepo-com.svg</file>
     <file alias="delete-2.svg">src/gui/resources/svg/delete-2-svgrepo-com.svg</file>
+    <file alias="down-2-svgrepo-com.svg">src/gui/resources/svg/down-2-svgrepo-com.svg</file>
+    <file alias="up-2-svgrepo-com.svg">src/gui/resources/svg/up-2-svgrepo-com.svg</file>
   </qresource>
+
 
 
 

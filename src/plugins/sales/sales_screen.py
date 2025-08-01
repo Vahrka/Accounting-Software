@@ -13,6 +13,8 @@ from .ui.form_ui import Ui_Form
 logger = get_logger()
 
 # TODO: do not add item to db before saving using save btn
+
+
 class SalesScreen(QTabWidget):
 
     def setup_ui(self):
@@ -46,11 +48,11 @@ class SalesScreen(QTabWidget):
         self.setTabText(0, self.tr("Invoices"))
         self.setTabText(1, self.tr("Customers"))
 
-    @Slot()
+    @Slot(name="Save to db")
     def save(self):
         print("Saved")
 
-    @Slot()
+    @Slot(name="Select Loog")
     def select_logo(self):
         file_path, selected_filter = QFileDialog.getOpenFileName(
             caption=self.tr("Select an Image"),
@@ -73,8 +75,8 @@ class SalesScreen(QTabWidget):
             pixmap = pixmap.scaled(250, 250, Qt.AspectRatioMode.KeepAspectRatio)
             self.ui.image_lable.setPixmap(pixmap)
 
-    @Slot()
-    def add_record(self):
+    @Slot(name="Add record to list")
+    def add_record(self) -> None:
         name = self.ui.billing_name_input.text()
         price = self.ui.price_input.text() or 0
         count = self.ui.count_input.text() or 0
@@ -82,11 +84,6 @@ class SalesScreen(QTabWidget):
             try:
                 price = int(price)
                 count = int(count)
-                db.connect()
-                billing = Billing(name=name, price=price, count=count)
-                billing.save()
-                db.close()
-                logger.info(f"Item saved in DB\nname={name}\nprice={price}\ncount={count}")
 
                 self.model = self.ui.tableView.model()
                 row_items = ([
@@ -95,13 +92,12 @@ class SalesScreen(QTabWidget):
                     QStandardItem(str(count)),
                     QStandardItem(str(price * count)),
                     QStandardItem(),
-
-                ])  # type: ignore
+                ])
 
                 for i in range(len(row_items)):
                     row_items[i].setTextAlignment(Qt.AlignmentFlag.AlignCenter)
 
-                self.model.appendRow(row_items)
+                self.model.appendRow(row_items)  # type: ignore
                 self.add_delete_button(self.model.rowCount() - 1)
 
                 self.ui.billing_name_input.clear()
@@ -114,7 +110,7 @@ class SalesScreen(QTabWidget):
             except Exception as error:
                 logger.fatal(f"Unexpected error happend.\n{error}",)
 
-    def add_delete_button(self, row):
+    def add_delete_button(self, row: int) -> None:
         # Create a container widget for perfect centering
         container = QWidget()
         layout = QHBoxLayout(container)
@@ -123,24 +119,11 @@ class SalesScreen(QTabWidget):
 
         # Create icon button
         btn = QToolButton()
+        btn.setProperty("class", "table_delete_btn")
         icon = QIcon(":/icons/delete-2.svg")
         btn.setIcon(icon)
         btn.setToolTip(self.tr("Delete"))
-        btn.setStyleSheet("""
-            QToolButton {
-                border: none;
-                padding: 2px;
-            }
-            QToolButton::icon {
-                color: #ff4444;  /* Red color for the icon */
-            }
-            QToolButton:hover {
-                background-color: #ffdddd;
-                border-radius: 3px;
-            }
-        """)
         btn.clicked.connect(lambda checked, r=row: self.delete_row(r))
-
         layout.addWidget(btn)
 
         # Set container in table cell
@@ -149,16 +132,8 @@ class SalesScreen(QTabWidget):
             container
         )
 
-    def delete_row(self, row):
+    def delete_row(self, row: int) -> None:
         try:
-            # Get the ID or unique identifier from your model
-            name = self.model.item(row, 0).text()
-
-            # Delete from database
-            db.connect()
-            Billing.delete().where(Billing.name == name).execute()
-            db.close()
-
             # Remove from table
             self.model.removeRow(row)
 

@@ -17,7 +17,6 @@ from src.core.utils.shortcutes import get_database_path, load_fonts
 from src.gui.main_window import MainWindow
 
 # Codes Here
-
 logger = get_logger(APP_NAME)
 
 

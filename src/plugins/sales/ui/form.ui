@@ -41,8 +41,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>878</width>
-         <height>734</height>
+         <width>854</width>
+         <height>961</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="scrollarea_qwidget_layout">
@@ -146,8 +146,8 @@
                    </property>
                    <property name="minimumSize">
                     <size>
-                     <width>206</width>
-                     <height>206</height>
+                     <width>200</width>
+                     <height>200</height>
                     </size>
                    </property>
                    <property name="maximumSize">
@@ -196,8 +196,8 @@
                    </property>
                    <property name="minimumSize">
                     <size>
-                     <width>206</width>
-                     <height>206</height>
+                     <width>200</width>
+                     <height>200</height>
                     </size>
                    </property>
                    <property name="maximumSize">
@@ -263,8 +263,8 @@
                    </property>
                    <property name="minimumSize">
                     <size>
-                     <width>206</width>
-                     <height>206</height>
+                     <width>200</width>
+                     <height>200</height>
                     </size>
                    </property>
                    <property name="frameShape">
@@ -309,8 +309,8 @@
                    </property>
                    <property name="minimumSize">
                     <size>
-                     <width>206</width>
-                     <height>206</height>
+                     <width>200</width>
+                     <height>200</height>
                     </size>
                    </property>
                    <property name="maximumSize">
@@ -403,6 +403,244 @@
                </widget>
               </item>
               <item>
+               <widget class="QWidget" name="widget_2" native="true">
+                <property name="maximumSize">
+                 <size>
+                  <width>818</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_6">
+                 <item>
+                  <widget class="QWidget" name="widget_4" native="true">
+                   <property name="maximumSize">
+                    <size>
+                     <width>850</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <layout class="QHBoxLayout" name="horizontalLayout_4">
+                    <property name="spacing">
+                     <number>10</number>
+                    </property>
+                    <property name="leftMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="topMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="rightMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="bottomMargin">
+                     <number>0</number>
+                    </property>
+                    <item>
+                     <widget class="QWidget" name="frame_btn_costumer_2" native="true">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>100</width>
+                        <height>100</height>
+                       </size>
+                      </property>
+                      <layout class="QHBoxLayout" name="horizontalLayout_2">
+                       <property name="spacing">
+                        <number>0</number>
+                       </property>
+                       <property name="leftMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="topMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="rightMargin">
+                        <number>0</number>
+                       </property>
+                       <property name="bottomMargin">
+                        <number>0</number>
+                       </property>
+                       <item>
+                        <widget class="QPushButton" name="select_costumer_btn">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="text">
+                          <string>Add Customer</string>
+                         </property>
+                         <property name="icon">
+                          <iconset theme="QIcon::ThemeIcon::ContactNew"/>
+                         </property>
+                         <property name="iconSize">
+                          <size>
+                           <width>64</width>
+                           <height>64</height>
+                          </size>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item>
+                     <spacer name="verticalSpacer">
+                      <property name="orientation">
+                       <enum>Qt::Orientation::Vertical</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>50</width>
+                        <height>40</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item>
+                     <widget class="QWidget" name="date_layout_widget" native="true">
+                      <property name="minimumSize">
+                       <size>
+                        <width>200</width>
+                        <height>0</height>
+                       </size>
+                      </property>
+                      <layout class="QVBoxLayout" name="date_layout">
+                       <property name="spacing">
+                        <number>10</number>
+                       </property>
+                       <item>
+                        <widget class="QLabel" name="label">
+                         <property name="text">
+                          <string> Invoice Date</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <spacer name="horizontalSpacer_2">
+                         <property name="orientation">
+                          <enum>Qt::Orientation::Horizontal</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>40</width>
+                           <height>10</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                       <item>
+                        <widget class="QDateEdit" name="dateEdit">
+                         <property name="displayFormat">
+                          <string>yyyy/MM/dd</string>
+                         </property>
+                         <property name="calendarPopup">
+                          <bool>true</bool>
+                         </property>
+                         <property name="timeSpec">
+                          <enum>Qt::TimeSpec::LocalTime</enum>
+                         </property>
+                         <property name="date">
+                          <date>
+                           <year>2025</year>
+                           <month>6</month>
+                           <day>1</day>
+                          </date>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <spacer name="horizontalSpacer">
+                         <property name="orientation">
+                          <enum>Qt::Orientation::Horizontal</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>40</width>
+                           <height>40</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                       <item>
+                        <widget class="QLabel" name="label_2">
+                         <property name="text">
+                          <string> Due Date</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <spacer name="horizontalSpacer_3">
+                         <property name="orientation">
+                          <enum>Qt::Orientation::Horizontal</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>40</width>
+                           <height>10</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                       <item>
+                        <widget class="QDateEdit" name="dateEdit_2">
+                         <property name="displayFormat">
+                          <string>yyyy/MM/dd</string>
+                         </property>
+                         <property name="calendarPopup">
+                          <bool>true</bool>
+                         </property>
+                         <property name="date">
+                          <date>
+                           <year>2025</year>
+                           <month>6</month>
+                           <day>30</day>
+                          </date>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QWidget" name="widget_6" native="true">
+                      <property name="minimumSize">
+                       <size>
+                        <width>300</width>
+                        <height>0</height>
+                       </size>
+                      </property>
+                      <layout class="QVBoxLayout" name="verticalLayout_5">
+                       <item>
+                        <widget class="QLineEdit" name="lineEdit">
+                         <property name="placeholderText">
+                          <string> Invoice Number</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLineEdit" name="lineEdit_2">
+                         <property name="placeholderText">
+                          <string> Order Number </string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
                <widget class="QWidget" name="widget_3" native="true">
                 <layout class="QHBoxLayout" name="horizontalLayout_3">
                  <item>
@@ -414,12 +652,6 @@
                  </item>
                  <item>
                   <widget class="QLineEdit" name="price_input">
-                   <property name="inputMask">
-                    <string>000000000000000</string>
-                   </property>
-                   <property name="maxLength">
-                    <number>15</number>
-                   </property>
                    <property name="placeholderText">
                     <string>Price</string>
                    </property>
@@ -427,9 +659,6 @@
                  </item>
                  <item>
                   <widget class="QLineEdit" name="count_input">
-                   <property name="inputMask">
-                    <string>0000000000</string>
-                   </property>
                    <property name="placeholderText">
                     <string>Count</string>
                    </property>

@@ -1,3 +1,6 @@
+fpdf==1.7.2
+Jinja2==3.1.6
+MarkupSafe==3.0.2
 Nuitka==2.5.1
 numpy==2.2.3
 ordered-set==4.1.0

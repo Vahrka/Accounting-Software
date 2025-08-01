@@ -333,3 +333,110 @@ QPushButton:disabled {
 }
 
 
+
+
+
+
+/* Material Design Table Style for PySide6 (Qt6) */
+
+QTableView, QTableWidget {
+    background-color: #FAFAFA;  /* Material Light Background */
+    alternate-background-color: #F5F5F5;  /* Alternating row color */
+    gridline-color: #E0E0E0;  /* Subtle grid lines */
+    selection-background-color: #1976D2;  /* Material Blue 700 */
+    selection-color: #FFFFFF;  /* White text on selection */
+    border: none;
+    border-radius: 4px;
+    padding: 2px;
+    font-family: 'Roboto', 'Segoe UI', sans-serif;
+    font-size: 13px;
+    color: #212121;  /* Material Dark Primary Text */
+}
+
+/* Header Styling */
+QHeaderView::section {
+    background-color: #F5F5F5;  /* Material Grey 100 */
+    color: #424242;  /* Material Dark Secondary Text */
+    padding: 8px 12px;
+    border: none;
+    border-right: 1px solid #E0E0E0;
+    border-bottom: 1px solid #E0E0E0;
+    margin: 0px;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 12px;
+}
+
+/* Header Hover Effect */
+QHeaderView::section:hover {
+    background-color: #EEEEEE;  /* Material Grey 200 */
+}
+
+/* Corner Button (Top-Left) */
+QTableView QTableCornerButton::section {
+    background-color: #F5F5F5;
+    border: none;
+    border-right: 1px solid #E0E0E0;
+    border-bottom: 1px solid #E0E0E0;
+}
+
+/* Item Styling */
+QTableView::item, QTableWidget::item {
+    padding: 8px 12px;
+    border: none;
+}
+
+/* Item Hover Effect */
+QTableView::item:hover, QTableWidget::item:hover {
+    background-color: #F5F5F5;
+}
+
+/* Selected Item Styling */
+QTableView::item:selected, QTableWidget::item:selected {
+    background-color: #1976D2;
+    color: #FFFFFF;
+}
+
+/* Disabled Items */
+QTableView::item:disabled, QTableWidget::item:disabled {
+    color: #BDBDBD;  /* Material Grey 400 */
+    background-color: transparent;
+}
+
+/* Focus Indicator */
+QTableView:focus, QTableWidget:focus {
+    outline: none;
+    border: 2px solid #1976D2;
+    border-radius: 4px;
+}
+
+/* Scrollbar Styling */
+QTableView QScrollBar, QTableWidget QScrollBar {
+    background: #F5F5F5;
+    border: none;
+    width: 12px;
+    margin: 0px;
+}
+
+QTableView QScrollBar::handle, QTableWidget QScrollBar::handle {
+    background: #BDBDBD;
+    border-radius: 6px;
+    min-height: 20px;
+}
+
+QTableView QScrollBar::handle:hover, QTableWidget QScrollBar::handle:hover {
+    background: #9E9E9E;
+}
+
+QTableView QScrollBar::add-line, QTableWidget QScrollBar::add-line,
+QTableView QScrollBar::sub-line, QTableWidget QScrollBar::sub-line {
+    height: 0px;
+    background: none;
+}
+
+
+
+QTooltip {
+    border-radius: 10px;
+    font-size: 500px;
+}

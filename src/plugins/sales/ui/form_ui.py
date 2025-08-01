@@ -15,10 +15,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QAbstractItemView, QApplication, QFrame, QHBoxLayout,
-    QHeaderView, QLabel, QLineEdit, QPushButton,
-    QScrollArea, QSizePolicy, QTabWidget, QTableView,
-    QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QAbstractItemView, QApplication, QDateEdit, QFrame,
+    QHBoxLayout, QHeaderView, QLabel, QLineEdit,
+    QPushButton, QScrollArea, QSizePolicy, QSpacerItem,
+    QTabWidget, QTableView, QVBoxLayout, QWidget)
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -40,7 +40,7 @@ class Ui_Form(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollarea_qwidget = QWidget()
         self.scrollarea_qwidget.setObjectName(u"scrollarea_qwidget")
-        self.scrollarea_qwidget.setGeometry(QRect(0, 0, 878, 734))
+        self.scrollarea_qwidget.setGeometry(QRect(0, 0, 854, 961))
         self.scrollarea_qwidget_layout = QVBoxLayout(self.scrollarea_qwidget)
         self.scrollarea_qwidget_layout.setObjectName(u"scrollarea_qwidget_layout")
         self.scrollarea_qwidget_layout.setContentsMargins(0, 0, 0, -1)
@@ -102,7 +102,7 @@ class Ui_Form(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.frame_title_sub.sizePolicy().hasHeightForWidth())
         self.frame_title_sub.setSizePolicy(sizePolicy)
-        self.frame_title_sub.setMinimumSize(QSize(206, 206))
+        self.frame_title_sub.setMinimumSize(QSize(200, 200))
         self.frame_title_sub.setMaximumSize(QSize(400, 16777215))
         self.verticalLayout = QVBoxLayout(self.frame_title_sub)
         self.verticalLayout.setObjectName(u"verticalLayout")
@@ -124,7 +124,7 @@ class Ui_Form(object):
         self.frame_btn_logo.setObjectName(u"frame_btn_logo")
         sizePolicy.setHeightForWidth(self.frame_btn_logo.sizePolicy().hasHeightForWidth())
         self.frame_btn_logo.setSizePolicy(sizePolicy)
-        self.frame_btn_logo.setMinimumSize(QSize(206, 206))
+        self.frame_btn_logo.setMinimumSize(QSize(200, 200))
         self.frame_btn_logo.setMaximumSize(QSize(300, 300))
         self.horizontalLayout = QHBoxLayout(self.frame_btn_logo)
         self.horizontalLayout.setSpacing(0)
@@ -151,7 +151,7 @@ class Ui_Form(object):
         self.frame_logo.setObjectName(u"frame_logo")
         sizePolicy.setHeightForWidth(self.frame_logo.sizePolicy().hasHeightForWidth())
         self.frame_logo.setSizePolicy(sizePolicy)
-        self.frame_logo.setMinimumSize(QSize(206, 206))
+        self.frame_logo.setMinimumSize(QSize(200, 200))
         self.frame_logo.setFrameShape(QFrame.Shape.NoFrame)
         self.frame_logo.setLineWidth(0)
         self.verticalLayout_2 = QVBoxLayout(self.frame_logo)
@@ -170,7 +170,7 @@ class Ui_Form(object):
         self.frame_address.setObjectName(u"frame_address")
         sizePolicy.setHeightForWidth(self.frame_address.sizePolicy().hasHeightForWidth())
         self.frame_address.setSizePolicy(sizePolicy)
-        self.frame_address.setMinimumSize(QSize(206, 206))
+        self.frame_address.setMinimumSize(QSize(200, 200))
         self.frame_address.setMaximumSize(QSize(600, 16777215))
         self.verticalLayout_3 = QVBoxLayout(self.frame_address)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
@@ -225,6 +225,114 @@ class Ui_Form(object):
 
         self.frame_billing_layout.addWidget(self.label_billing)
 
+        self.widget_2 = QWidget(self.frame_billing)
+        self.widget_2.setObjectName(u"widget_2")
+        self.widget_2.setMaximumSize(QSize(818, 16777215))
+        self.verticalLayout_6 = QVBoxLayout(self.widget_2)
+        self.verticalLayout_6.setObjectName(u"verticalLayout_6")
+        self.widget_4 = QWidget(self.widget_2)
+        self.widget_4.setObjectName(u"widget_4")
+        self.widget_4.setMaximumSize(QSize(850, 16777215))
+        self.horizontalLayout_4 = QHBoxLayout(self.widget_4)
+        self.horizontalLayout_4.setSpacing(10)
+        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
+        self.horizontalLayout_4.setContentsMargins(0, 0, 0, 0)
+        self.frame_btn_costumer_2 = QWidget(self.widget_4)
+        self.frame_btn_costumer_2.setObjectName(u"frame_btn_costumer_2")
+        sizePolicy1.setHeightForWidth(self.frame_btn_costumer_2.sizePolicy().hasHeightForWidth())
+        self.frame_btn_costumer_2.setSizePolicy(sizePolicy1)
+        self.frame_btn_costumer_2.setMinimumSize(QSize(100, 100))
+        self.horizontalLayout_2 = QHBoxLayout(self.frame_btn_costumer_2)
+        self.horizontalLayout_2.setSpacing(0)
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.horizontalLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.select_costumer_btn = QPushButton(self.frame_btn_costumer_2)
+        self.select_costumer_btn.setObjectName(u"select_costumer_btn")
+        sizePolicy1.setHeightForWidth(self.select_costumer_btn.sizePolicy().hasHeightForWidth())
+        self.select_costumer_btn.setSizePolicy(sizePolicy1)
+        icon1 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.ContactNew))
+        self.select_costumer_btn.setIcon(icon1)
+        self.select_costumer_btn.setIconSize(QSize(64, 64))
+
+        self.horizontalLayout_2.addWidget(self.select_costumer_btn)
+
+
+        self.horizontalLayout_4.addWidget(self.frame_btn_costumer_2)
+
+        self.verticalSpacer = QSpacerItem(50, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.horizontalLayout_4.addItem(self.verticalSpacer)
+
+        self.date_layout_widget = QWidget(self.widget_4)
+        self.date_layout_widget.setObjectName(u"date_layout_widget")
+        self.date_layout_widget.setMinimumSize(QSize(200, 0))
+        self.date_layout = QVBoxLayout(self.date_layout_widget)
+        self.date_layout.setSpacing(10)
+        self.date_layout.setObjectName(u"date_layout")
+        self.label = QLabel(self.date_layout_widget)
+        self.label.setObjectName(u"label")
+
+        self.date_layout.addWidget(self.label)
+
+        self.horizontalSpacer_2 = QSpacerItem(40, 10, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.date_layout.addItem(self.horizontalSpacer_2)
+
+        self.dateEdit = QDateEdit(self.date_layout_widget)
+        self.dateEdit.setObjectName(u"dateEdit")
+        self.dateEdit.setCalendarPopup(True)
+        self.dateEdit.setTimeSpec(Qt.TimeSpec.LocalTime)
+        self.dateEdit.setDate(QDate(2025, 6, 1))
+
+        self.date_layout.addWidget(self.dateEdit)
+
+        self.horizontalSpacer = QSpacerItem(40, 40, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.date_layout.addItem(self.horizontalSpacer)
+
+        self.label_2 = QLabel(self.date_layout_widget)
+        self.label_2.setObjectName(u"label_2")
+
+        self.date_layout.addWidget(self.label_2)
+
+        self.horizontalSpacer_3 = QSpacerItem(40, 10, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.date_layout.addItem(self.horizontalSpacer_3)
+
+        self.dateEdit_2 = QDateEdit(self.date_layout_widget)
+        self.dateEdit_2.setObjectName(u"dateEdit_2")
+        self.dateEdit_2.setCalendarPopup(True)
+        self.dateEdit_2.setDate(QDate(2025, 6, 30))
+
+        self.date_layout.addWidget(self.dateEdit_2)
+
+
+        self.horizontalLayout_4.addWidget(self.date_layout_widget)
+
+        self.widget_6 = QWidget(self.widget_4)
+        self.widget_6.setObjectName(u"widget_6")
+        self.widget_6.setMinimumSize(QSize(300, 0))
+        self.verticalLayout_5 = QVBoxLayout(self.widget_6)
+        self.verticalLayout_5.setObjectName(u"verticalLayout_5")
+        self.lineEdit = QLineEdit(self.widget_6)
+        self.lineEdit.setObjectName(u"lineEdit")
+
+        self.verticalLayout_5.addWidget(self.lineEdit)
+
+        self.lineEdit_2 = QLineEdit(self.widget_6)
+        self.lineEdit_2.setObjectName(u"lineEdit_2")
+
+        self.verticalLayout_5.addWidget(self.lineEdit_2)
+
+
+        self.horizontalLayout_4.addWidget(self.widget_6)
+
+
+        self.verticalLayout_6.addWidget(self.widget_4)
+
+
+        self.frame_billing_layout.addWidget(self.widget_2)
+
         self.widget_3 = QWidget(self.frame_billing)
         self.widget_3.setObjectName(u"widget_3")
         self.horizontalLayout_3 = QHBoxLayout(self.widget_3)
@@ -236,7 +344,6 @@ class Ui_Form(object):
 
         self.price_input = QLineEdit(self.widget_3)
         self.price_input.setObjectName(u"price_input")
-        self.price_input.setMaxLength(15)
 
         self.horizontalLayout_3.addWidget(self.price_input)
 
@@ -315,10 +422,15 @@ class Ui_Form(object):
         self.address_input.setPlaceholderText(QCoreApplication.translate("Form", u"Address", None))
         self.country_input.setPlaceholderText(QCoreApplication.translate("Form", u"Country", None))
         self.label_billing.setText(QCoreApplication.translate("Form", u"Billing", None))
+        self.select_costumer_btn.setText(QCoreApplication.translate("Form", u"Add Customer", None))
+        self.label.setText(QCoreApplication.translate("Form", u" Invoice Date", None))
+        self.dateEdit.setDisplayFormat(QCoreApplication.translate("Form", u"yyyy/MM/dd", None))
+        self.label_2.setText(QCoreApplication.translate("Form", u" Due Date", None))
+        self.dateEdit_2.setDisplayFormat(QCoreApplication.translate("Form", u"yyyy/MM/dd", None))
+        self.lineEdit.setPlaceholderText(QCoreApplication.translate("Form", u" Invoice Number", None))
+        self.lineEdit_2.setPlaceholderText(QCoreApplication.translate("Form", u" Order Number ", None))
         self.billing_name_input.setPlaceholderText(QCoreApplication.translate("Form", u"Name", None))
-        self.price_input.setInputMask(QCoreApplication.translate("Form", u"000000000000000", None))
         self.price_input.setPlaceholderText(QCoreApplication.translate("Form", u"Price", None))
-        self.count_input.setInputMask(QCoreApplication.translate("Form", u"0000000000", None))
         self.count_input.setPlaceholderText(QCoreApplication.translate("Form", u"Count", None))
         self.add_to_record_btn.setText(QCoreApplication.translate("Form", u"Add to record", None))
         self.add_to_record_btn.setProperty(u"class", QCoreApplication.translate("Form", u"primary outlined", None))

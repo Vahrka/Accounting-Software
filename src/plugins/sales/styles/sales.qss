@@ -188,3 +188,175 @@ QPushButton.primary.outlined:hover {
     border-radius: 10px;
     border: 1px solid #efefef;
 }
+
+
+QToolButton.table_delete_btn {
+    border: none;
+}
+QToolButton.table_delete_btn::icon {
+    color: #ff4444;  /* Red color for the icon */
+}
+QToolButton.table_delete_btn:hover {
+    background-color: #ffdddd;
+    border-radius: 3px;
+}
+
+
+
+
+
+/* ===== BASE DATE/TIME EDIT ===== */
+QDateEdit, QDateTimeEdit, QTimeEdit {
+    background-color: transparent;
+    border: none;
+    border-bottom: 2px solid #757575; /* Grey 600 */
+    border-radius: 4px 4px 0 0;
+    padding: 8px 0;
+    font: 14px "Roboto";
+    color: #212121; /* Grey 900 */
+    selection-background-color: #bbdefb; /* Blue 100 */
+    min-height: 36px;
+}
+
+QDateEdit:hover, QDateTimeEdit:hover, QTimeEdit:hover {
+    border-bottom: 2px solid #424242; /* Grey 800 */
+}
+
+QDateEdit:focus, QDateTimeEdit:focus, QTimeEdit:focus {
+    border-bottom: 2px solid #2196f3; /* Blue 500 */
+    background-color: rgba(33, 150, 243, 0.05); /* Blue 500 with 5% opacity */
+}
+
+QDateEdit::drop-down, QDateTimeEdit::drop-down {
+    width: 24px;
+}
+
+QTimeEdit::up-button, QTimeEdit::down-button {
+    width: 24px;
+}
+
+/* ===== CALENDAR POPUP ===== */
+QCalendarWidget {
+    background-color: white;
+    border: 1px solid #e0e0e0; /* Grey 300 */
+    border-radius: 4px;
+    font: 12px "Roboto";
+    color: #212121; /* Grey 900 */
+}
+
+/* Header (month/year) */
+QCalendarWidget QWidget#qt_calendar_navigationbar {
+    background-color: #f5f5f5; /* Grey 100 */
+    border-bottom: 1px solid #e0e0e0; /* Grey 300 */
+    min-height: 48px;
+    border-radius: 4px 4px 0 0;
+}
+
+QCalendarWidget QToolButton {
+    background-color: transparent;
+    border: none;
+    color: #2196f3; /* Blue 500 */
+    font-weight: 500;
+    padding: 4px 8px;
+    margin: 0 2px;
+    border-radius: 4px;
+}
+
+QCalendarWidget QToolButton:hover {
+    background-color: rgba(33, 150, 243, 0.08); /* Blue 500 with 8% opacity */
+}
+
+/* Month button */
+QCalendarWidget QComboBox#qt_calendar_monthbutton {
+    background-color: transparent;
+    border: none;
+    color: #212121; /* Grey 900 */
+    font-weight: 500;
+    padding: 4px 16px 4px 8px;
+    min-width: 80px;
+}
+
+QCalendarWidget QComboBox#qt_calendar_monthbutton::drop-down {
+    width: 16px;
+    border: none;
+}
+
+/* Year button */
+QCalendarWidget QSpinBox#qt_calendar_yearbutton {
+    background-color: transparent;
+    border: none;
+    color: #212121; /* Grey 900 */
+    font-weight: 500;
+    padding: 4px 16px 4px 8px;
+    min-width: 60px;
+}
+
+/* Weekday headers */
+QCalendarWidget QWidget#qt_calendar_calendarview {
+    alternate-background-color: white;
+}
+
+QCalendarWidget QTableView {
+    gridline-color: #e0e0e0; /* Grey 300 */
+    selection-background-color: #bbdefb; /* Blue 100 */
+    selection-color: #000000;
+}
+
+QCalendarWidget QTableView::item {
+    padding: 8px;
+    border: none;
+}
+
+QCalendarWidget QTableView::item:selected {
+    background-color: #2196f3; /* Blue 500 */
+    color: white;
+    border-radius: 50%;
+}
+
+/* Day cells */
+QCalendarWidget QAbstractItemView:enabled {
+    color: #212121; /* Grey 900 */
+    background-color: white;
+    selection-background-color: #2196f3; /* Blue 500 */
+    selection-color: white;
+}
+
+QCalendarWidget QAbstractItemView:disabled {
+    color: #bdbdbd; /* Grey 400 */
+}
+
+/* Today indicator */
+QCalendarWidget QAbstractItemView:enabled:selected {
+    background-color: #2196f3; /* Blue 500 */
+    color: white;
+    border-radius: 50%;
+}
+
+/* ===== TIME POPUP ===== */
+QTimeEdit QAbstractItemView {
+    background-color: white;
+    border: 1px solid #e0e0e0; /* Grey 300 */
+    border-radius: 4px;
+    font: 14px "Roboto";
+    selection-background-color: #2196f3; /* Blue 500 */
+    selection-color: white;
+    padding: 4px;
+}
+
+/* ===== FOCUS INDICATOR ===== */
+QDateEdit:focus, QDateTimeEdit:focus, QTimeEdit:focus {
+    border-bottom: 2px solid #2196f3; /* Blue 500 */
+    background-color: rgba(33, 150, 243, 0.05);
+}
+
+/* ===== DISABLED STATE ===== */
+QDateEdit:disabled, QDateTimeEdit:disabled, QTimeEdit:disabled {
+    color: #9e9e9e; /* Grey 500 */
+    border-bottom: 2px dotted #bdbdbd; /* Grey 400 */
+    background-color: transparent;
+}
+
+/* ===== POPUP SHADOW EFFECT ===== */
+QCalendarWidget, QTimeEdit QAbstractItemView {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.16), 0 2px 4px rgba(0, 0, 0, 0.23);
+}
