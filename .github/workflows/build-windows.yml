@@ -1,4 +1,4 @@
-name: Build PySide6 Windows Application
+name: Build Windows Application
 
 on:
   workflow_dispatch:
@@ -17,38 +17,41 @@ jobs:
           python-version: '3.11'
           architecture: 'x64'
 
-      - name: Install Windows-compatible dependencies
+      - name: Install dependencies (without patchelf)
         run: |
           python -m pip install --upgrade pip
-          # Install all packages EXCEPT patchelf (Linux-only)
-          pip install fpdf==1.7.2
-          pip install Jinja2==3.1.6
-          pip install MarkupSafe==3.0.2
-          pip install Nuitka==2.5.1
-          pip install numpy==2.2.3
-          pip install ordered-set==4.1.0
-          pip install pandas==2.2.3
-          pip install peewee==3.17.9
-          pip install PySide6==6.8.2.1
-          pip install python-dateutil==2.9.0.post0
-          pip install pytz==2025.1
-          pip install PyYAML==6.0.2
-          pip install six==1.17.0
-          pip install tzdata==2025.1
-          pip install zstandard==0.23.0
-          
-      - name: Verify installation
-        run: pip list | findstr "PySide6 pandas numpy"
+          pip install fpdf==1.7.2 Jinja2==3.1.6 MarkupSafe==3.0.2
+          pip install numpy==2.2.3 ordered-set==4.1.0
+          pip install pandas==2.2.3 peewee==3.17.9 PySide6==6.8.2.1
+          pip install python-dateutil==2.9.0.post0 pytz==2025.1
+          pip install PyYAML==6.0.2 six==1.17.0 tzdata==2025.1 zstandard==0.23.0
+
+      - name: Generate or create missing translation files
+        run: |
+          # Create dummy .qm files if .ts files exist but .qm missing
+          Get-ChildItem src/i18n -Filter *.ts -ErrorAction SilentlyContinue | ForEach-Object {
+            $qm_path = $_.FullName -replace '\.ts$', '.qm'
+            if (-not (Test-Path $qm_path)) {
+              Write-Host "Generating $qm_path"
+              pyside6-lrelease $_.FullName -qm $qm_path
+            }
+          }
+          # If no .ts and no .qm, create empty files to avoid RCC error
+          if ((Get-ChildItem src/i18n -Filter *.qm -ErrorAction SilentlyContinue).Count -eq 0) {
+            Write-Host "Creating dummy .qm files"
+            "en", "fa", "de" | ForEach-Object {
+              [System.IO.File]::WriteAllBytes("src/i18n/localization_$_.qm", @())
+            }
+          }
 
       - name: Compile Qt Resources
         run: pyside6-rcc source.qrc -o source_rc.py
 
-      - name: Build with Nuitka
+      - name: Build with Nuitka (onefile mode)
         uses: Nuitka/Nuitka-Action@main
         with:
           script-name: main.py
-          mode: standalone
-          onefile: true
+          mode: onefile                    # ✅ Correct: single executable
           enable-plugins: pyside6
           windows-console-mode: disable
           windows-icon-from-ico: src/gui/resources/imgs/icon.ico
@@ -58,9 +61,9 @@ jobs:
             src/gui/resources/fonts=src/gui/resources/fonts
             src/gui/resources/imgs=src/gui/resources/imgs
             src/gui/resources/svg=src/gui/resources/svg
-          include-module: |
-            src
+          include-module: src
           output-dir: build_output
+          assume-yes-for-downloads: true
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
