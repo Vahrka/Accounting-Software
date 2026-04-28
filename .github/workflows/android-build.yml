@@ -1,4 +1,4 @@
-name: Build Android APK
+name: Build PySide6 Android APK (Manual)
 
 on:
   workflow_dispatch:
@@ -10,43 +10,30 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # ----- Install JDK 17 (required for Android tools)
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      # ----- Install system dependencies
       - name: Install system packages
         run: |
           sudo apt-get update
           sudo apt-get install -y patchelf wget unzip zip
 
-      # ----- Setup Android SDK (using pre-installed SDK)
       - name: Setup Android SDK
         run: |
-          # Use pre-installed Android SDK on Ubuntu runner
           export ANDROID_SDK_ROOT="/usr/local/lib/android/sdk"
           export ANDROID_NDK_ROOT="$ANDROID_SDK_ROOT/ndk/27.2.12479018"
           
-          # Accept all licenses using JDK 17
           sudo $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses --no_https <<< "y" || true
-          
-          # Install required platforms and build tools
           sudo $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --no_https \
-            "platform-tools" \
-            "platforms;android-34" \
-            "build-tools;35.0.0"
-          
-          # Install NDK
-          sudo $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --no_https \
-            "ndk;27.2.12479018"
+            "platform-tools" "platforms;android-34" "build-tools;35.0.0"
+          sudo $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --no_https "ndk;27.2.12479018"
           
           echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT" >> $GITHUB_ENV
           echo "ANDROID_NDK_ROOT=$ANDROID_NDK_ROOT" >> $GITHUB_ENV
-          
-      # ----- Python and dependencies
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -62,7 +49,6 @@ jobs:
           pip install python-dateutil==2.9.0.post0 pytz==2025.1
           pip install PyYAML==6.0.2 six==1.17.0 tzdata==2025.1 zstandard==0.23.0
 
-      # ----- Auto-create missing files
       - name: Ensure main.py exists
         run: |
           if [ ! -f "main.py" ]; then
@@ -114,6 +100,20 @@ jobs:
           android.release_artifact = apk
           EOF
             echo "Created default pysidedeploy.spec"
+          fi
+
+      # ----- Fix missing translation files -----
+      - name: Ensure translation files exist
+        run: |
+          if [ -f "source.qrc" ]; then
+            # Find all .qm references in source.qrc
+            grep -oE 'src/i18n/[^"]+\.qm' source.qrc | while read -r qm_path; do
+              mkdir -p "$(dirname "$qm_path")"
+              if [ ! -f "$qm_path" ]; then
+                echo "Creating dummy $qm_path"
+                touch "$qm_path"
+              fi
+            done
           fi
 
       - name: Compile Qt resources
