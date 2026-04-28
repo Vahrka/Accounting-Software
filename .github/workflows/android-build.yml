@@ -127,7 +127,7 @@ jobs:
         run: |
           python -m venv build_venv
           source build_venv/bin/activate
-          pip install packaging
+          pip install packaging -r requirements.txt
           pyside6-android-deploy --config pysidedeploy.spec --verbose
 
       - name: Upload APK artifact
