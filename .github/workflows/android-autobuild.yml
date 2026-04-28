@@ -1,0 +1,190 @@
+name: Auto-Build PySide6 Android APK
+
+on:
+  workflow_dispatch:  # Manual trigger
+  push:
+    branches: [ main, master ]  # Auto-run on push (optional)
+
+permissions:
+  contents: write  # Allows committing default files back to repo
+
+jobs:
+  android-build:
+    runs-on: ubuntu-22.04  # pyside6-android-deploy works best on 22.04
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # ------------------------------------------------------------------
+      # 1. Ensure required files exist; create defaults if missing
+      # ------------------------------------------------------------------
+      - name: Ensure main.py exists
+        run: |
+          if [ ! -f "main.py" ]; then
+            echo "main.py not found. Creating a minimal default..."
+            cat > main.py << 'EOF'
+#!/usr/bin/env python3
+import sys
+from PySide6.QtWidgets import QApplication, QLabel, QVBoxLayout, QWidget
+
+class MainWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+        layout = QVBoxLayout()
+        label = QLabel("Hello from PySide6 on Android!")
+        layout.addWidget(label)
+        self.setLayout(layout)
+        self.setWindowTitle("Auto-Generated App")
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec())
+EOF
+            echo "✅ Default main.py created."
+          else
+            echo "✅ main.py found."
+          fi
+
+      - name: Ensure source.qrc exists (empty resources)
+        run: |
+          if [ ! -f "source.qrc" ]; then
+            echo '<?xml version="1.0" encoding="UTF-8"?><RCC><qresource prefix="/"/></RCC>' > source.qrc
+            echo "✅ Default source.qrc created."
+          else
+            echo "✅ source.qrc found."
+          fi
+
+      - name: Ensure pysidedeploy.spec exists (Android config)
+        run: |
+          if [ ! -f "pysidedeploy.spec" ]; then
+            cat > pysidedeploy.spec << 'EOF'
+[app]
+name = MyPySide6App
+package_name = org.example.mypyside6app
+version = 1.0.0
+description = My PySide6 Application
+author = Your Name
+main_script = main.py
+requirements = PySide6
+android_extra_java_dirs =
+android_permissions = INTERNET
+android_manifest_minsdk = 21
+android_manifest_targetsdk = 34
+android_gradle_dependencies =
+android_gradle_repositories =
+
+[buildozer]
+android.release_artifact = apk
+EOF
+            echo "✅ Default pysidedeploy.spec created."
+          else
+            echo "✅ pysidedeploy.spec found."
+          fi
+
+      - name: Commit default files back to repo if any were created
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+          git add main.py source.qrc pysidedeploy.spec 2>/dev/null || true
+          if ! git diff --cached --quiet; then
+            git commit -m "Auto-generate missing Android build files [skip ci]"
+            git push
+            echo "✅ Default files committed to repo."
+          else
+            echo "No new default files to commit."
+          fi
+
+      # ------------------------------------------------------------------
+      # 2. Install dependencies and Android SDK/NDK
+      # ------------------------------------------------------------------
+      - name: Install system packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openjdk-17-jdk patchelf wget unzip zip
+
+      - name: Setup Android SDK & NDK
+        run: |
+          export ANDROID_SDK_ROOT="$HOME/android-sdk"
+          export ANDROID_NDK_ROOT="$ANDROID_SDK_ROOT/ndk"
+          mkdir -p "$ANDROID_SDK_ROOT"
+
+          # Install command line tools
+          cd "$ANDROID_SDK_ROOT"
+          wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
+          unzip -q commandlinetools-linux-11076708_latest.zip
+          rm commandlinetools-linux-11076708_latest.zip
+
+          # Accept licenses and install required components
+          yes | cmdline-tools/bin/sdkmanager --sdk_root="$ANDROID_SDK_ROOT" --licenses >/dev/null 2>&1
+          cmdline-tools/bin/sdkmanager --sdk_root="$ANDROID_SDK_ROOT" \
+            "platform-tools" \
+            "platforms;android-34" \
+            "build-tools;35.0.0"
+
+          # Download and extract NDK
+          wget -q https://dl.google.com/android/repository/android-ndk-r27c-linux.zip
+          unzip -q android-ndk-r27c-linux.zip
+          mv android-ndk-r27c "$ANDROID_NDK_ROOT"
+          rm android-ndk-r27c-linux.zip
+
+          echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT" >> $GITHUB_ENV
+          echo "ANDROID_NDK_ROOT=$ANDROID_NDK_ROOT" >> $GITHUB_ENV
+
+      - name: Setup Python and PySide6
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
+        run: |
+          pip install --upgrade pip
+          pip install PySide6 fpdf Jinja2 pandas peewee PyYAML
+
+      - name: Compile Qt resources (if source.qrc not empty)
+        run: |
+          if grep -q '<file' source.qrc; then
+            pyside6-rcc source.qrc -o source_rc.py
+            echo "✅ Resources compiled."
+          else
+            echo "⚠️ source.qrc has no resources; skipping compilation."
+            echo "# Auto-generated empty resources" > source_rc.py
+          fi
+
+      # ------------------------------------------------------------------
+      # 3. Finally, build the APK
+      # ------------------------------------------------------------------
+      - name: Build APK with pyside6-android-deploy
+        run: |
+          # The tool requires the environment variables to be set
+          export ANDROID_SDK_ROOT="$HOME/android-sdk"
+          export ANDROID_NDK_ROOT="$HOME/android-sdk/ndk"
+          pyside6-android-deploy --config pysidedeploy.spec --verbose
+        env:
+          ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
+          ANDROID_NDK_ROOT: ${{ env.ANDROID_NDK_ROOT }}
+
+      - name: Find and rename APK
+        run: |
+          APK_PATH=$(find . -name "*.apk" -type f | head -n 1)
+          if [ -z "$APK_PATH" ]; then
+            echo "❌ No APK found!"
+            exit 1
+          fi
+          mkdir -p artifacts
+          cp "$APK_PATH" artifacts/app-unsigned.apk
+          echo "✅ APK copied to artifacts/app-unsigned.apk"
+
+      - name: Upload APK as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: PySide6-Android-APK
+          path: artifacts/*.apk
+          retention-days: 7
+
+      - name: Display success message
+        run: echo "🎉 APK built successfully! Download from Artifacts."
