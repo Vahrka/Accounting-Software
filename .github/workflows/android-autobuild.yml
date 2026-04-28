@@ -1,88 +1,24 @@
-name: Manual Android APK Build (PySide6)
+name: Build PySide6 Android APK
 
 on:
-  workflow_dispatch:                # manual run only
+  workflow_dispatch:          # manual trigger only
 
 jobs:
   build-android:
     runs-on: ubuntu-22.04
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      # ------------------------------------------------------------
-      # 1. Create default files if they are missing
-      # ------------------------------------------------------------
-      - name: Ensure main.py exists
-        run: |
-          if [ ! -f "main.py" ]; then
-            cat > main.py << 'EOF'
-#!/usr/bin/env python3
-import sys
-from PySide6.QtWidgets import QApplication, QLabel, QVBoxLayout, QWidget
-
-class MainWindow(QWidget):
-    def __init__(self):
-        super().__init__()
-        layout = QVBoxLayout()
-        label = QLabel("PySide6 on Android - Auto generated")
-        layout.addWidget(label)
-        self.setLayout(layout)
-        self.setWindowTitle("My App")
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    window = MainWindow()
-    window.show()
-    sys.exit(app.exec())
-EOF
-            echo "✅ Created default main.py"
-          else
-            echo "✅ main.py already exists"
-          fi
-
-      - name: Ensure source.qrc exists
-        run: |
-          if [ ! -f "source.qrc" ]; then
-            echo '<RCC><qresource prefix="/"/></RCC>' > source.qrc
-            echo "✅ Created empty source.qrc"
-          else
-            echo "✅ source.qrc already exists"
-          fi
-
-      - name: Ensure pysidedeploy.spec exists
-        run: |
-          if [ ! -f "pysidedeploy.spec" ]; then
-            cat > pysidedeploy.spec << 'EOF'
-[app]
-name = MyPySide6App
-package_name = org.example.mypyside6app
-version = 1.0.0
-description = My PySide6 Application
-main_script = main.py
-requirements = PySide6
-android_permissions = INTERNET
-android_manifest_minsdk = 21
-android_manifest_targetsdk = 34
-
-[buildozer]
-android.release_artifact = apk
-EOF
-            echo "✅ Created default pysidedeploy.spec"
-          else
-            echo "✅ pysidedeploy.spec already exists"
-          fi
-
-      # ------------------------------------------------------------
-      # 2. Install system dependencies & Android SDK/NDK
-      # ------------------------------------------------------------
+      # -------------------------------
+      # 1. Install system dependencies & Android SDK/NDK
+      # -------------------------------
       - name: Install system packages
         run: |
           sudo apt-get update
           sudo apt-get install -y openjdk-17-jdk patchelf wget unzip zip
 
-      - name: Setup Android SDK and NDK
+      - name: Setup Android SDK & NDK
         run: |
           export ANDROID_SDK_ROOT="$HOME/android-sdk"
           export ANDROID_NDK_ROOT="$ANDROID_SDK_ROOT/ndk"
@@ -105,49 +41,105 @@ EOF
           echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT" >> $GITHUB_ENV
           echo "ANDROID_NDK_ROOT=$ANDROID_NDK_ROOT" >> $GITHUB_ENV
 
+      # -------------------------------
+      # 2. Setup Python & install dependencies (same as Windows, without patchelf)
+      # -------------------------------
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Install Python dependencies
+      - name: Install Python packages
         run: |
-          pip install --upgrade pip
-          pip install PySide6 fpdf Jinja2 pandas peewee PyYAML
+          python -m pip install --upgrade pip
+          pip install PySide6==6.8.2.1
+          pip install fpdf==1.7.2 Jinja2==3.1.6 MarkupSafe==3.0.2
+          pip install numpy==2.2.3 ordered-set==4.1.0
+          pip install pandas==2.2.3 peewee==3.17.9
+          pip install python-dateutil==2.9.0.post0 pytz==2025.1
+          pip install PyYAML==6.0.2 six==1.17.0 tzdata==2025.1 zstandard==0.23.0
 
-      - name: Compile Qt resources (if needed)
+      # -------------------------------
+      # 3. Auto‑create missing build files (main.py, source.qrc, pysidedeploy.spec)
+      # -------------------------------
+      - name: Ensure main.py exists
+        run: |
+          if [ ! -f "main.py" ]; then
+            cat > main.py << 'EOF'
+#!/usr/bin/env python3
+import sys
+from PySide6.QtWidgets import QApplication, QLabel, QVBoxLayout, QWidget
+
+class MainWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+        layout = QVBoxLayout()
+        layout.addWidget(QLabel("PySide6 on Android - Auto built"))
+        self.setLayout(layout)
+        self.setWindowTitle("MyApp")
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    w = MainWindow()
+    w.show()
+    sys.exit(app.exec())
+EOF
+            echo "Created default main.py"
+          fi
+
+      - name: Ensure source.qrc exists
+        run: |
+          if [ ! -f "source.qrc" ]; then
+            echo '<RCC><qresource prefix="/"/></RCC>' > source.qrc
+            echo "Created empty source.qrc"
+          fi
+
+      - name: Ensure pysidedeploy.spec exists (default config)
+        run: |
+          if [ ! -f "pysidedeploy.spec" ]; then
+            cat > pysidedeploy.spec << 'EOF'
+[app]
+name = MyPySide6App
+package_name = org.example.mypyside6app
+version = 1.0.0
+description = Built with GitHub Actions
+main_script = main.py
+requirements = PySide6
+android_permissions = INTERNET
+android_manifest_minsdk = 21
+android_manifest_targetsdk = 34
+
+[buildozer]
+android.release_artifact = apk
+EOF
+            echo "Created default pysidedeploy.spec"
+          fi
+
+      # -------------------------------
+      # 4. Compile Qt resources
+      # -------------------------------
+      - name: Compile Qt resources
         run: |
           if grep -q '<file' source.qrc; then
             pyside6-rcc source.qrc -o source_rc.py
-            echo "✅ Compiled source.qrc"
           else
-            echo "⚠️ No resources to compile, creating dummy source_rc.py"
             echo "# empty resources" > source_rc.py
           fi
 
-      # ------------------------------------------------------------
-      # 3. Build APK
-      # ------------------------------------------------------------
-      - name: Build APK with pyside6-android-deploy
+      # -------------------------------
+      # 5. Build APK
+      # -------------------------------
+      - name: Build APK
         run: |
           export ANDROID_SDK_ROOT="$HOME/android-sdk"
           export ANDROID_NDK_ROOT="$HOME/android-sdk/ndk"
           pyside6-android-deploy --config pysidedeploy.spec --verbose
 
-      - name: Locate and upload APK
-        run: |
-          APK=$(find . -name "*.apk" -type f | head -1)
-          if [ -z "$APK" ]; then
-            echo "❌ No APK generated!"
-            exit 1
-          fi
-          mkdir -p artifacts
-          cp "$APK" artifacts/app-unsigned.apk
-          echo "APK_PATH=artifacts/app-unsigned.apk" >> $GITHUB_ENV
-
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: PySide6-Android-APK
-          path: artifacts/app-unsigned.apk
+          path: |
+            **/*.apk
+            !**/android-sdk/**
           retention-days: 7
