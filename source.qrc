@@ -52,10 +52,6 @@
 
 
 
-  <qresource prefix="translations">
-    <file alias="localization_en.qm">src/i18n/localization_en.qm</file>
-    <file alias="localization_fa.qm">src/i18n/localization_fa.qm</file>
-</qresource>
 
 
 </RCC>
