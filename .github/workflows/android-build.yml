@@ -123,8 +123,11 @@ jobs:
             echo "# empty resources" > source_rc.py
           fi
 
-      - name: Build APK
+      - name: Build APK (in virtual environment to avoid prompt)
         run: |
+          python -m venv build_venv
+          source build_venv/bin/activate
+          pip install packaging
           pyside6-android-deploy --config pysidedeploy.spec --verbose
 
       - name: Upload APK artifact
