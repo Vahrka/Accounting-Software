@@ -1,9 +1,8 @@
 # This workflow runs ONLY when manually triggered.
-# It will NOT run on push, pull_request, or any automatic event.
 name: Build PySide6 Android APK (Manual)
 
 on:
-  workflow_dispatch:      # <-- ONLY manual trigger
+  workflow_dispatch:
 
 jobs:
   build-android:
@@ -12,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # ----- Install system dependencies & Android SDK/NDK -----
+      # ----- System dependencies & Android SDK/NDK -----
       - name: Install system packages
         run: |
           sudo apt-get update
@@ -41,7 +40,7 @@ jobs:
           echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT" >> $GITHUB_ENV
           echo "ANDROID_NDK_ROOT=$ANDROID_NDK_ROOT" >> $GITHUB_ENV
 
-      # ----- Python and dependencies (same as Windows, no patchelf) -----
+      # ----- Python and dependencies -----
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -57,29 +56,29 @@ jobs:
           pip install python-dateutil==2.9.0.post0 pytz==2025.1
           pip install PyYAML==6.0.2 six==1.17.0 tzdata==2025.1 zstandard==0.23.0
 
-      # ----- Auto‑create missing build files -----
+      # ----- Create missing files (safe YAML) -----
       - name: Ensure main.py exists
         run: |
           if [ ! -f "main.py" ]; then
-            cat > main.py << 'EOF'
-#!/usr/bin/env python3
-import sys
-from PySide6.QtWidgets import QApplication, QLabel, QVBoxLayout, QWidget
+            cat > main.py <<-EOF
+          #!/usr/bin/env python3
+          import sys
+          from PySide6.QtWidgets import QApplication, QLabel, QVBoxLayout, QWidget
 
-class MainWindow(QWidget):
-    def __init__(self):
-        super().__init__()
-        layout = QVBoxLayout()
-        layout.addWidget(QLabel("PySide6 on Android - Auto built"))
-        self.setLayout(layout)
-        self.setWindowTitle("MyApp")
+          class MainWindow(QWidget):
+              def __init__(self):
+                  super().__init__()
+                  layout = QVBoxLayout()
+                  layout.addWidget(QLabel("PySide6 on Android - Auto built"))
+                  self.setLayout(layout)
+                  self.setWindowTitle("MyApp")
 
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    w = MainWindow()
-    w.show()
-    sys.exit(app.exec())
-EOF
+          if __name__ == "__main__":
+              app = QApplication(sys.argv)
+              w = MainWindow()
+              w.show()
+              sys.exit(app.exec())
+          EOF
             echo "Created default main.py"
           fi
 
@@ -90,28 +89,27 @@ EOF
             echo "Created empty source.qrc"
           fi
 
-      - name: Ensure pysidedeploy.spec exists (default config)
+      - name: Ensure pysidedeploy.spec exists
         run: |
           if [ ! -f "pysidedeploy.spec" ]; then
-            cat > pysidedeploy.spec << 'EOF'
-[app]
-name = MyPySide6App
-package_name = org.example.mypyside6app
-version = 1.0.0
-description = Built with GitHub Actions
-main_script = main.py
-requirements = PySide6
-android_permissions = INTERNET
-android_manifest_minsdk = 21
-android_manifest_targetsdk = 34
+            cat > pysidedeploy.spec <<-EOF
+          [app]
+          name = MyPySide6App
+          package_name = org.example.mypyside6app
+          version = 1.0.0
+          description = Built with GitHub Actions
+          main_script = main.py
+          requirements = PySide6
+          android_permissions = INTERNET
+          android_manifest_minsdk = 21
+          android_manifest_targetsdk = 34
 
-[buildozer]
-android.release_artifact = apk
-EOF
+          [buildozer]
+          android.release_artifact = apk
+          EOF
             echo "Created default pysidedeploy.spec"
           fi
 
-      # ----- Compile Qt resources (if any) -----
       - name: Compile Qt resources
         run: |
           if grep -q '<file' source.qrc; then
@@ -120,7 +118,6 @@ EOF
             echo "# empty resources" > source_rc.py
           fi
 
-      # ----- Build the APK -----
       - name: Build APK
         run: |
           export ANDROID_SDK_ROOT="$HOME/android-sdk"
