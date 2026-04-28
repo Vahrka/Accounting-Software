@@ -1,0 +1,79 @@
+name: Build PySide6 Windows Application
+
+on:
+  workflow_dispatch:  # Manual trigger
+  push:
+    tags:
+      - 'v*'  # Auto-build when you push version tags
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          architecture: 'x64'
+
+      - name: Cache pip packages
+        uses: actions/cache@v3
+        with:
+          path: ~\AppData\Local\pip\Cache
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install PySide6
+          pip install nuitka
+          pip install -r requirements.txt
+          
+      - name: Compile Qt Resources
+        run: |
+          # Compile your resources file
+          pyside6-rcc source.qrc -o source_rc.py
+          echo "✅ Resources compiled"
+
+      - name: Build with Nuitka
+        uses: Nuitka/Nuitka-Action@main
+        with:
+          script-name: main.py
+          mode: standalone
+          onefile: true
+          enable-plugins: pyside6
+          windows-console-mode: disable
+          windows-icon-from-ico: src/gui/resources/imgs/icon.ico
+          include-data-dir: |
+            src/i18n=src/i18n
+            src/gui/styles=src/gui/styles
+          include-module: |
+            src.core
+            src.gui
+            src.i18n
+            src.plugins
+          output-dir: build_output
+          company-name: "YourCompany"
+          product-name: "YourAppName"
+          file-version: "1.0.0"
+          product-version: "1.0.0"
+          copyright: "Your Copyright Here"
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: YourAppName-Windows-x64
+          path: build_output/*.exe
+
+      - name: Create GitHub Release (if tagged)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: build_output/*.exe
+          generate_release_notes: true
