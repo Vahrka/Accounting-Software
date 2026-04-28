@@ -1,5 +1,4 @@
-# This workflow runs ONLY when manually triggered.
-name: Build PySide6 Android APK (Manual)
+name: Build Android APK
 
 on:
   workflow_dispatch:
@@ -11,36 +10,27 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # ----- System dependencies & Android SDK/NDK -----
+      # ----- Install system dependencies (patchelf needed for pyside6-android-deploy)
       - name: Install system packages
         run: |
           sudo apt-get update
           sudo apt-get install -y openjdk-17-jdk patchelf wget unzip zip
 
-      - name: Setup Android SDK & NDK
+      # ----- Set up Android SDK and NDK using official action (no manual license issues)
+      - name: Set up Android SDK & NDK
+        uses: android-actions/setup-android@v3
+        with:
+          api-level: 34
+          build-tools: 35.0.0
+          ndk: '27.2.12479018'   # NDK r27c
+          cmake: '3.22.1'
+
+      - name: Set environment variables for SDK/NDK
         run: |
-          export ANDROID_SDK_ROOT="$HOME/android-sdk"
-          export ANDROID_NDK_ROOT="$ANDROID_SDK_ROOT/ndk"
-          mkdir -p "$ANDROID_SDK_ROOT"
+          echo "ANDROID_SDK_ROOT=$ANDROID_HOME" >> $GITHUB_ENV
+          echo "ANDROID_NDK_ROOT=$ANDROID_NDK_HOME" >> $GITHUB_ENV
 
-          cd "$ANDROID_SDK_ROOT"
-          wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
-          unzip -q commandlinetools-linux-11076708_latest.zip
-          rm commandlinetools-linux-11076708_latest.zip
-
-          yes | cmdline-tools/bin/sdkmanager --sdk_root="$ANDROID_SDK_ROOT" --licenses >/dev/null 2>&1
-          cmdline-tools/bin/sdkmanager --sdk_root="$ANDROID_SDK_ROOT" \
-            "platform-tools" "platforms;android-34" "build-tools;35.0.0"
-
-          wget -q https://dl.google.com/android/repository/android-ndk-r27c-linux.zip
-          unzip -q android-ndk-r27c-linux.zip
-          mv android-ndk-r27c "$ANDROID_NDK_ROOT"
-          rm android-ndk-r27c-linux.zip
-
-          echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT" >> $GITHUB_ENV
-          echo "ANDROID_NDK_ROOT=$ANDROID_NDK_ROOT" >> $GITHUB_ENV
-
-      # ----- Python and dependencies -----
+      # ----- Python and dependencies (same as Windows)
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -56,7 +46,7 @@ jobs:
           pip install python-dateutil==2.9.0.post0 pytz==2025.1
           pip install PyYAML==6.0.2 six==1.17.0 tzdata==2025.1 zstandard==0.23.0
 
-      # ----- Create missing files (safe YAML) -----
+      # ----- Auto-create missing files (fixed YAML syntax)
       - name: Ensure main.py exists
         run: |
           if [ ! -f "main.py" ]; then
@@ -120,8 +110,8 @@ jobs:
 
       - name: Build APK
         run: |
-          export ANDROID_SDK_ROOT="$HOME/android-sdk"
-          export ANDROID_NDK_ROOT="$HOME/android-sdk/ndk"
+          export ANDROID_SDK_ROOT="$ANDROID_HOME"
+          export ANDROID_NDK_ROOT="$ANDROID_NDK_HOME"
           pyside6-android-deploy --config pysidedeploy.spec --verbose
 
       - name: Upload APK artifact
