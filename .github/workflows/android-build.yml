@@ -1,4 +1,4 @@
-name: FIXED PySide6 Android APK Builder
+name: Fixed PySide6 Android APK Builder
 
 on:
   workflow_dispatch:
@@ -19,26 +19,17 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      # --------------------------------------------
-      # 1. Install system dependencies and Android SDK/NDK
-      # --------------------------------------------
       - name: Install system packages
         run: |
           sudo apt-get update
           sudo apt-get install -y patchelf wget unzip zip git autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
 
-      - name: Setup Android SDK and NDK (using Qt script)
+      # Use pre-installed Android SDK & NDK
+      - name: Set Android SDK/NDK environment variables
         run: |
-          git clone https://code.qt.io/pyside/pyside-setup
-          cd pyside-setup
-          python tools/cross_compile_android/main.py --download-only --skip-update --auto-accept-license
-          cd ..
-          echo "ANDROID_SDK_ROOT=$HOME/.pyside6-android-deploy/android_sdk" >> $GITHUB_ENV
-          echo "ANDROID_NDK_ROOT=$HOME/.pyside6-android-deploy/android_ndk" >> $GITHUB_ENV
+          echo "ANDROID_SDK_ROOT=$ANDROID_HOME" >> $GITHUB_ENV
+          echo "ANDROID_NDK_ROOT=$ANDROID_NDK_HOME" >> $GITHUB_ENV
 
-      # --------------------------------------------
-      # 2. Python and PySide6 setup
-      # --------------------------------------------
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -47,13 +38,11 @@ jobs:
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install packaging py7zr aqtinstall
+          pip install packaging aqtinstall
           pip install PySide6==6.8.2.1
           pip install fpdf Jinja2 MarkupSafe numpy pandas peewee python-dateutil pytz PyYAML six tzdata zstandard
 
-      # --------------------------------------------
-      # 3. Create required config files (if missing)
-      # --------------------------------------------
+      # Ensure required config files exist
       - name: Ensure pysidedeploy.spec with Android target
         run: |
           if [ ! -f "pysidedeploy.spec" ]; then
@@ -76,21 +65,6 @@ jobs:
             grep -q "^target\s*=\s*android" pysidedeploy.spec || echo "target = android" >> pysidedeploy.spec
           fi
 
-      # --------------------------------------------
-      # 4. Preemptively download the Android wheels
-      # --------------------------------------------
-      - name: Download required Android wheels
-        run: |
-          mkdir -p artifacts
-          aqt install-qt --outputdir $PWD/artifacts linux android 6.8.2 android_arm64_v8a -m all
-          wheel_pyside=$(find ./artifacts -name "PySide6*.whl" | head -1)
-          wheel_shiboken=$(find ./artifacts -name "shiboken6*.whl" | head -1)
-          echo "WHEEL_PYSIDE=$wheel_pyside" >> $GITHUB_ENV
-          echo "WHEEL_SHIBOKEN=$wheel_shiboken" >> $GITHUB_ENV
-
-      # --------------------------------------------
-      # 5. Create dummy translation files (if needed)
-      # --------------------------------------------
       - name: Ensure translation files exist
         run: |
           if [ -f "source.qrc" ]; then
@@ -108,10 +82,18 @@ jobs:
             echo "# empty resources" > source_rc.py
           fi
 
-      # --------------------------------------------
-      # 6. The fixed Android build command
-      # --------------------------------------------
-      - name: Build APK (with explicit wheel paths)
+      # Download Android wheels using aqtinstall
+      - name: Download Android wheels for PySide6
+        run: |
+          mkdir -p android_wheels
+          aqt install-qt --outputdir android_wheels linux android 6.8.2 android_arm64_v8a -m all
+          wheel_pyside=$(find android_wheels -name "PySide6*.whl" | head -1)
+          wheel_shiboken=$(find android_wheels -name "shiboken6*.whl" | head -1)
+          echo "WHEEL_PYSIDE=$wheel_pyside" >> $GITHUB_ENV
+          echo "WHEEL_SHIBOKEN=$wheel_shiboken" >> $GITHUB_ENV
+
+      # Build APK with explicit wheel paths
+      - name: Build APK using pyside6-android-deploy
         id: build_apk
         run: |
           python -m venv build_venv
@@ -121,29 +103,25 @@ jobs:
           pip install PySide6==6.8.2.1
           pip install fpdf Jinja2 MarkupSafe numpy pandas peewee python-dateutil pytz PyYAML six tzdata zstandard
 
-          # The core fix: explicitly provide the Android wheel paths
-          pyside6-android-deploy \
-            --wheel-pyside "${{ env.WHEEL_PYSIDE }}" \
-            --wheel-shiboken "${{ env.WHEEL_SHIBOKEN }}" \
+          # Run with explicit wheels and auto-yes
+          yes | pyside6-android-deploy \
+            --wheel-pyside "$WHEEL_PYSIDE" \
+            --wheel-shiboken "$WHEEL_SHIBOKEN" \
             --config pysidedeploy.spec \
             --verbose
 
-      # --------------------------------------------
-      # 7. Locate and publish the APK
-      # --------------------------------------------
       - name: Locate APK
         id: find_apk
         run: |
           APK_PATH=$(find . -name "*.apk" -type f -not -path "./android-sdk/*" | head -1)
           if [ -z "$APK_PATH" ]; then
-            echo "⚠️ APK not found. Searching deeper..."
             APK_PATH=$(find .buildozer -name "*.apk" 2>/dev/null | head -1)
           fi
           if [ -z "$APK_PATH" ]; then
-            echo "❌ APK not found. Check build logs."
+            echo "❌ APK not found"
             exit 1
           fi
-          echo "APK found at: $APK_PATH"
+          echo "APK found: $APK_PATH"
           mkdir -p final_artifacts
           cp "$APK_PATH" final_artifacts/MyApp-android.apk
           echo "apk_path=final_artifacts/MyApp-android.apk" >> $GITHUB_OUTPUT
@@ -155,9 +133,6 @@ jobs:
           path: final_artifacts/MyApp-android.apk
           retention-days: 7
 
-      # --------------------------------------------
-      # 8. Push to software-version branch
-      # --------------------------------------------
       - name: Push APK to software-version branch
         run: |
           git config user.name "GitHub Actions Bot"
