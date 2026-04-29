@@ -123,20 +123,21 @@ jobs:
             echo "# empty resources" > source_rc.py
           fi
 
-      - name: Build APK (in virtual environment to avoid prompt)
+      # ==================== FIXED ANDROID BUILD STEP ====================
+      - name: Build APK (using pyside6-deploy with Android wheels)
         run: |
           python -m venv build_venv
           source build_venv/bin/activate
-          pip install packaging -r requirements.txt
-          python -m pip install --upgrade pip
+          pip install --upgrade pip
           pip install packaging
-          pip install PySide6==6.8.2.1
-          pip install fpdf==1.7.2 Jinja2==3.1.6 MarkupSafe==3.0.2
-          pip install numpy==2.2.3 ordered-set==4.1.0
-          pip install pandas==2.2.3 peewee==3.17.9
-          pip install python-dateutil==2.9.0.post0 pytz==2025.1
-          pip install PyYAML==6.0.2 six==1.17.0 tzdata==2025.1 zstandard==0.23.0
-          pyside6-android-deploy --config pysidedeploy.spec --verbose
+          # Install PySide6 from the official Android snapshot index
+          pip install PySide6 --index-url https://download.qt.io/snapshots/ci/pyside6/6.8/latest/
+          # Install your project's other dependencies (needed for the app)
+          pip install fpdf Jinja2 MarkupSafe numpy ordered-set pandas peewee \
+                      python-dateutil pytz PyYAML six tzdata zstandard
+          # Run the modern deployment tool
+          pyside6-deploy --android --config pysidedeploy.spec --verbose
+      # ==================================================================
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
