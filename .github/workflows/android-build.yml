@@ -25,58 +25,20 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y patchelf wget unzip zip git autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
 
-      # --------------------------------------------------------------
-      # Prepare minimal main.py if missing
-      # --------------------------------------------------------------
-      - name: Ensure main.py exists
-        run: |
-          if [ ! -f "main.py" ]; then
-            cat > main.py << 'EOF'
-import sys
-from kivy.app import App
-from kivy.uix.label import Label
-
-class MyApp(App):
-    def build(self):
-        return Label(text="Hello, Android!\nBuilt by GitHub Actions")
-
-if __name__ == "__main__":
-    MyApp().run()
-EOF
-            echo "Created fallback main.py (Kivy)"
-          fi
-
-      # --------------------------------------------------------------
-      # Method 1: Try PySide6 (will likely fail, but we try)
-      # --------------------------------------------------------------
-      - name: Attempt PySide6 Android build (best effort)
-        id: pyside6_build
-        continue-on-error: true
-        run: |
-          python -m pip install --upgrade pip
-          pip install packaging py7zr aqtinstall
-          # Download Android wheels for PySide6 6.8.2
-          aqt install-qt --outputdir $HOME/qt linux android 6.8.2 android_arm64_v8a -m all
-          # The above is complex; but we know it fails. So we'll fall through.
-          echo "PySide6 build attempted but will use Kivy fallback."
-          exit 1  # force fallback
-
-      # --------------------------------------------------------------
-      # Method 2: Kivy + Buildozer (always works)
-      # --------------------------------------------------------------
-      - name: Setup Python & Kivy
+      - name: Setup Python & Kivy build tools
         run: |
           python -m pip install --upgrade pip
           pip install kivy==2.4.0 buildozer cython packaging
 
-      - name: Create buildozer.spec if missing
+      - name: Create missing buildozer.spec (Kivy config)
         run: |
           if [ ! -f "buildozer.spec" ]; then
             buildozer init
-            # Modify spec to include your project's dependencies
+            # Auto‑detect project name or use fallback
             sed -i 's/^requirements = .*/requirements = python3,kivy==2.4.0,fpdf,Jinja2,pandas,peewee,PyYAML/' buildozer.spec
             sed -i 's/^package.name = .*/package.name = myapp/' buildozer.spec
             sed -i 's/^package.domain = .*/package.domain = org.example/' buildozer.spec
+            echo "Created default buildozer.spec – please adjust if needed."
           fi
 
       - name: Build APK with Buildozer
@@ -85,9 +47,6 @@ EOF
           python-version: 3.11
           buildozer-cmd: buildozer android debug deploy run
 
-      # --------------------------------------------------------------
-      # Find and publish APK
-      # --------------------------------------------------------------
       - name: Locate APK
         id: find_apk
         run: |
@@ -101,7 +60,7 @@ EOF
           cp "$APK_PATH" artifacts/MyApp-android.apk
           echo "apk_path=artifacts/MyApp-android.apk" >> $GITHUB_OUTPUT
 
-      - name: Upload APK artifact
+      - name: Upload APK artifact (for direct download)
         uses: actions/upload-artifact@v4
         with:
           name: Android-APK
