@@ -1,4 +1,4 @@
-name: PySide6 Android APK (Fixed Wheel Paths)
+name: PySide6 Android APK (Manual)
 
 on:
   workflow_dispatch:
@@ -36,41 +36,37 @@ jobs:
           pip install PySide6==6.8.2.1
           pip install fpdf Jinja2 MarkupSafe numpy pandas peewee python-dateutil pytz PyYAML six tzdata zstandard
 
-      - name: Create pysidedeploy.spec with Android target
+      - name: Create pysidedeploy.spec
         run: |
-          cat > pysidedeploy.spec << 'EOF'
-[app]
-name = MyPySide6App
-package_name = org.example.mypyside6app
-version = 1.0.0
-main_script = main.py
-target = android
-requirements = PySide6
-android_permissions = INTERNET
-android_manifest_minsdk = 21
-android_manifest_targetsdk = 34
+          cat > pysidedeploy.spec <<-EOF
+          [app]
+          name = MyPySide6App
+          package_name = org.example.mypyside6app
+          version = 1.0.0
+          main_script = main.py
+          target = android
+          requirements = PySide6
+          android_permissions = INTERNET
+          android_manifest_minsdk = 21
+          android_manifest_targetsdk = 34
 
-[buildozer]
-android.release_artifact = apk
-EOF
+          [buildozer]
+          android.release_artifact = apk
+          EOF
 
-      - name: Download official Android wheels for PySide6
+      - name: Download Android wheels
         id: download_wheels
         run: |
           mkdir -p android_wheels
-          # Download the exact Qt version that matches PySide6 6.8.2
           aqt install-qt --outputdir android_wheels linux android 6.8.2 android_arm64_v8a -m all
-          # Find the wheels
-          WHEEL_PYSIDE=$(find android_wheels -type f -name "PySide6-*.whl" | head -1)
-          WHEEL_SHIBOKEN=$(find android_wheels -type f -name "shiboken6-*.whl" | head -1)
+          WHEEL_PYSIDE=$(find android_wheels -name "PySide6-*.whl" | head -1)
+          WHEEL_SHIBOKEN=$(find android_wheels -name "shiboken6-*.whl" | head -1)
           if [ -z "$WHEEL_PYSIDE" ] || [ -z "$WHEEL_SHIBOKEN" ]; then
-            echo "Failed to download wheels"
+            echo "Failed to find wheels"
             exit 1
           fi
           echo "wheel_pyside=$WHEEL_PYSIDE" >> $GITHUB_OUTPUT
           echo "wheel_shiboken=$WHEEL_SHIBOKEN" >> $GITHUB_OUTPUT
-          echo "WHEEL_PYSIDE=$WHEEL_PYSIDE" >> $GITHUB_ENV
-          echo "WHEEL_SHIBOKEN=$WHEEL_SHIBOKEN" >> $GITHUB_ENV
 
       - name: Ensure translation files exist
         run: |
@@ -89,7 +85,7 @@ EOF
             echo "# empty resources" > source_rc.py
           fi
 
-      - name: Build APK with explicit wheels
+      - name: Build APK
         run: |
           python -m venv build_venv
           source build_venv/bin/activate
@@ -111,9 +107,7 @@ EOF
             APK_PATH=$(find ~/.pyside6-android-deploy -name "*.apk" 2>/dev/null | head -1)
           fi
           if [ -z "$APK_PATH" ]; then
-            echo "No APK found. Listing directories:"
-            find . -name "*.apk" 2>/dev/null || true
-            ls -la .buildozer 2>/dev/null || true
+            echo "❌ APK not found"
             exit 1
           fi
           echo "APK: $APK_PATH"
