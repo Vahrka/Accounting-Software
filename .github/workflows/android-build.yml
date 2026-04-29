@@ -1,4 +1,4 @@
-name: Fixed PySide6 Android APK Builder
+name: PySide6 Android APK (Manual)
 
 on:
   workflow_dispatch:
@@ -24,7 +24,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y patchelf wget unzip zip git autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
 
-      # Use pre-installed Android SDK & NDK
       - name: Set Android SDK/NDK environment variables
         run: |
           echo "ANDROID_SDK_ROOT=$ANDROID_HOME" >> $GITHUB_ENV
@@ -38,12 +37,11 @@ jobs:
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install packaging aqtinstall
+          pip install packaging
           pip install PySide6==6.8.2.1
           pip install fpdf Jinja2 MarkupSafe numpy pandas peewee python-dateutil pytz PyYAML six tzdata zstandard
 
-      # Ensure required config files exist
-      - name: Ensure pysidedeploy.spec with Android target
+      - name: Ensure pysidedeploy.spec with target=android
         run: |
           if [ ! -f "pysidedeploy.spec" ]; then
             cat > pysidedeploy.spec <<-EOF
@@ -65,7 +63,7 @@ jobs:
             grep -q "^target\s*=\s*android" pysidedeploy.spec || echo "target = android" >> pysidedeploy.spec
           fi
 
-      - name: Ensure translation files exist
+      - name: Ensure translation files exist (if referenced)
         run: |
           if [ -f "source.qrc" ]; then
             grep -oE 'src/i18n/[^"]+\.qm' source.qrc | while read -r qm_path; do
@@ -82,19 +80,7 @@ jobs:
             echo "# empty resources" > source_rc.py
           fi
 
-      # Download Android wheels using aqtinstall
-      - name: Download Android wheels for PySide6
-        run: |
-          mkdir -p android_wheels
-          aqt install-qt --outputdir android_wheels linux android 6.8.2 android_arm64_v8a -m all
-          wheel_pyside=$(find android_wheels -name "PySide6*.whl" | head -1)
-          wheel_shiboken=$(find android_wheels -name "shiboken6*.whl" | head -1)
-          echo "WHEEL_PYSIDE=$wheel_pyside" >> $GITHUB_ENV
-          echo "WHEEL_SHIBOKEN=$wheel_shiboken" >> $GITHUB_ENV
-
-      # Build APK with explicit wheel paths
-      - name: Build APK using pyside6-android-deploy
-        id: build_apk
+      - name: Build APK with pyside6-deploy
         run: |
           python -m venv build_venv
           source build_venv/bin/activate
@@ -102,13 +88,7 @@ jobs:
           pip install packaging
           pip install PySide6==6.8.2.1
           pip install fpdf Jinja2 MarkupSafe numpy pandas peewee python-dateutil pytz PyYAML six tzdata zstandard
-
-          # Run with explicit wheels and auto-yes
-          yes | pyside6-android-deploy \
-            --wheel-pyside "$WHEEL_PYSIDE" \
-            --wheel-shiboken "$WHEEL_SHIBOKEN" \
-            --config pysidedeploy.spec \
-            --verbose
+          yes | pyside6-deploy --config pysidedeploy.spec --verbose
 
       - name: Locate APK
         id: find_apk
@@ -126,7 +106,7 @@ jobs:
           cp "$APK_PATH" final_artifacts/MyApp-android.apk
           echo "apk_path=final_artifacts/MyApp-android.apk" >> $GITHUB_OUTPUT
 
-      - name: Upload APK artifact
+      - name: Upload APK as artifact
         uses: actions/upload-artifact@v4
         with:
           name: PySide6-Android-APK
