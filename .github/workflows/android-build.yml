@@ -1,4 +1,4 @@
-name: PySide6 Android APK (Manual)
+name: Build Android APK
 
 on:
   workflow_dispatch:
@@ -24,6 +24,11 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y patchelf wget unzip zip git autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
 
+      - name: Set Android SDK/NDK environment variables
+        run: |
+          echo "ANDROID_SDK_ROOT=$ANDROID_HOME" >> $GITHUB_ENV
+          echo "ANDROID_NDK_ROOT=$ANDROID_NDK_HOME" >> $GITHUB_ENV
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -36,9 +41,10 @@ jobs:
           pip install PySide6==6.8.2.1
           pip install fpdf Jinja2 MarkupSafe numpy pandas peewee python-dateutil pytz PyYAML six tzdata zstandard
 
-      - name: Create pysidedeploy.spec
+      - name: Ensure pysidedeploy.spec with target=android
         run: |
-          cat > pysidedeploy.spec <<-EOF
+          if [ ! -f "pysidedeploy.spec" ]; then
+            cat > pysidedeploy.spec <<-EOF
           [app]
           name = MyPySide6App
           package_name = org.example.mypyside6app
@@ -53,23 +59,11 @@ jobs:
           [buildozer]
           android.release_artifact = apk
           EOF
-
-      - name: Download Android wheels (PySide6 for arm64)
-        id: download_wheels
-        run: |
-          mkdir -p android_wheels
-          cd android_wheels
-          pip download --only-binary=:all: --platform android_arm64 --python-version 311 --implementation cp --abi cp311 PySide6==6.8.2.1 shiboken6==6.8.2.1 -d .
-          WHEEL_PYSIDE=$(ls PySide6-*.whl | head -1)
-          WHEEL_SHIBOKEN=$(ls shiboken6-*.whl | head -1)
-          if [ -z "$WHEEL_PYSIDE" ] || [ -z "$WHEEL_SHIBOKEN" ]; then
-            echo "Failed to download wheels"
-            exit 1
+          else
+            grep -q "^target\s*=\s*android" pysidedeploy.spec || echo "target = android" >> pysidedeploy.spec
           fi
-          echo "wheel_pyside=$(pwd)/$WHEEL_PYSIDE" >> $GITHUB_OUTPUT
-          echo "wheel_shiboken=$(pwd)/$WHEEL_SHIBOKEN" >> $GITHUB_OUTPUT
 
-      - name: Ensure translation files exist
+      - name: Ensure translation files exist (if referenced)
         run: |
           if [ -f "source.qrc" ]; then
             grep -oE 'src/i18n/[^"]+\.qm' source.qrc | while read -r qm_path; do
@@ -86,7 +80,7 @@ jobs:
             echo "# empty resources" > source_rc.py
           fi
 
-      - name: Build APK
+      - name: Build APK with pyside6-deploy
         run: |
           python -m venv build_venv
           source build_venv/bin/activate
@@ -94,39 +88,50 @@ jobs:
           pip install packaging
           pip install PySide6==6.8.2.1
           pip install fpdf Jinja2 MarkupSafe numpy pandas peewee python-dateutil pytz PyYAML six tzdata zstandard
-          yes | pyside6-android-deploy \
-            --wheel-pyside "${{ steps.download_wheels.outputs.wheel_pyside }}" \
-            --wheel-shiboken "${{ steps.download_wheels.outputs.wheel_shiboken }}" \
-            --config pysidedeploy.spec \
-            --verbose
+          yes | pyside6-deploy --config pysidedeploy.spec --verbose
 
       - name: Locate APK
         id: find_apk
         run: |
-          APK_PATH=$(find . -name "*.apk" -type f -not -path "./android-sdk/*" | head -1)
+          echo "Searching for APK..."
+          # List directories to help debug
+          echo "Current directory contents:"
+          ls -la
+          echo ""
+          echo "Searching common locations:"
+          # Search in the entire project
+          APK_PATH=$(find . -type f -name "*.apk" -not -path "./android-sdk/*" | head -1)
           if [ -z "$APK_PATH" ]; then
-            APK_PATH=$(find ~/.pyside6-android-deploy -name "*.apk" 2>/dev/null | head -1)
+            APK_PATH=$(find ~/.pyside6-android-deploy -type f -name "*.apk" 2>/dev/null | head -1)
           fi
           if [ -z "$APK_PATH" ]; then
-            echo "❌ APK not found"
+            APK_PATH=$(find .buildozer -type f -name "*.apk" 2>/dev/null | head -1)
+          fi
+          if [ -z "$APK_PATH" ]; then
+            APK_PATH=$(find deploy -type f -name "*.apk" 2>/dev/null | head -1)
+          fi
+          if [ -z "$APK_PATH" ]; then
+            echo "❌ APK not found. Full find output:"
+            find . -name "*.apk" 2>/dev/null || true
             exit 1
           fi
-          echo "APK: $APK_PATH"
+          echo "APK found: $APK_PATH"
           mkdir -p final_artifacts
           cp "$APK_PATH" final_artifacts/MyApp-android.apk
           echo "apk_path=final_artifacts/MyApp-android.apk" >> $GITHUB_OUTPUT
 
-      - name: Upload APK
+      - name: Upload APK as artifact
         uses: actions/upload-artifact@v4
         with:
           name: PySide6-Android-APK
           path: final_artifacts/MyApp-android.apk
           retention-days: 7
 
-      - name: Push to software-version branch
+      - name: Push APK to software-version branch
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
+
           TARGET_BRANCH="software-version"
           if git ls-remote --heads origin "$TARGET_BRANCH" | grep -q "$TARGET_BRANCH"; then
             git fetch origin "$TARGET_BRANCH"
@@ -135,8 +140,10 @@ jobs:
             git checkout --orphan "$TARGET_BRANCH"
             git rm -rf . > /dev/null 2>&1 || true
           fi
+
           find . -name "*.apk" -type f -not -path "./.git/*" -delete
           cp final_artifacts/MyApp-android.apk ./MyApp-android.apk
+
           git add MyApp-android.apk
-          git commit -m "Update Android APK - $(date -u +'%Y-%m-%d %H:%M:%S UTC')" || echo "No changes"
+          git commit -m "Update Android APK - $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
           git push origin "$TARGET_BRANCH" --force
