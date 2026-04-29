@@ -1,4 +1,4 @@
-name: Ultimate Android APK Builder
+name: FIXED PySide6 Android APK Builder
 
 on:
   workflow_dispatch:
@@ -11,8 +11,7 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -20,53 +19,145 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Install system dependencies
+      # --------------------------------------------
+      # 1. Install system dependencies and Android SDK/NDK
+      # --------------------------------------------
+      - name: Install system packages
         run: |
           sudo apt-get update
           sudo apt-get install -y patchelf wget unzip zip git autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
 
-      - name: Setup Python & Kivy build tools
+      - name: Setup Android SDK and NDK (using Qt script)
+        run: |
+          git clone https://code.qt.io/pyside/pyside-setup
+          cd pyside-setup
+          python tools/cross_compile_android/main.py --download-only --skip-update --auto-accept-license
+          cd ..
+          echo "ANDROID_SDK_ROOT=$HOME/.pyside6-android-deploy/android_sdk" >> $GITHUB_ENV
+          echo "ANDROID_NDK_ROOT=$HOME/.pyside6-android-deploy/android_ndk" >> $GITHUB_ENV
+
+      # --------------------------------------------
+      # 2. Python and PySide6 setup
+      # --------------------------------------------
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install kivy==2.4.0 buildozer cython packaging
+          pip install packaging py7zr aqtinstall
+          pip install PySide6==6.8.2.1
+          pip install fpdf Jinja2 MarkupSafe numpy pandas peewee python-dateutil pytz PyYAML six tzdata zstandard
 
-      - name: Create missing buildozer.spec (Kivy config)
+      # --------------------------------------------
+      # 3. Create required config files (if missing)
+      # --------------------------------------------
+      - name: Ensure pysidedeploy.spec with Android target
         run: |
-          if [ ! -f "buildozer.spec" ]; then
-            buildozer init
-            # Auto‑detect project name or use fallback
-            sed -i 's/^requirements = .*/requirements = python3,kivy==2.4.0,fpdf,Jinja2,pandas,peewee,PyYAML/' buildozer.spec
-            sed -i 's/^package.name = .*/package.name = myapp/' buildozer.spec
-            sed -i 's/^package.domain = .*/package.domain = org.example/' buildozer.spec
-            echo "Created default buildozer.spec – please adjust if needed."
+          if [ ! -f "pysidedeploy.spec" ]; then
+            cat > pysidedeploy.spec <<-EOF
+          [app]
+          name = MyPySide6App
+          package_name = org.example.mypyside6app
+          version = 1.0.0
+          main_script = main.py
+          target = android
+          requirements = PySide6
+          android_permissions = INTERNET
+          android_manifest_minsdk = 21
+          android_manifest_targetsdk = 34
+
+          [buildozer]
+          android.release_artifact = apk
+          EOF
+          else
+            grep -q "^target\s*=\s*android" pysidedeploy.spec || echo "target = android" >> pysidedeploy.spec
           fi
 
-      - name: Build APK with Buildozer
-        uses: digreatbrian/buildozer-action@v2
-        with:
-          python-version: 3.11
-          buildozer-cmd: buildozer android debug deploy run
+      # --------------------------------------------
+      # 4. Preemptively download the Android wheels
+      # --------------------------------------------
+      - name: Download required Android wheels
+        run: |
+          mkdir -p artifacts
+          aqt install-qt --outputdir $PWD/artifacts linux android 6.8.2 android_arm64_v8a -m all
+          wheel_pyside=$(find ./artifacts -name "PySide6*.whl" | head -1)
+          wheel_shiboken=$(find ./artifacts -name "shiboken6*.whl" | head -1)
+          echo "WHEEL_PYSIDE=$wheel_pyside" >> $GITHUB_ENV
+          echo "WHEEL_SHIBOKEN=$wheel_shiboken" >> $GITHUB_ENV
 
+      # --------------------------------------------
+      # 5. Create dummy translation files (if needed)
+      # --------------------------------------------
+      - name: Ensure translation files exist
+        run: |
+          if [ -f "source.qrc" ]; then
+            grep -oE 'src/i18n/[^"]+\.qm' source.qrc | while read -r qm_path; do
+              mkdir -p "$(dirname "$qm_path")"
+              touch "$qm_path"
+            done
+          fi
+
+      - name: Compile Qt resources
+        run: |
+          if grep -q '<file' source.qrc; then
+            pyside6-rcc source.qrc -o source_rc.py
+          else
+            echo "# empty resources" > source_rc.py
+          fi
+
+      # --------------------------------------------
+      # 6. The fixed Android build command
+      # --------------------------------------------
+      - name: Build APK (with explicit wheel paths)
+        id: build_apk
+        run: |
+          python -m venv build_venv
+          source build_venv/bin/activate
+          pip install --upgrade pip
+          pip install packaging
+          pip install PySide6==6.8.2.1
+          pip install fpdf Jinja2 MarkupSafe numpy pandas peewee python-dateutil pytz PyYAML six tzdata zstandard
+
+          # The core fix: explicitly provide the Android wheel paths
+          pyside6-android-deploy \
+            --wheel-pyside "${{ env.WHEEL_PYSIDE }}" \
+            --wheel-shiboken "${{ env.WHEEL_SHIBOKEN }}" \
+            --config pysidedeploy.spec \
+            --verbose
+
+      # --------------------------------------------
+      # 7. Locate and publish the APK
+      # --------------------------------------------
       - name: Locate APK
         id: find_apk
         run: |
-          APK_PATH=$(find ./bin -name "*.apk" | head -1)
+          APK_PATH=$(find . -name "*.apk" -type f -not -path "./android-sdk/*" | head -1)
           if [ -z "$APK_PATH" ]; then
-            echo "❌ APK not found"
+            echo "⚠️ APK not found. Searching deeper..."
+            APK_PATH=$(find .buildozer -name "*.apk" 2>/dev/null | head -1)
+          fi
+          if [ -z "$APK_PATH" ]; then
+            echo "❌ APK not found. Check build logs."
             exit 1
           fi
-          echo "APK found at $APK_PATH"
-          mkdir -p artifacts
-          cp "$APK_PATH" artifacts/MyApp-android.apk
-          echo "apk_path=artifacts/MyApp-android.apk" >> $GITHUB_OUTPUT
+          echo "APK found at: $APK_PATH"
+          mkdir -p final_artifacts
+          cp "$APK_PATH" final_artifacts/MyApp-android.apk
+          echo "apk_path=final_artifacts/MyApp-android.apk" >> $GITHUB_OUTPUT
 
-      - name: Upload APK artifact (for direct download)
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Android-APK
-          path: artifacts/MyApp-android.apk
+          name: PySide6-Android-APK
+          path: final_artifacts/MyApp-android.apk
           retention-days: 7
 
+      # --------------------------------------------
+      # 8. Push to software-version branch
+      # --------------------------------------------
       - name: Push APK to software-version branch
         run: |
           git config user.name "GitHub Actions Bot"
@@ -81,9 +172,8 @@ jobs:
             git rm -rf . > /dev/null 2>&1 || true
           fi
 
-          # Remove old APKs and copy the new one
           find . -name "*.apk" -type f -not -path "./.git/*" -delete
-          cp artifacts/MyApp-android.apk ./MyApp-android.apk
+          cp final_artifacts/MyApp-android.apk ./MyApp-android.apk
 
           git add MyApp-android.apk
           git commit -m "Update Android APK - $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
