@@ -39,16 +39,12 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install Python packages
+      - name: Install Python packages (host dependencies)
         run: |
           python -m pip install --upgrade pip
           pip install packaging
+          # These are for the host – the app's own dependencies will be installed inside the venv later
           pip install PySide6==6.8.2.1
-          pip install fpdf==1.7.2 Jinja2==3.1.6 MarkupSafe==3.0.2
-          pip install numpy==2.2.3 ordered-set==4.1.0
-          pip install pandas==2.2.3 peewee==3.17.9
-          pip install python-dateutil==2.9.0.post0 pytz==2025.1
-          pip install PyYAML==6.0.2 six==1.17.0 tzdata==2025.1 zstandard==0.23.0
 
       - name: Ensure main.py exists
         run: |
@@ -124,18 +120,18 @@ jobs:
           fi
 
       # ==================== FIXED ANDROID BUILD STEP ====================
-      - name: Build APK (using pyside6-deploy with Android wheels)
+      - name: Build APK using pyside6-deploy
         run: |
           python -m venv build_venv
           source build_venv/bin/activate
           pip install --upgrade pip
           pip install packaging
-          # Install PySide6 from the official Android snapshot index
-          pip install PySide6 --index-url https://download.qt.io/snapshots/ci/pyside6/6.8/latest/
-          # Install your project's other dependencies (needed for the app)
+          # Install the normal PySide6 (desktop) – this provides pyside6-deploy
+          pip install PySide6==6.8.2.1
+          # Install your app's other dependencies (they will be included in the APK)
           pip install fpdf Jinja2 MarkupSafe numpy ordered-set pandas peewee \
                       python-dateutil pytz PyYAML six tzdata zstandard
-          # Run the modern deployment tool
+          # Run the deployment tool; it will automatically download Android wheels
           pyside6-deploy --android --config pysidedeploy.spec --verbose
       # ==================================================================
 
