@@ -21,7 +21,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y patchelf wget unzip zip
 
-      # Android SDK is already preinstalled on the runner
       - name: Set Android SDK & NDK environment variables
         run: |
           echo "ANDROID_SDK_ROOT=$ANDROID_HOME" >> $GITHUB_ENV
@@ -36,29 +35,27 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install PySide6==6.8.2.1 packaging
-          # Install your app’s other requirements
           pip install fpdf Jinja2 MarkupSafe numpy pandas peewee python-dateutil pytz PyYAML six tzdata zstandard
 
       - name: Ensure main.py exists
         run: |
           if [ ! -f "main.py" ]; then
-            cat > main.py << 'EOF'
-import sys
-from PySide6.QtWidgets import QApplication, QLabel, QVBoxLayout, QWidget
-
-class MainWindow(QWidget):
-    def __init__(self):
-        super().__init__()
-        layout = QVBoxLayout()
-        layout.addWidget(QLabel("PySide6 on Android"))
-        self.setLayout(layout)
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    w = MainWindow()
-    w.show()
-    sys.exit(app.exec())
-EOF
+            printf '%s\n' \
+              'import sys' \
+              'from PySide6.QtWidgets import QApplication, QLabel, QVBoxLayout, QWidget' \
+              '' \
+              'class MainWindow(QWidget):' \
+              '    def __init__(self):' \
+              '        super().__init__()' \
+              '        layout = QVBoxLayout()' \
+              '        layout.addWidget(QLabel("PySide6 on Android"))' \
+              '        self.setLayout(layout)' \
+              '' \
+              'if __name__ == "__main__":' \
+              '    app = QApplication(sys.argv)' \
+              '    w = MainWindow()' \
+              '    w.show()' \
+              '    sys.exit(app.exec())' > main.py
           fi
 
       - name: Ensure source.qrc exists
@@ -70,23 +67,22 @@ EOF
       - name: Ensure pysidedeploy.spec with Android target
         run: |
           if [ ! -f "pysidedeploy.spec" ]; then
-            cat > pysidedeploy.spec << 'EOF'
-[app]
-name = MyApp
-package_name = org.example.myapp
-version = 1.0.0
-main_script = main.py
-target = android
-requirements = PySide6
-android_permissions = INTERNET
-android_manifest_minsdk = 21
-android_manifest_targetsdk = 34
+            cat > pysidedeploy.spec <<-EOF
+          [app]
+          name = MyApp
+          package_name = org.example.myapp
+          version = 1.0.0
+          main_script = main.py
+          target = android
+          requirements = PySide6
+          android_permissions = INTERNET
+          android_manifest_minsdk = 21
+          android_manifest_targetsdk = 34
 
-[buildozer]
-android.release_artifact = apk
-EOF
+          [buildozer]
+          android.release_artifact = apk
+          EOF
           else
-            # Ensure target = android is present
             grep -q "^target\s*=\s*android" pysidedeploy.spec || echo "target = android" >> pysidedeploy.spec
           fi
 
@@ -107,9 +103,6 @@ EOF
             echo "# empty resources" > source_rc.py
           fi
 
-      # ------------------------------------------------------------------
-      # Android build using pyside6-deploy (official method)
-      # ------------------------------------------------------------------
       - name: Build APK
         run: |
           python -m venv build_venv
@@ -117,19 +110,16 @@ EOF
           pip install --upgrade pip
           pip install packaging PySide6==6.8.2.1
           pip install fpdf Jinja2 MarkupSafe numpy pandas peewee python-dateutil pytz PyYAML six tzdata zstandard
-          # Accept any license prompts automatically
           echo "Y" | pyside6-deploy --config pysidedeploy.spec --verbose
 
       - name: Locate and prepare APK
         id: find_apk
         run: |
-          # Typical output paths for pyside6-deploy Android builds
           APK_FILE=$(find . -type f -name "*.apk" -not -path "./android-sdk/*" | head -1)
           if [ -z "$APK_FILE" ]; then
-            echo "APK not found. Listing directories for debug:"
+            echo "APK not found. Listing directories:"
             ls -la
             find . -name "*.apk" 2>/dev/null || true
-            find . -name "*release*.apk" 2>/dev/null || true
             exit 1
           fi
           echo "Found APK: $APK_FILE"
