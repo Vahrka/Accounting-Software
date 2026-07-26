@@ -1,34 +1,35 @@
 from utils.logger import get_logger
 
-# Database core
 from .account import Account
-# Base utilities
 from .base import BaseModelExtended, SoftDeleteMixin, TimestampMixin
 from .customer import Customer
 from .database import BaseModel, _db, db_manager, init_database
 from .employee import Employee
-from .inventory_item import InventoryItem
+from .inventory_item import InventoryItem, Supplier
 from .invoice import Invoice
 from .sales import Billing, Sale, SaleItem
 from .transaction import Transaction
-from .user import User
-
-# All models
+from .user import Permission, Role, RolePermission, User, UserRole
 
 logger = get_logger()
 
 # List all models for table creation
 ALL_MODELS = [
     User,
+    Permission,
+    Role,
+    RolePermission,
+    UserRole,
     Account,
     Employee,
     Customer,
     InventoryItem,
     Sale,
     SaleItem,
+    Supplier,
     Invoice,
     Transaction,
-    Billing
+    Billing,
 ]
 
 
@@ -43,31 +44,63 @@ def drop_tables() -> None:
 
 
 def initialize_test_data() -> None:
-    """Initialize test data for development"""
+    """Initialize test data for development (idempotent)"""
+    # Get or create default permissions
+    perm_view_users, _ = Permission.get_or_create(
+        name='view_users',
+        defaults={'description': 'Can view user list'}
+    )
+    perm_edit_users, _ = Permission.get_or_create(
+        name='edit_users',
+        defaults={'description': 'Can edit users'}
+    )
+    perm_view_reports, _ = Permission.get_or_create(
+        name='view_reports',
+        defaults={'description': 'Can view reports'}
+    )
+
+    # Get or create default roles
+    admin_role, _ = Role.get_or_create(name='admin')
+    manager_role, _ = Role.get_or_create(name='manager')
+
+    # Assign permissions to roles using the explicit through model
+    # (this is idempotent and avoids the .add() method issues)
+    for role, perms in [
+        (admin_role, [perm_view_users, perm_edit_users, perm_view_reports]),
+        (manager_role, [perm_view_users, perm_view_reports]),
+    ]:
+        for perm in perms:
+            RolePermission.get_or_create(role=role, permission=perm)
+
+    # Create admin user only if no users exist
     if User.select().count() == 0:
-        # Create admin user
         admin = User.create(
             username='admin',
             email='admin@example.com',
-            password_hash='hashed_password',
-            is_admin=True,
+            password_hash='hashed_password',   # replace with proper hashing later
+            full_name='Administrator',
             is_active=True
         )
+        # Assign admin role to user using the explicit through model
+        UserRole.get_or_create(user=admin, role=admin_role)
 
         # Create sample customer
-        customer = Customer.create(
-            name='John Doe',
+        customer, _ = Customer.get_or_create(
             email='john@example.com',
-            phone='123-456-7890',
-            address='123 Main St',
-            city='New York',
-            state='NY',
-            country='USA',
-            postal_code='10001',
-            created_by=admin
+            defaults={
+                'name': 'John Doe',
+                'phone': '123-456-7890',
+                'address': '123 Main St',
+                'city': 'New York',
+                'state': 'NY',
+                'country': 'USA',
+                'postal_code': '10001',
+                'created_by': admin
+            }
         )
-
         logger.info("Test data created successfully!")
+    else:
+        logger.info("Test data already exists, skipping creation.")
 
 
 # What to export
@@ -85,10 +118,15 @@ __all__ = [
 
     # Models
     'User',
+    'Permission',
+    'Role',
+    'RolePermission',
+    'UserRole',
     'Account',
     'Employee',
     'Customer',
     'InventoryItem',
+    'Supplier',
     'Sale',
     'SaleItem',
     'Invoice',
@@ -99,5 +137,5 @@ __all__ = [
     'ALL_MODELS',
     'create_tables',
     'drop_tables',
-    'initialize_test_data'
+    'initialize_test_data',
 ]

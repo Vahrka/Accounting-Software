@@ -101,15 +101,15 @@ class Application:
 
         # List of font files to load from application resources
         font_files = [
-            ":/fonts/Vazirmatn-RD-UI-FD-Black",
-            ":/fonts/Vazirmatn-RD-UI-FD-Bold",
-            ":/fonts/Vazirmatn-RD-UI-FD-ExtraBold",
-            ":/fonts/Vazirmatn-RD-UI-FD-ExtraLight",
-            ":/fonts/Vazirmatn-RD-UI-FD-Light",
-            ":/fonts/Vazirmatn-RD-UI-FD-Medium",
-            ":/fonts/Vazirmatn-RD-UI-FD-Regular",
-            ":/fonts/Vazirmatn-RD-UI-FD-SemiBold",
-            ":/fonts/Vazirmatn-RD-UI-FD-Thin",
+            ":/fonts/Vazirmatn-RD-UI-Black",
+            ":/fonts/Vazirmatn-RD-UI-Bold",
+            ":/fonts/Vazirmatn-RD-UI-ExtraBold",
+            ":/fonts/Vazirmatn-RD-UI-ExtraLight",
+            ":/fonts/Vazirmatn-RD-UI-Light",
+            ":/fonts/Vazirmatn-RD-UI-Medium",
+            ":/fonts/Vazirmatn-RD-UI-Regular",
+            ":/fonts/Vazirmatn-RD-UI-SemiBold",
+            ":/fonts/Vazirmatn-RD-UI-Thin",
         ]
 
         # Clear any previously loaded application fonts to avoid duplicates

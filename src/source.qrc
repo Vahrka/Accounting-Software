@@ -3,17 +3,18 @@
         <file>resources/theme/qtquickcontrols2.conf</file>
     </qresource>
     <qresource prefix="/fonts">
-        <file alias="Vazirmatn-RD-UI-FD-Black">resources/fonts/vazirmatn/Vazirmatn-RD-UI-FD-Black.ttf</file>
-        <file alias="Vazirmatn-RD-UI-FD-Bold">resources/fonts/vazirmatn/Vazirmatn-RD-UI-FD-Bold.ttf</file>
-        <file alias="Vazirmatn-RD-UI-FD-ExtraBold">resources/fonts/vazirmatn/Vazirmatn-RD-UI-FD-ExtraBold.ttf</file>
-        <file alias="Vazirmatn-RD-UI-FD-ExtraLight">resources/fonts/vazirmatn/Vazirmatn-RD-UI-FD-ExtraLight.ttf</file>
-        <file alias="Vazirmatn-RD-UI-FD-Light">resources/fonts/vazirmatn/Vazirmatn-RD-UI-FD-Light.ttf</file>
-        <file alias="Vazirmatn-RD-UI-FD-Medium">resources/fonts/vazirmatn/Vazirmatn-RD-UI-FD-Medium.ttf</file>
-        <file alias="Vazirmatn-RD-UI-FD-Regular">resources/fonts/vazirmatn/Vazirmatn-RD-UI-FD-Regular.ttf</file>
-        <file alias="Vazirmatn-RD-UI-FD-SemiBold">resources/fonts/vazirmatn/Vazirmatn-RD-UI-FD-SemiBold.ttf</file>
-        <file alias="Vazirmatn-RD-UI-FD-Thin">resources/fonts/vazirmatn/Vazirmatn-RD-UI-FD-Thin.ttf</file>
+        <file alias="Vazirmatn-RD-UI-Black">resources/fonts/vazirmatn/Vazirmatn-RD-UI-Black.ttf</file>
+        <file alias="Vazirmatn-RD-UI-Bold">resources/fonts/vazirmatn/Vazirmatn-RD-UI-Bold.ttf</file>
+        <file alias="Vazirmatn-RD-UI-ExtraBold">resources/fonts/vazirmatn/Vazirmatn-RD-UI-ExtraBold.ttf</file>
+        <file alias="Vazirmatn-RD-UI-ExtraLight">resources/fonts/vazirmatn/Vazirmatn-RD-UI-ExtraLight.ttf</file>
+        <file alias="Vazirmatn-RD-UI-Light">resources/fonts/vazirmatn/Vazirmatn-RD-UI-Light.ttf</file>
+        <file alias="Vazirmatn-RD-UI-Medium">resources/fonts/vazirmatn/Vazirmatn-RD-UI-Medium.ttf</file>
+        <file alias="Vazirmatn-RD-UI-Regular">resources/fonts/vazirmatn/Vazirmatn-RD-UI-Regular.ttf</file>
+        <file alias="Vazirmatn-RD-UI-SemiBold">resources/fonts/vazirmatn/Vazirmatn-RD-UI-SemiBold.ttf</file>
+        <file alias="Vazirmatn-RD-UI-Thin">resources/fonts/vazirmatn/Vazirmatn-RD-UI-Thin.ttf</file>
     </qresource>
     <qresource prefix="/icons">
+        <file alias="arrow-up.png">resources/icons/png/arrow-up-svgrepo-com.png</file>
         <file alias="dropdown-arrow.png">resources/icons/png/dropdown-arrow-svgrepo-com.png</file>
         <file alias="chart.svg">resources/icons/svg/chart-mixed-svgrepo-com.svg</file>
         <file alias="contact-phonebook-support.svg">resources/icons/svg/contact-phonebook-support-svgrepo-com.svg</file>
@@ -44,8 +45,8 @@
         <file alias="icon">resources/images/icon.png</file>
     </qresource>
     <qresource prefix="/locales">
-        <file alias="en">resources/locales/qm/en.qm</file>
-        <file alias="fa">resources/locales/qm/fa.qm</file>
+        <file>resources/locales/qm/en.qm</file>
+        <file>resources/locales/qm/fa.qm</file>
     </qresource>
     <qresource prefix="/styles">
         <file alias="dark-style">resources/theme/dark.qss</file>

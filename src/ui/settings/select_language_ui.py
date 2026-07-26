@@ -70,6 +70,7 @@ class Ui_LanguageSetting(object):
         self.font_input = QComboBox(self.widget)
         self.font_input.setObjectName(u"font_input")
         self.font_input.setMaxVisibleItems(5)
+        self.font_input.setMaxCount(5)
 
         self.horizontalLayout_3.addWidget(self.font_input)
 

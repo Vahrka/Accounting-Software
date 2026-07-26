@@ -77,6 +77,9 @@
             <property name="maxVisibleItems">
              <number>5</number>
             </property>
+            <property name="maxCount">
+             <number>5</number>
+            </property>
            </widget>
           </item>
          </layout>
@@ -106,7 +109,7 @@
         <string>Save</string>
        </property>
        <property name="icon">
-        <iconset>
+        <iconset resource="../../source.qrc">
          <normaloff>:/icons/save-storage-file-document</normaloff>:/icons/save-storage-file-document</iconset>
        </property>
        <property name="iconSize">

@@ -20,7 +20,7 @@ class InvoiceScreen(RetranslateMixin, QTabWidget):
     @property
     def NAME(self) -> str:
         """Sidebar label, re-evaluated on every access for live translation."""
-        return self.tr("Sales")
+        return self.tr("Invoice")
 
     def setup_ui(self):
         self.ui = Ui_Invoice()
