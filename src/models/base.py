@@ -1,7 +1,7 @@
 import json
 from datetime import datetime
 
-from peewee import BooleanField, DateTimeField
+from peewee import BooleanField, DateTimeField, IntegerField
 
 from .database import BaseModel
 
@@ -38,7 +38,8 @@ class SoftDeleteMixin:
 
 
 class BaseModelExtended(BaseModel):
-    """Extended base model with common methods"""
+    """Extended base model with common methods and fields"""
+    id = IntegerField(unique=True, primary_key=True)
 
     class Meta:
         abstract = True
@@ -57,14 +58,6 @@ class BaseModelExtended(BaseModel):
     def to_json(self) -> str:
         """Convert model to JSON"""
         return json.dumps(self.to_dict(), default=str)
-
-    @classmethod
-    def get_or_none(cls, **kwargs):
-        """Get record or None"""
-        try:
-            return cls.get(**kwargs)
-        except cls.DoesNotExist:
-            return None
 
     @classmethod
     def exists(cls, **kwargs) -> bool:

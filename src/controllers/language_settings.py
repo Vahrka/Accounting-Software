@@ -51,7 +51,6 @@ class LanguageSettingsController(RetranslateMixin, QWidget):
         """Save language preference and apply changes"""
         # Get selected language index from combobox
         selected_language = self.ui.language_input.currentIndex()
-        print(selected_language)
         language_code = self.language_list[selected_language]
 
         self.change_language(language_code)

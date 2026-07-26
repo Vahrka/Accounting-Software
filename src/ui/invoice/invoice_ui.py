@@ -15,10 +15,11 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QAbstractItemView, QApplication, QDateEdit, QFrame,
-    QHBoxLayout, QHeaderView, QLabel, QLineEdit,
-    QPushButton, QScrollArea, QSizePolicy, QSpacerItem,
-    QTabWidget, QTableView, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QAbstractItemView, QApplication, QDateEdit, QDoubleSpinBox,
+    QFrame, QHBoxLayout, QHeaderView, QLabel,
+    QLineEdit, QPushButton, QScrollArea, QSizePolicy,
+    QSpacerItem, QSpinBox, QTabWidget, QTableView,
+    QVBoxLayout, QWidget)
 import source_rc
 
 class Ui_Invoice(object):
@@ -41,7 +42,7 @@ class Ui_Invoice(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollarea_qwidget = QWidget()
         self.scrollarea_qwidget.setObjectName(u"scrollarea_qwidget")
-        self.scrollarea_qwidget.setGeometry(QRect(0, 0, 1079, 859))
+        self.scrollarea_qwidget.setGeometry(QRect(0, 0, 1079, 860))
         self.scrollarea_qwidget_layout = QVBoxLayout(self.scrollarea_qwidget)
         self.scrollarea_qwidget_layout.setObjectName(u"scrollarea_qwidget_layout")
         self.scrollarea_qwidget_layout.setContentsMargins(0, 0, 0, 0)
@@ -332,13 +333,14 @@ class Ui_Invoice(object):
 
         self.horizontalLayout_3.addWidget(self.billing_name_input)
 
-        self.price_input = QLineEdit(self.widget_3)
+        self.price_input = QDoubleSpinBox(self.widget_3)
         self.price_input.setObjectName(u"price_input")
 
         self.horizontalLayout_3.addWidget(self.price_input)
 
-        self.count_input = QLineEdit(self.widget_3)
+        self.count_input = QSpinBox(self.widget_3)
         self.count_input.setObjectName(u"count_input")
+        self.count_input.setMaximum(9999)
 
         self.horizontalLayout_3.addWidget(self.count_input)
 
@@ -350,7 +352,6 @@ class Ui_Invoice(object):
         self.horizontalLayout_3.setStretch(0, 4)
         self.horizontalLayout_3.setStretch(1, 3)
         self.horizontalLayout_3.setStretch(2, 3)
-        self.horizontalLayout_3.setStretch(3, 1)
 
         self.frame_billing_layout.addWidget(self.widget_3)
 
@@ -413,8 +414,8 @@ class Ui_Invoice(object):
         self.lineEdit.setPlaceholderText(QCoreApplication.translate("Invoice", u" Invoice Number", None))
         self.lineEdit_2.setPlaceholderText(QCoreApplication.translate("Invoice", u" Order Number ", None))
         self.billing_name_input.setPlaceholderText(QCoreApplication.translate("Invoice", u"Name", None))
-        self.price_input.setPlaceholderText(QCoreApplication.translate("Invoice", u"Price", None))
-        self.count_input.setPlaceholderText(QCoreApplication.translate("Invoice", u"Count", None))
+        self.price_input.setPrefix(QCoreApplication.translate("Invoice", u"Price: ", None))
+        self.count_input.setPrefix(QCoreApplication.translate("Invoice", u"Count: ", None))
         self.add_to_record_btn.setText(QCoreApplication.translate("Invoice", u"Add to record", None))
         self.add_to_record_btn.setProperty(u"class", QCoreApplication.translate("Invoice", u"primary outlined", None))
         Invoice.setTabText(Invoice.indexOf(self.Invoices), QCoreApplication.translate("Invoice", u"Invoices", None))

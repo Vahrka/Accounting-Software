@@ -45,7 +45,7 @@
          <x>0</x>
          <y>0</y>
          <width>1079</width>
-         <height>859</height>
+         <height>860</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="scrollarea_qwidget_layout">
@@ -552,7 +552,7 @@
               </item>
               <item>
                <widget class="QWidget" name="widget_3" native="true">
-                <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="4,3,3,1">
+                <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="4,3,3,0">
                  <item>
                   <widget class="QLineEdit" name="billing_name_input">
                    <property name="placeholderText">
@@ -561,16 +561,19 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLineEdit" name="price_input">
-                   <property name="placeholderText">
-                    <string>Price</string>
+                  <widget class="QDoubleSpinBox" name="price_input">
+                   <property name="prefix">
+                    <string>Price: </string>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLineEdit" name="count_input">
-                   <property name="placeholderText">
-                    <string>Count</string>
+                  <widget class="QSpinBox" name="count_input">
+                   <property name="prefix">
+                    <string>Count: </string>
+                   </property>
+                   <property name="maximum">
+                    <number>9999</number>
                    </property>
                   </widget>
                  </item>

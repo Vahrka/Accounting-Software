@@ -1011,3 +1011,76 @@ QToolTip {
     border-radius: 4px;
     padding: 4px 8px;
 }
+
+
+
+
+/* ====================== */
+/* SPINBOX STYLES         */
+/* ====================== */
+
+QDoubleSpinBox, QSpinBox {
+    background-color: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    /* padding: 0 12px; */
+    padding-right: 24px; /* Space for up/down buttons */
+    color: #374151;
+    font-size: 13px;
+    selection-background-color: #93c5fd;
+    selection-color: #1e3a8a;
+}
+
+QDoubleSpinBox:hover, QSpinBox:hover {
+    background-color: #f9fafb;
+    border-color: #9ca3af;
+}
+
+QDoubleSpinBox:focus, QSpinBox:focus {
+    background-color: #ffffff;
+    border: 1px solid #2563eb;
+}
+
+QDoubleSpinBox:disabled, QSpinBox:disabled {
+    background-color: #f3f4f6;
+    color: #9ca3af;
+    border-color: #e5e7eb;
+}
+
+/* Up / Down Buttons */
+QDoubleSpinBox::up-button, QSpinBox::up-button,
+QDoubleSpinBox::down-button, QSpinBox::down-button {
+    background: transparent;
+    border: none;
+    width: 20px;
+}
+
+QDoubleSpinBox::up-button:hover, QSpinBox::up-button:hover,
+QDoubleSpinBox::down-button:hover, QSpinBox::down-button:hover {
+    background-color: #eff6ff;
+    border-radius: 4px;
+}
+
+QDoubleSpinBox::up-button:pressed, QSpinBox::up-button:pressed,
+QDoubleSpinBox::down-button:pressed, QSpinBox::down-button:pressed {
+    background-color: #dbeafe;
+}
+
+/* Arrows (Drawn with CSS borders so no external icons are needed) */
+QDoubleSpinBox::up-arrow, QSpinBox::up-arrow, QDoubleSpinBox::down-arrow, QSpinBox::down-arrow {
+    width: 0;
+    height: 0;
+}
+
+/* Optional: if you want to use icons like your QComboBox, replace the blocks above with: */
+
+QDoubleSpinBox::up-arrow, QSpinBox::up-arrow {
+    image: url(:/icons/arrow-up.png);
+    width: 12px;
+    height: 12px;
+}
+QDoubleSpinBox::down-arrow, QSpinBox::down-arrow {
+    image: url(:/icons/dropdown-arrow.png);
+    width: 12px;
+    height: 12px;
+}

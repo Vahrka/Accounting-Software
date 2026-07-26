@@ -38,14 +38,15 @@
         <file alias="settings.svg">resources/icons/svg/settings-svgrepo-com.svg</file>
         <file alias="table.svg">resources/icons/svg/table-svgrepo-com.svg</file>
         <file alias="up-2-svgrepo-com.svg">resources/icons/svg/up-2-svgrepo-com.svg</file>
+        <file alias="arrow-up.png">resources/icons/png/arrow-up-svgrepo-com.png</file>
     </qresource>
     <qresource prefix="/img-icon">
         <file alias="app-ico">resources/images/icon.ico</file>
         <file alias="icon">resources/images/icon.png</file>
     </qresource>
     <qresource prefix="/locales">
-        <file alias="en">resources/locales/qm/en.qm</file>
-        <file alias="fa">resources/locales/qm/fa.qm</file>
+        <file>resources/locales/qm/en.qm</file>
+        <file>resources/locales/qm/fa.qm</file>
     </qresource>
     <qresource prefix="/styles">
         <file alias="dark-style">resources/theme/dark.qss</file>
