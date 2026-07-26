@@ -19,7 +19,11 @@ class LanguageSettingsController(RetranslateMixin, QWidget):
         # Get the main application instance
         self.app: QCoreApplication = QCoreApplication.instance()  # type: ignore
 
-        self.font_families = QFontDatabase().families()
+        self.font_families = []
+        for i in range(9):  # 0 through 8
+            self.font_families.extend(QFontDatabase.applicationFontFamilies(i))
+
+        self.font_families = list(dict.fromkeys(self.font_families))
 
         # Dictionary mapping language display names to locale codes
         # FIXME: Update this code for `PySide6.QtCore.QLocal`. This option would being update after we add every language support in the world. Until then we just hard coding.
@@ -90,8 +94,8 @@ class LanguageSettingsController(RetranslateMixin, QWidget):
         except:
             self.ui.font_input.setCurrentIndex(-1)
 
+    # FIXME: If user deletes some system fonts it may crash after loading again.
 
-    # FIXME: If user deletes some system fonts it may crash after loading again. 
     def save_font_prefrence(self, font_idx):
         settings = QSettings()
         settings.setValue("font-family", {self.font_families[font_idx]: font_idx})
