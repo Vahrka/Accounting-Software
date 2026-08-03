@@ -8,8 +8,6 @@ from utils.mixins import RetranslateMixin
 from widgets.base_screen import BaseScreen
 from widgets.menubar import Menubar
 
-
-
 # Codes Here
 
 
@@ -31,6 +29,10 @@ class MainWindow(RetranslateMixin, QMainWindow):
         self._nav_screens: list[tuple[QPushButton, BaseScreen]] = []
 
         self.load_screens()
+
+        # Set initial screen to first one (index 0)
+        if self.ui.MainStackView.count() > 0:
+            self.go_to_screen(0)
 
     def changeEvent(self, event: QEvent, /) -> None:
         """Refresh nav button labels whenever the app language changes."""
@@ -115,6 +117,27 @@ class MainWindow(RetranslateMixin, QMainWindow):
         """Switch to a specific screen in the stack view."""
         if 0 <= screen < self.ui.MainStackView.count():
             self.ui.MainStackView.setCurrentIndex(screen)
+
+            # Update button styles
+            for i in range(self.ui.MainSideNav.count()):
+                item = self.ui.MainSideNav.itemAt(i)
+                if item and item.widget():
+                    btn = item.widget()
+                    if isinstance(btn, QPushButton):
+                        btn_index = btn.property("index")
+                        if btn_index == screen:
+                            # Add "active" class to current button
+                            current_classes = btn.property("class") or ""
+                            btn.setProperty("class", f"{current_classes} active".strip())
+                            btn.style().unpolish(btn)
+                            btn.style().polish(btn)
+                        else:
+                            # Remove "active" class from other buttons
+                            current_classes = btn.property("class") or ""
+                            new_classes = " ".join(c for c in current_classes.split() if c != "active")
+                            btn.setProperty("class", new_classes if new_classes else "")
+                            btn.style().unpolish(btn)
+                            btn.style().polish(btn)
         else:
             logger.error(f"Invalid screen index: {screen}")
 

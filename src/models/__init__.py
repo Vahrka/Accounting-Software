@@ -5,7 +5,7 @@ from .base import BaseModelExtended, SoftDeleteMixin, TimestampMixin
 from .customer import Customer
 from .database import BaseModel, _db, db_manager, init_database
 from .employee import Employee
-from .inventory_item import InventoryItem, Supplier
+from .inventory_item import Category, InventoryItem, Supplier
 from .invoice import Invoice
 from .sales import Billing, Sale, SaleItem
 from .transaction import Transaction
@@ -30,6 +30,7 @@ ALL_MODELS = [
     Invoice,
     Transaction,
     Billing,
+    Category
 ]
 
 
@@ -132,6 +133,7 @@ __all__ = [
     'Invoice',
     'Transaction',
     'Billing',
+    'Category',
 
     # Utilities
     'ALL_MODELS',

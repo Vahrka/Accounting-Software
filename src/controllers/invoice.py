@@ -1,18 +1,140 @@
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from PySide6.QtCore import Qt, Slot
-from PySide6.QtGui import QIcon, QPixmap, QStandardItem, QStandardItemModel
-from PySide6.QtWidgets import (QFileDialog, QHBoxLayout, QHeaderView,
-                               QTabWidget, QToolButton, QWidget)
+from PySide6.QtGui import QStandardItem, QStandardItemModel, QIcon, QPixmap
+from PySide6.QtWidgets import (QAbstractItemView, QDialog, QFileDialog,
+                               QHBoxLayout, QHeaderView, QLineEdit,
+                               QPushButton, QTabWidget, QTableView,
+                               QToolButton, QVBoxLayout, QWidget)
 
-from models import Billing, db_manager
+from models import Billing, Customer, db_manager
 from ui.invoice.invoice_ui import Ui_Invoice
 from utils.logger import get_logger
 from utils.mixins import RetranslateMixin
 
+if TYPE_CHECKING:
+    from models import Customer as CustomerType
+
 logger = get_logger()
 
 # TODO: do not add item to db before saving using save btn
+
+
+class CustomerSelectDialog(RetranslateMixin, QDialog):
+    """Dialog for searching and selecting a customer."""
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setObjectName("CustomerSelectDialog")
+        self.setMinimumSize(650, 450)
+        self.selected_customer: CustomerType | None = None
+        self._customers: list[CustomerType] = []
+        self._setup_ui()
+        self._load_customers()
+
+    def _setup_ui(self):
+        main_layout = QVBoxLayout(self)
+
+        self.search_input = QLineEdit()
+        self.search_input.setPlaceholderText(self.tr("Search by name, email or phone…"))
+        self.search_input.textChanged.connect(self._apply_filter)
+        main_layout.addWidget(self.search_input)
+
+        self.table_view = QTableView()
+        self.table_view.setObjectName("customerSelectTable")
+        self.table_view.setSelectionBehavior(
+            QAbstractItemView.SelectionBehavior.SelectRows
+        )
+        self.table_view.setSelectionMode(
+            QAbstractItemView.SelectionMode.SingleSelection
+        )
+        self.table_view.setEditTriggers(
+            QAbstractItemView.EditTrigger.NoEditTriggers
+        )
+        self.table_view.horizontalHeader().setSectionResizeMode(
+            QHeaderView.ResizeMode.Stretch
+        )
+        self.table_view.doubleClicked.connect(self._on_accept)
+        main_layout.addWidget(self.table_view)
+
+        self.table_model = QStandardItemModel(self)
+        self.table_model.setHorizontalHeaderLabels([
+            self.tr("Name"),
+            self.tr("Email"),
+            self.tr("Phone"),
+            self.tr("City"),
+            self.tr("Country"),
+        ])
+        self.table_view.setModel(self.table_model)
+
+        btn_layout = QHBoxLayout()
+        btn_layout.addStretch()
+        self.ok_btn = QPushButton(self.tr("Select"))
+        self.ok_btn.setObjectName("dialogOkBtn")
+        self.cancel_btn = QPushButton(self.tr("Cancel"))
+        self.cancel_btn.setObjectName("dialogCancelBtn")
+        self.ok_btn.clicked.connect(self._on_accept)
+        self.cancel_btn.clicked.connect(self.reject)
+        btn_layout.addWidget(self.ok_btn)
+        btn_layout.addWidget(self.cancel_btn)
+        main_layout.addLayout(btn_layout)
+
+    # ------------------------------------------------------------------
+    # Data
+    # ------------------------------------------------------------------
+
+    def _load_customers(self, search: str = "") -> None:
+        query = Customer.select()
+        if search:
+            like = f"%{search}%"
+            query = query.where(
+                (Customer.name ** like)
+                | (Customer.email ** like)
+                | (Customer.phone ** like)
+            )
+        self._customers = list(query.order_by(Customer.name))
+        self._populate_table()
+
+    def _populate_table(self) -> None:
+        self.table_model.removeRows(0, self.table_model.rowCount())
+        for customer in self._customers:
+            name_item = QStandardItem(customer.name)
+            name_item.setData(customer, Qt.ItemDataRole.UserRole)
+            name_item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+
+            email_item = QStandardItem(customer.email)
+            email_item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+
+            phone_item = QStandardItem(customer.phone)
+            phone_item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+
+            city_item = QStandardItem(customer.city)
+            city_item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+
+            country_item = QStandardItem(customer.country)
+            country_item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+
+            self.table_model.appendRow([
+                name_item, email_item, phone_item,
+                city_item, country_item,
+            ])
+
+    # ------------------------------------------------------------------
+    # Slots
+    # ------------------------------------------------------------------
+
+    def _apply_filter(self, text: str) -> None:
+        self._load_customers(text.strip())
+
+    def _on_accept(self) -> None:
+        indexes = self.table_view.selectionModel().selectedRows()
+        if not indexes:
+            return
+        row = indexes[0].row()
+        if 0 <= row < len(self._customers):
+            self.selected_customer = self._customers[row]
+            self.accept()
 
 
 class InvoiceScreen(RetranslateMixin, QTabWidget):
@@ -30,6 +152,8 @@ class InvoiceScreen(RetranslateMixin, QTabWidget):
         self.ui.select_logo_btn.clicked.connect(self.select_logo)
         self.ui.add_to_record_btn.clicked.connect(self.add_record)
         self.ui.select_costumer_btn.clicked.connect(self.select_costumer)
+
+        self._selected_customer = None
 
         self.ui.tableView.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)  # type: ignore
         # self.ui.tableView.setEditTriggers(QAbstractItemView.NoEditTriggers)  # type: ignore
@@ -140,5 +264,34 @@ class InvoiceScreen(RetranslateMixin, QTabWidget):
         except Exception as e:
             logger.error(f"Error deleting row:\n{e}")
 
-    def select_costumer(self):
-        print("Select costumer")
+    @Slot(name="Select Customer")
+    def select_costumer(self) -> None:
+        dialog = CustomerSelectDialog(self)
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            self._selected_customer = dialog.selected_customer
+            if self._selected_customer:
+                self._update_customer_display()
+
+    def _update_customer_display(self) -> None:
+        """Fill customer-related widgets in the invoice UI.
+
+        Widget names below must match the ``.ui`` file.
+        If a widget is missing the attribute is simply skipped.
+        """
+        c = self._selected_customer
+        if c is None:
+            return
+
+        for attr, value in (
+            ("customer_name_input", c.name),
+            ("customer_email_input", c.email),
+            ("customer_phone_input", c.phone),
+            ("customer_address_input", c.address),
+            ("customer_city_input", c.city),
+            ("customer_state_input", c.state),
+            ("customer_country_input", c.country),
+            ("customer_postal_code_input", c.postal_code),
+        ):
+            widget = getattr(self.ui, attr, None)
+            if widget is not None:
+                widget.setText(str(value or ""))

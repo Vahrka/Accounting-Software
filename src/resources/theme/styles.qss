@@ -68,7 +68,7 @@ QMenuBar::icon {
 #MainSideNavFrame QPushButton { /* The btns inside navbar */
     min-width: 50px;
     max-width: 200px;
-    padding: 10px 35px 10px 10px;
+    padding: 10px;
     border-left: 5px solid #6453fe;
     margin: 0px 8px;
     border-top-left-radius: 0;
@@ -94,6 +94,17 @@ QMenuBar::icon {
     width: 18px;
     height: 18px;
 }
+
+
+/* Active state for navigation buttons */
+#MainSideNavFrame QPushButton[class*="active"] {
+    background-color: #fff;
+    color: #ff5722;
+    border-left: 5px solid #ffc107;
+    font-weight: 700;
+}
+
+
 
 
 /* ====================== */

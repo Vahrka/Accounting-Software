@@ -12,11 +12,15 @@ class Supplier(BaseModelExtended, TimestampMixin):
     phone = CharField(max_length=20)
     address = TextField(null=True)
 
-    class Meta:
+    class Meta: # type: ignore
         table_name = 'suppliers'
 
     def __str__(self):
         return self.name
+
+
+class Category(BaseModelExtended):
+    category = CharField(max_length=50, index=True)
 
 
 class InventoryItem(BaseModelExtended, TimestampMixin):
@@ -24,7 +28,7 @@ class InventoryItem(BaseModelExtended, TimestampMixin):
     sku = CharField(max_length=50, unique=True, index=True)
     name = CharField(max_length=100, index=True)
     description = TextField(null=True)
-    category = CharField(max_length=50, index=True)
+    category = ForeignKeyField(Category, backref='inventory_category', null=True, on_delete='SET NULL')
     unit_price = DecimalField(max_digits=10, decimal_places=2)
     stock_quantity = IntegerField(default=0)
     reorder_level = IntegerField(default=0)
@@ -32,7 +36,7 @@ class InventoryItem(BaseModelExtended, TimestampMixin):
     cost_price = DecimalField(max_digits=10, decimal_places=2)
     supplier = ForeignKeyField(Supplier, backref='inventory_items', null=True, on_delete='SET NULL')
 
-    class Meta:
+    class Meta: # type: ignore
         table_name = 'inventory_items'
         indexes = (
             (('sku', 'name'), False),
