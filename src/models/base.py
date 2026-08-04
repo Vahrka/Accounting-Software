@@ -6,20 +6,26 @@ from peewee import BooleanField, DateTimeField, IntegerField
 from .database import BaseModel
 
 
-class TimestampMixin:
+class TimestampMixin(BaseModel):
     """Mixin for timestamp fields"""
     created_at = DateTimeField(default=datetime.now)
     updated_at = DateTimeField(default=datetime.now)
+
+    class Meta:
+        abstract = True
 
     def save(self, *args, **kwargs):
         self.updated_at = datetime.now()
         return super().save(*args, **kwargs)
 
 
-class SoftDeleteMixin:
+class SoftDeleteMixin(BaseModel):
     """Mixin for soft delete functionality"""
     is_deleted = BooleanField(default=False)
     deleted_at = DateTimeField(null=True)
+
+    class Meta:
+        abstract = True
 
     def delete(self, *args, **kwargs):
         """Soft delete instead of hard delete"""
