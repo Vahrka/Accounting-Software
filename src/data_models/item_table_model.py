@@ -19,14 +19,16 @@ class ItemTableModel(QAbstractTableModel):
 
     def refresh(self, search: str = "", category: str = "") -> None:
         """Reload items from the database, optionally filtered."""
-        query = InventoryItem.select()
+        query = InventoryItem.get_active()
         if search:
             like = f"%{search}%"
             query = query.where(
-                (InventoryItem.sku ** like) | (InventoryItem.name ** like)
+                (InventoryItem.sku ** like)
+                | (InventoryItem.name ** like)
+                | (InventoryItem.barcode ** like)
             )
         if category:
-            query = query.where(InventoryItem.category == category)
+            query = query.where(InventoryItem.category_id == int(category))
 
         self.beginResetModel()
         self._items = list(query.order_by(InventoryItem.name))
@@ -56,38 +58,55 @@ class ItemTableModel(QAbstractTableModel):
             return None
 
         item = self._items[index.row()]
+        col = index.column()
 
         if role == Qt.ItemDataRole.DisplayRole:
-            column = index.column()
-            if column == 0:
+            if col == 0:
                 return item.sku
-            if column == 1:
+            if col == 1:
                 return item.name
-            if column == 2:
-                return item.category
-            if column == 3:
+            if col == 2:
+                return item.category.name if item.category else ""
+            if col == 3:
                 return f"{item.unit_price:.2f}"
-            if column == 4:
+            if col == 4:
                 return f"{item.cost_price:.2f}"
-            if column == 5:
+            if col == 5:
                 return item.stock_quantity
-            if column == 6:
+            if col == 6:
                 return item.reorder_level
-            if column == 7:
-                return item.location
-            if column == 8:
+            if col == 7:
+                return item.location or ""
+            if col == 8:
                 return item.supplier.name if item.supplier else ""
 
         if role == Qt.ItemDataRole.BackgroundRole and item.needs_reorder:
-            return Qt.GlobalColor.yellow
+            from PySide6.QtGui import QColor
+            return QColor(255, 255, 200)
 
         return None
+
+    def sort(self, column: int,  # noqa: N802
+              order: Qt.SortOrder = Qt.SortOrder.AscendingOrder) -> None:
+        self.beginResetModel()
+        reverse = order == Qt.SortOrder.DescendingOrder
+        key_map = {
+            0: lambda i: i.sku,
+            1: lambda i: i.name.lower(),
+            2: lambda i: (i.category.name if i.category else ""),
+            3: lambda i: i.unit_price,
+            4: lambda i: i.cost_price,
+            5: lambda i: i.stock_quantity,
+        }
+        key_fn = key_map.get(column, lambda i: i.sku)
+        self._items.sort(key=key_fn, reverse=reverse)
+        self.endResetModel()
 
 
 class SupplierTableModel(QAbstractTableModel):
     """Table model exposing Supplier records to a QTableView."""
 
-    HEADERS = ("Name", "Contact Person", "Email", "Phone", "Address")
+    HEADERS = ("Name", "Contact Person", "Email", "Phone", "City", "Active")
 
     def __init__(self, parent=None) -> None:
         super().__init__(parent)
@@ -95,9 +114,14 @@ class SupplierTableModel(QAbstractTableModel):
 
     def refresh(self, search: str = "") -> None:
         """Reload suppliers from the database, optionally filtered."""
-        query = Supplier.select()
+        query = Supplier.get_active()
         if search:
-            query = query.where(Supplier.name ** f"%{search}%")
+            like = f"%{search}%"
+            query = query.where(
+                (Supplier.name ** like)
+                | (Supplier.email ** like)
+                | (Supplier.contact_person ** like)
+            )
 
         self.beginResetModel()
         self._suppliers = list(query.order_by(Supplier.name))
@@ -127,15 +151,30 @@ class SupplierTableModel(QAbstractTableModel):
             return None
 
         supplier = self._suppliers[index.row()]
-        column = index.column()
-        if column == 0:
+        col = index.column()
+        if col == 0:
             return supplier.name
-        if column == 1:
+        if col == 1:
             return supplier.contact_person or ""
-        if column == 2:
+        if col == 2:
             return supplier.email
-        if column == 3:
-            return supplier.phone
-        if column == 4:
-            return supplier.address or ""
+        if col == 3:
+            return supplier.phone or ""
+        if col == 4:
+            return supplier.city or ""
+        if col == 5:
+            return "Yes" if supplier.is_active else "No"
         return None
+
+    def sort(self, column: int,  # noqa: N802
+              order: Qt.SortOrder = Qt.SortOrder.AscendingOrder) -> None:
+        self.beginResetModel()
+        reverse = order == Qt.SortOrder.DescendingOrder
+        key_map = {
+            0: lambda s: s.name.lower(),
+            1: lambda s: (s.contact_person or "").lower(),
+            2: lambda s: s.email.lower(),
+        }
+        key_fn = key_map.get(column, lambda s: s.name)
+        self._suppliers.sort(key=key_fn, reverse=reverse)
+        self.endResetModel()

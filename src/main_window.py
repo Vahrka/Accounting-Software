@@ -160,9 +160,13 @@ class MainWindow(RetranslateMixin, QMainWindow):
             # Get the actual class from the controllers module
             screen = getattr(controllers, screen_class)()
             logger.info(f"Loading screen: {screen.NAME}")
-
-            screen.setup_ui()
-            btn = QPushButton(screen.NAME)
+            try:
+                screen.setup_ui()
+                btn = QPushButton(screen.NAME)
+            except Exception as e:
+                logger.error(f"Failed to setup screen {screen.NAME}: {e}")
+                exit(1)
+                
             try:
                 self.add_to_screen(btn, screen)
             except Exception as e:
